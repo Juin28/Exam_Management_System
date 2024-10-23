@@ -1,9 +1,18 @@
 # COMP3111 Project
 
-Team ID - Group 18
-Team ID, members’ personal particulars (email id, GitHub id, dev branch id), and individual task assignment.
-1. Task 1 - YUEN, Bryan Qi Wen
+## Team ID - Group 18
 
-2. Task 2 - TAN, Juin
+### 1. Task 1 (Student Portal) - YUEN, Bryan Qi Wen
+- Email: bqwyuen@connect.ust.hk
+- GitHub id: shockwave359
+- Dev Branch ID: Bryan
 
-3. Task 3 - LOH, Angus Han Jern
+### 2. Task 2 (Teacher Portal) - TAN, Juin
+- Email: jtanat@connect.ust.hk
+- GitHub id: juin28
+- Dev Branch ID: Juin
+
+### 3. Task 3 (Teacher and Manager Portal) - LOH, Angus Han Jern
+- Email: ahjloh@connect.ust.hk
+- GitHub id: angusk701
+- Dev Branch ID: Angus
