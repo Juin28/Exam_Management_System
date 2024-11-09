@@ -34,4 +34,16 @@ public class ManagerMainController implements Initializable {
     public void exit() {
         System.exit(0);
     }
+
+    public boolean testEvenNumber (int integer)
+    {
+        if(integer%2 == 0)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
 }
