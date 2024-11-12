@@ -41,6 +41,16 @@ public class StudentLoginController implements Initializable {
     }
 
     @FXML
-    public void register() {
+    public void register(ActionEvent e) {
+        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("StudentRegisterUI.fxml"));
+        Stage stage = new Stage();
+        stage.setTitle("Student Register");
+        try {
+            stage.setScene(new Scene(fxmlLoader.load()));
+        } catch (IOException e1) {
+            e1.printStackTrace();
+        }
+        stage.show();
+        ((Stage) ((Button) e.getSource()).getScene().getWindow()).close();
     }
 }
