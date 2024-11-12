@@ -28,16 +28,55 @@ public class ManagerLoginController implements Initializable {
 
     @FXML
     public void login(ActionEvent e) {
+        boolean loginStatus = handleManagerLogin();
+        String message = loginStatus ? "Login successful" : "Login failed, please try again";
+
+        // Display popup for login status
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("LoginPopup.fxml"));
+            Stage popupStage = new Stage();
+            popupStage.setTitle("Hint");
+            popupStage.setScene(new Scene(fxmlLoader.load()));
+
+            LoginPopupController controller = fxmlLoader.getController();
+            controller.setMessage(message);
+            controller.setManagerLoginController(this, loginStatus, e.getSource());
+
+            popupStage.show();
+        } catch (IOException e1) {
+            e1.printStackTrace();
+        }
+    }
+
+    public void showManagerUI(Object eventSource)
+    {
         FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("ManagerMainUI.fxml"));
         Stage stage = new Stage();
-        stage.setTitle("Hi " + usernameTxt.getText() +", Welcome to HKUST Examination System");
+        stage.setTitle("Hi " + usernameTxt.getText() + ", Welcome to HKUST Examination System");
         try {
             stage.setScene(new Scene(fxmlLoader.load()));
         } catch (IOException e1) {
             e1.printStackTrace();
         }
         stage.show();
-        ((Stage) ((Button) e.getSource()).getScene().getWindow()).close();
+        ((Stage) ((Button) eventSource).getScene().getWindow()).close();
+    }
+
+    public boolean handleManagerLogin()
+    {
+        // get the username and password
+        String username = usernameTxt.getText();
+        String password = passwordTxt.getText();
+
+        // since there is only one manager, hardcode the username and password
+        // to ""admin" and "admin" respectively
+        if (username.equals("admin") && password.equals("admin")) {
+            System.out.println("Manager login successfully");
+            return true;
+        } else {
+            System.out.println("Manager login failed");
+            return false;
+        }
     }
 
 }
