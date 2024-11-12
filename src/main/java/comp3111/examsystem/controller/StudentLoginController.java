@@ -1,6 +1,8 @@
 package comp3111.examsystem.controller;
 
 import comp3111.examsystem.Main;
+import comp3111.examsystem.model.Student;
+import comp3111.examsystem.service.Database;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -21,9 +23,10 @@ public class StudentLoginController implements Initializable {
     private TextField usernameTxt;
     @FXML
     private PasswordField passwordTxt;
+    private Database<Student> studentDatabase;
 
     public void initialize(URL location, ResourceBundle resources) {
-
+        studentDatabase = new Database<>(Student.class);
     }
 
     @FXML
@@ -37,6 +40,8 @@ public class StudentLoginController implements Initializable {
             e1.printStackTrace();
         }
         stage.show();
+//        Student test = new Student("bob", "bob", "Male", 12, "CSE", "ok", "0", 20925579);
+//        studentDatabase.add(test);
         ((Stage) ((Button) e.getSource()).getScene().getWindow()).close();
     }
 

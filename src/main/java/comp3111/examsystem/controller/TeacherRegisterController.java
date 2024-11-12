@@ -147,6 +147,7 @@
 
 package comp3111.examsystem.controller;
 
+import comp3111.examsystem.model.Teacher;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
@@ -223,10 +224,11 @@ public class TeacherRegisterController {
         } else if (!password.equals(confirmPassword)) {
             MsgSender.showMsg("Passwords do not match.");
             return false;
-        } else if (Database.queryByField("username", username) != null) {
-            MsgSenser.showMsg("Username already exists.");
-            return false;
         }
+//        else if (Database.queryByField("username", username) != null) {
+//            MsgSender.showMsg("Username already exists.");
+//            return false;
+//        }
         // Add any other validation checks as needed
         return true;
     }
