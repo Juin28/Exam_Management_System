@@ -1,6 +1,9 @@
 package comp3111.examsystem.controller;
 
 import comp3111.examsystem.Main;
+import comp3111.examsystem.model.Student;
+import comp3111.examsystem.service.Database;
+import comp3111.examsystem.service.MsgSender;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -21,16 +24,49 @@ public class StudentLoginController implements Initializable {
     private TextField usernameTxt;
     @FXML
     private PasswordField passwordTxt;
+    private Database<Student> studentDatabase;
 
     public void initialize(URL location, ResourceBundle resources) {
-
+        studentDatabase = new Database<>(Student.class);
     }
 
     @FXML
     public void login(ActionEvent e) {
         FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("StudentMainUI.fxml"));
         Stage stage = new Stage();
-        stage.setTitle("Hi " + usernameTxt.getText() +", Welcome to HKUST Examination System");
+        // list to store student with the given username
+        List<Student> studentList = studentDatabase.queryByField("username", usernameTxt.getText());
+        // if the student does not exist
+        if(studentList.isEmpty()){
+            MsgSender.showMsg("This user does not exist. Please register for an account.");
+        }
+        // if the student exists
+        else{
+            // check if the entered password matches the password in the database
+            // if passwords do not match
+            if(!studentList.getFirst().getPassword().equals(passwordTxt.getText())){
+                MsgSender.showMsg("Incorrect password. Please re-enter password.");
+            }
+            // if passwords match
+            else{
+                stage.setTitle("Hi " + usernameTxt.getText() +", Welcome to HKUST Examination System");
+                try {
+                    stage.setScene(new Scene(fxmlLoader.load()));
+                    stage.show();
+                    ((Stage) ((Button) e.getSource()).getScene().getWindow()).close();
+
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
+            }
+        }
+    }
+
+    @FXML
+    public void register(ActionEvent e) {
+        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("StudentRegisterUI.fxml"));
+        Stage stage = new Stage();
+        stage.setTitle("Student Register");
         try {
             stage.setScene(new Scene(fxmlLoader.load()));
         } catch (IOException e1) {
@@ -38,9 +74,5 @@ public class StudentLoginController implements Initializable {
         }
         stage.show();
         ((Stage) ((Button) e.getSource()).getScene().getWindow()).close();
-    }
-
-    @FXML
-    public void register() {
     }
 }
