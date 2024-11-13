@@ -1,29 +1,55 @@
 package comp3111.examsystem.model;
 
 public class Grade {
-    public int studentId;
-    public int questionId;
-    public int studentScore;
+    public long id;
+    public String studentId;
+    public String questionId;
+    public String studentScore;
 
-    public Grade(int studentScore) {
-        this.studentScore = studentScore;
+//    public Grade(int studentScore) {
+//        this.studentScore = studentScore;
+//    }
+    public Grade(){
+        this.studentId = "studentId";
+        this.questionId = "questionId";
+        this.studentScore = "studentScore";
+        this.id = 0;
     }
 
-    public int getStudentId() {
-        return studentId;
-    }
-
-    public int getQuestionId() {
-        return questionId;
-    }
-
-    public int getStudentScore() {
-        return studentScore;
-    }
-
-    public void setStudentScore(int studentId, int questionId, int studentScore) {
+    public Grade(String studentId, String questionId, String studentScore){
         this.studentId = studentId;
         this.questionId = questionId;
         this.studentScore = studentScore;
+        this.id = 0;
     }
+
+    public String getQuestionId() {
+        return questionId;
+    }
+
+    public void setQuestionId(String questionId) {
+        this.questionId = questionId;
+    }
+
+    public String getStudentScore() {
+        return studentScore;
+    }
+
+    public void setStudentScore(String studentScore) {
+        this.studentScore = studentScore;
+    }
+
+    public String getStudentId() {
+        return studentId;
+    }
+
+    public void setStudentId(String studentId) {
+        this.studentId = studentId;
+    }
+
+//    public void setStudentScore(int studentId, int questionId, int studentScore) {
+//        this.studentId = studentId;
+//        this.questionId = questionId;
+//        this.studentScore = studentScore;
+//    }
 }
