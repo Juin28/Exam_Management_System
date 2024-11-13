@@ -25,7 +25,7 @@ public class User {
         this.gender = gender;
     }
 
-    public void setAge(int age) {
+    public void setAge(String age) {
         this.age = age;
     }
 

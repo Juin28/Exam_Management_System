@@ -17,6 +17,7 @@ import java.util.ResourceBundle;
 
 public class StudentRegisterController implements Initializable {
     private Database<Student> studentDatabase;
+    private Integer studentNum;
 
     @FXML
     private TextField ageTxt;
@@ -46,6 +47,12 @@ public class StudentRegisterController implements Initializable {
     private TextField usernameTxt;
 
     @FXML
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        this.studentDatabase = new Database<>(Student.class);
+        studentNum = studentDatabase.getAll().size();
+    }
+
+    @FXML
     void closeWindow() {
         Stage stage = (Stage) usernameTxt.getScene().getWindow();
         stage.close();
@@ -61,6 +68,8 @@ public class StudentRegisterController implements Initializable {
         String password = passwordTxt.getText();
         String passConfirm = passwordConfirmTxt.getText();
         if(validateFields(age, department, gender, name, username, password, passConfirm)){
+            Student tmp = new Student(username, name, gender, age, department, password, "0", 0);
+            studentDatabase.add(tmp);
             MsgSender.showMsg("Registration Successful! You can now log in.");
             closeWindow();
         }
@@ -79,11 +88,14 @@ public class StudentRegisterController implements Initializable {
             MsgSender.showMsg("Passwords do not match");
             return false;
         }
+        else if(studentNum != 0){
+            if(!studentDatabase.queryByField("username", username).isEmpty()){
+                MsgSender.showMsg("This student already exists.");
+                return false;
+            }
+        }
+
         return true;
     }
 
-
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-    }
 }
