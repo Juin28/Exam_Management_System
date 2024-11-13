@@ -1,9 +1,9 @@
 package comp3111.examsystem.model;
 
 public class Grade {
-    private int studentId;
-    private int questionId;
-    private int studentScore;
+    public int studentId;
+    public int questionId;
+    public int studentScore;
 
     public Grade(int studentScore) {
         this.studentScore = studentScore;
