@@ -1,14 +1,14 @@
 package comp3111.examsystem.model;
 
 public class Student extends User {
-    private int studentId;
+    public long id;
 
-    public Student(String username, String name, String gender, int age, String department, String password, String studentScore, int studentId) {
+    public Student(String username, String name, String gender, String age, String department, String password, String studentScore, long id) {
         super(username, name, gender, age, department, password);
-        this.studentId = studentId;
+        this.id = id;
     }
 
-    public int getStudentId() {
-        return studentId;
+    public long getId() {
+        return id;
     }
 }

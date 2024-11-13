@@ -4,18 +4,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Quiz {
-    private String quizName;
-    private int quizTime;
-    private int numQuestions;
-    private boolean isPublished;
-    private List<Integer> questions;    // storing Question ids instead of Question objects
+    public int id;
+    public String quizName;
+    public int quizTime;
+    public int numQuestions;
+    public boolean isPublished;
+    public List<Long> questions;    // storing Question ids instead of Question objects
 
-    public Quiz(String quizName, int quizTime, int numQuestions) {
+    public Quiz(String quizName, int quizTime, int numQuestions, int id) {
+        this.id = id;
         this.quizName = quizName;
         this.quizTime = quizTime;
         this.numQuestions = numQuestions;
         this.isPublished = false;
         this.questions = new ArrayList<>();
+    }
+
+    public int getId() {
+        return id;
     }
 
     public String getQuizName() {
@@ -38,11 +44,11 @@ public class Quiz {
         this.isPublished = true;
     }
 
-    public List<Integer> getQuestions() {
+    public List<Long> getQuestions() {
         return questions;
     }
 
     public void addQuestion(Question question) {
-        questions.add(question.getQuestionId());
+        questions.add(question.getId());
     }
 }

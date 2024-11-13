@@ -1,20 +1,27 @@
 package comp3111.examsystem.model;
 
 public class Teacher extends User {
-    private String position;
-    private int teacherId;
+    public String position;
+    public long id;
 
-    public Teacher(String username, String name, String gender, int age, String department, String password, String position, int teacherId) {
+    // Default constructor
+    public Teacher() {
+        super("username", "name", "male", "20", "department", "password");
+        this.position = "position";
+        this.id = 0;
+    }
+
+    public Teacher(String username, String name, String gender, String age, String department, String password, String position, long id) {
         super(username, name, gender, age, department, password);
         this.position = position;
-        this.teacherId = teacherId;
+        this.id = id;
     }
 
     public String getPosition() {
         return position;
     }
 
-    public int getTeacherId() {
-        return teacherId;
+    public long getId() {
+        return id;
     }
 }

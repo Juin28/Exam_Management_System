@@ -16,6 +16,10 @@ public class Database<T> {
     String jsonFile;
 
     public Database(Class<T> entity) {
+        if (entity == null) {
+            throw new IllegalArgumentException("Entity class cannot be null");
+        }
+
         entitySample = entity;
         tableName = entitySample.getSimpleName().toLowerCase();
         jsonFile = Paths.get("src", "main", "resources", "database", tableName + ".txt").toString();
@@ -27,6 +31,7 @@ public class Database<T> {
                 e.printStackTrace();
             }
         }
+
     }
 
     // Query database based on key
@@ -108,7 +113,7 @@ public class Database<T> {
                     }
                 }
             }
-            if (clazz.equals(Entity.class)) {
+            if (clazz.equals(Object.class)) {
                 break;
             }
             else {
@@ -212,10 +217,9 @@ public class Database<T> {
                             setValue(tlist.get(i), field.getName(), o);
                         }
                     }
-                    if (clazz.equals(Entity.class)) {
+                    if (clazz.equals(Object.class)) {
                         break;
-                    }
-                    else {
+                    } else {
                         clazz = clazz.getSuperclass();
                     }
                 }
@@ -312,21 +316,32 @@ public class Database<T> {
     }
 
     private String entityToTxt(T t) {
+        if (entitySample == null) {
+            throw new IllegalStateException("entitySample is not initialized.");
+        }
+
         StringBuffer sbf = new StringBuffer();
         Class<?> clazz = entitySample;
+
         while (true) {
             for (Field field : clazz.getDeclaredFields()) {
                 if (!field.getName().equals("dbutil")) {
                     Object obj = getValue(t, field.getName());
+
                     if (obj != null && !obj.toString().isEmpty()) {
                         sbf.append(field.getName()).append(":").append(obj).append(",");
                     }
                 }
             }
-            if (clazz.equals(Entity.class)) {
+
+//            if (clazz.equals(Entity.class)) {
+//                break;
+//            } else {
+//                clazz = clazz.getSuperclass();
+//            }
+            if (clazz.equals(Object.class)) {
                 break;
-            }
-            else {
+            } else {
                 clazz = clazz.getSuperclass();
             }
         }
