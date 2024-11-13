@@ -36,13 +36,14 @@ public class StudentLoginController implements Initializable {
         stage.setTitle("Hi " + usernameTxt.getText() +", Welcome to HKUST Examination System");
         try {
             stage.setScene(new Scene(fxmlLoader.load()));
+            stage.show();
+            ((Stage) ((Button) e.getSource()).getScene().getWindow()).close();
+
         } catch (IOException e1) {
             e1.printStackTrace();
         }
-        stage.show();
 //        Student test = new Student("bob", "bob", "Male", 12, "CSE", "ok", "0", 20925579);
 //        studentDatabase.add(test);
-        ((Stage) ((Button) e.getSource()).getScene().getWindow()).close();
     }
 
     @FXML
