@@ -50,9 +50,12 @@ package comp3111.examsystem.controller;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import comp3111.examsystem.Main;
+import comp3111.examsystem.model.Teacher;
+import comp3111.examsystem.service.Database;
 import comp3111.examsystem.service.MsgSender;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -65,13 +68,21 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
 public class TeacherLoginController implements Initializable {
+    private Database<Teacher> teacherDatabase;
+    private List<Teacher> allTeachers;
+
     @FXML
     private TextField usernameTxt;
     @FXML
     private PasswordField passwordTxt;
 
+//    public void initialize(URL location, ResourceBundle resources) {
+//    }
+
+    @FXML
     public void initialize(URL location, ResourceBundle resources) {
-        // Initialization logic can go here
+        this.teacherDatabase = new Database<>(Teacher.class);
+        allTeachers = teacherDatabase.getAll();
     }
 
     @FXML
@@ -94,9 +105,25 @@ public class TeacherLoginController implements Initializable {
         String username = usernameTxt.getText();
         String password = passwordTxt.getText();
 
-        // Check against hardcoded credentials
-        // [TODO] Replace this with actual authentication logic
-        return username.equals("teacher") && password.equals("teacher");
+        if (validInput(username, password)) {
+            return checkTeacherCredentials(username, password);
+        } else {
+            MsgSender.showMsg("Please enter both username and password.");
+            return false;
+        }
+    }
+
+    private boolean validInput(String username, String password) {
+        return !username.isEmpty() && !password.isEmpty();
+    }
+
+    private boolean checkTeacherCredentials(String username, String password) {
+        for (Teacher teacher : allTeachers) {
+            if (teacher.getUsername().equals(username) && teacher.getPassword().equals(password)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private void loadTeacherMainUI(ActionEvent e) {
@@ -106,12 +133,14 @@ public class TeacherLoginController implements Initializable {
         stage.setTitle("Hi " + usernameTxt.getText() + ", Welcome to HKUST Examination System");
         try {
             stage.setScene(new Scene(fxmlLoader.load()));
+            stage.show();
+
+            // Close the current login window
+            ((Stage) ((Button) e.getSource()).getScene().getWindow()).close();
+
         } catch (IOException e1) {
             e1.printStackTrace();
         }
-        stage.show();
-        // Close the current login window
-        ((Stage) ((Button) e.getSource()).getScene().getWindow()).close();
     }
 
     @FXML
@@ -121,18 +150,15 @@ public class TeacherLoginController implements Initializable {
         Stage stage = new Stage();
         stage.setTitle("Teacher Registration");
 
-        System.out.println("Registering teacher");
-
         try {
             stage.setScene(new Scene(fxmlLoader.load()));
-//            stage.show();
+            stage.show();
+
             // Close the current login window
-//            ((Stage) usernameTxt.getScene().getWindow()).close();
+            ((Stage) ((Button) e.getSource()).getScene().getWindow()).close();
+
         } catch (IOException err) {
             err.printStackTrace();
         }
-        stage.show();
-        // Close the current login window
-        ((Stage) ((Button) e.getSource()).getScene().getWindow()).close();
     }
 }

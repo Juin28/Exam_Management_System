@@ -1,0 +1,3 @@
+position:Head,id:1731411798009,username:Teacher1,name:Teacher1,gender:Male,age:30,department:CSE,password:123,
+position:Associate Head,id:1731411816222,username:Teacher2,name:Teacher2,gender:Female,age:50,department:CSE,password:123,
+position:Associate Head,id:1731466955221,username:A,name:Testing1,gender:Male,age:35,department:CSE,password:a,

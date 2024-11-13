@@ -1,14 +1,14 @@
 package comp3111.examsystem.model;
 
 public class User {
-    private String username;
-    private String name;
-    private String gender;
-    private int age;
-    private String department;
-    private String password;
+    public String username;
+    public String name;
+    public String gender;
+    public String age;
+    public String department;
+    public String password;
 
-    public User(String username, String name, String gender, int age, String department, String password) {
+    public User(String username, String name, String gender, String age, String department, String password) {
         this.username = username;
         this.name = name;
         this.gender = gender;
@@ -53,7 +53,7 @@ public class User {
         return gender;
     }
 
-    public int getAge() {
+    public String getAge() {
         return age;
     }
 
