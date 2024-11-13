@@ -29,7 +29,12 @@ public class ManagerLoginController implements Initializable {
 
     @FXML
     public void login(ActionEvent e) {
-        boolean loginStatus = handleManagerLogin();
+        // get the username and password
+        String username = usernameTxt.getText();
+        String password = passwordTxt.getText();
+
+        // call handleManagerLogin to validate the credentials
+        boolean loginStatus = handleManagerLogin(username,password);
         String message = loginStatus ? "Login successful" : "Login failed, please try again";
 
         // Display popup for login status
@@ -54,12 +59,8 @@ public class ManagerLoginController implements Initializable {
         ((Stage) ((Button) eventSource).getScene().getWindow()).close();
     }
 
-    public boolean handleManagerLogin()
+    public boolean handleManagerLogin(String username, String password)
     {
-        // get the username and password
-        String username = usernameTxt.getText();
-        String password = passwordTxt.getText();
-
         // since there is only one manager, hardcode the username and password
         // to ""admin" and "admin" respectively
         if (username.equals("admin") && password.equals("admin")) {
