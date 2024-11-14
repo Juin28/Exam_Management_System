@@ -6,6 +6,7 @@ import comp3111.examsystem.model.Grade;
 import comp3111.examsystem.model.Quiz;
 import comp3111.examsystem.model.Student;
 import comp3111.examsystem.service.Database;
+import comp3111.examsystem.service.MsgSender;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
@@ -32,6 +33,7 @@ public class StudentMainController implements Initializable {
     private Student student;
     private List<String> quizzes;
     private List<Grade> studentGrades;
+    public static Quiz chosenQuiz;
 
     public void initialize(URL location, ResourceBundle resources) {
         // initializing the quizDatabase
@@ -55,7 +57,7 @@ public class StudentMainController implements Initializable {
                 studentGrades.add(gradeDatabase.getAll().get(i));
             }
         }
-        System.out.println(studentGrades);
+//        System.out.println(studentGrades);
         // formatting the quiz information
         for(int i = 0; i < quizDatabase.getAll().size(); ++i){
             Quiz quiz = quizDatabase.getAll().get(i);
@@ -86,14 +88,29 @@ public class StudentMainController implements Initializable {
     public void openExamUI(ActionEvent e) {
         FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("QuizViewUI.fxml"));
         Stage stage = new Stage();
-        stage.setTitle("Start Exam");
-        try {
-            stage.setScene(new Scene(fxmlLoader.load()));
-        } catch (IOException e1) {
-            e1.printStackTrace();
+
+        if(examCombox.getValue() == null){
+            MsgSender.showMsg("Please select a quiz to start.");
         }
-        stage.show();
-        ((Stage) ((Button) e.getSource()).getScene().getWindow()).close();
+        else{
+            // Remove spaces and split the by "|"
+            String[] parts = formatString(examCombox.getValue());
+            List<Quiz> listOfQuizzes = quizDatabase.queryByField("courseId", parts[0]);
+            // Setting the chosenQuiz
+            for(int i = 0; i < listOfQuizzes.size(); ++i){
+                if(listOfQuizzes.get(i).getQuizName().equals(parts[1])){
+                    chosenQuiz = listOfQuizzes.get(i);
+                }
+            }
+            stage.setTitle("Start Exam");
+            try {
+                stage.setScene(new Scene(fxmlLoader.load()));
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+            stage.show();
+            ((Stage) ((Button) e.getSource()).getScene().getWindow()).close();
+        }
     }
 
     @FXML
@@ -103,5 +120,21 @@ public class StudentMainController implements Initializable {
     @FXML
     public void exit() {
         System.exit(0);
+    }
+
+    // Helper function to remove whitespaces and split by "|"
+    private static String[] formatString(String input) {
+        if (input == null) {
+            return null; // Handle null case
+        }
+        return splitByPipe(input.replace(" ", ""));
+    }
+
+    // Helper function to split a String by "|"
+    protected static String[] splitByPipe(String input) {
+        if (input == null) {
+            return new String[0]; // Return an empty array if input is null
+        }
+        return input.split("\\|"); // Split by "|" character
     }
 }

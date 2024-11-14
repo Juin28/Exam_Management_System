@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="comp3111.examsystem.controller.QuizViewController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="comp3111.examsystem.controller.QuizViewController">
    <top>
       <HBox prefHeight="128.0" prefWidth="600.0" BorderPane.alignment="CENTER">
          <children>
@@ -51,14 +51,14 @@
       </HBox>
    </top>
    <left>
-      <ListView prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
+      <ListView fx:id="questionList" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
    </left>
    <center>
       <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
          <children>
             <HBox prefHeight="30.0" prefWidth="400.0">
                <children>
-                  <Label text="Question Number">
+                  <Label fx:id="currQNum" text="Question Number">
                      <HBox.margin>
                         <Insets left="135.0" />
                      </HBox.margin>
