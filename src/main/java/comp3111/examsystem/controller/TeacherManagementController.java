@@ -67,17 +67,24 @@ public class TeacherManagementController {
     @FXML
     public boolean updateTeacher(ActionEvent actionEvent) {
         System.out.println("Updating Teacher");
+        if (teachUsernameInput.getText().isEmpty()) {
+            MsgSender.showMsg("Username field cannot be empty. Please enter a valid username.");
+            return false;
+        }
         for (Teacher teacher : allTeachers) {
             if (teacher.getUsername().equals(teachUsernameInput.getText())) {
                 // found the teacher, we now validate the changes
                 boolean valid = validateUpdateInput(teacher);
                 if (valid) {
                     // successfully validated the changes, show a confirmation message
-                    MsgSender.showConfirm("Update Teacher", "Are you sure you want to update this teacher?", () -> updateTeacherInDatabase(teacher));
+                    MsgSender.showConfirm("Update Teacher", "Are you sure you want to update teacher with username: " + teacher.getUsername() + " ?", () -> updateTeacherInDatabase(teacher));
                 }
                 return true;
             }
         }
+
+        // username of teacher cannot be found
+        MsgSender.showMsg("Teacher cannot be found. Please enter a valid username.");
         return false;
     }
 
@@ -137,8 +144,14 @@ public class TeacherManagementController {
         // check which inputs are not null, we then use that to determine which fields to update
         if (!name.isEmpty())
         {
-            teacher.setName(name);
+            // name is the same, prompt a different name
+            if (name.equals(teacher.getName()))
+            {
+                MsgSender.showMsg("Name is the same. Please input a different name");
+                return false;
+            }
         }
+
         if (!age.isEmpty())
         {
             if (!validateAge(age))
@@ -146,7 +159,12 @@ public class TeacherManagementController {
                 MsgSender.showMsg("Please input a valid age");
                 return false;
             }
-            teacher.setAge(age);
+            // age is the same, prompt a different age
+            if (age.equals(teacher.getAge()))
+            {
+                MsgSender.showMsg("Age is the same. Please input a different age");
+                return false;
+            }
         }
         if (!department.isEmpty())
         {
@@ -156,21 +174,50 @@ public class TeacherManagementController {
                 MsgSender.showMsg("Please input a valid department");
                 return false;
             }
-            teacher.setDepartment(department);
+
+            // department is the same, prompt a different department
+            if (department.equals(teacher.getDepartment()))
+            {
+                MsgSender.showMsg("Department is the same. Please input a different department");
+                return false;
+            }
         }
         if (!password.isEmpty())
         {
-            teacher.setPassword(password);
+            // password is the same, prompt a different password
+            if (password.equals(teacher.getPassword()))
+            {
+                MsgSender.showMsg("Password is the same. Please input a different password");
+                return false;
+            }
         }
         if (teachGenderInput.getValue() != null)
         {
-            teacher.setGender(teachGenderInput.toString());
+            // gender is the same, prompt a different gender
+            if (teachGenderInput.getValue().equals(teacher.getGender()))
+            {
+                MsgSender.showMsg("Gender is the same. Please input a different gender");
+                return false;
+            }
         }
         if (teachPosInput.getValue() != null)
         {
-            teacher.setPosition(teachPosInput.toString());
+            // position is the same, prompt a different position
+            if (teachPosInput.getValue().equals(teacher.getPosition()))
+            {
+                MsgSender.showMsg("Position is the same. Please input a different position");
+                return false;
+            }
         }
-        // successfully validated input, return true after copying teacher details
+
+        // successfully validated input, set the corresponding values and return true
+        if (!name.isEmpty()){teacher.setName(name);}
+        if (!age.isEmpty()){teacher.setAge(age);}
+        if (!department.isEmpty()){teacher.setDepartment(department);}
+        if (!password.isEmpty()){teacher.setPassword(password);}
+        if (teachGenderInput.getValue() != null){teacher.setGender(teachGenderInput.getValue());}
+        if (teachPosInput.getValue() != null){teacher.setPosition(teachPosInput.getValue());}
+
         return true;
     }
 
