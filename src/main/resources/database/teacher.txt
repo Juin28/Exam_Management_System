@@ -1,3 +1,7 @@
 position:Head,id:1731411798009,username:Teacher1,name:Teacher1,gender:Male,age:30,department:CSE,password:123,
 position:Associate Head,id:1731411816222,username:Teacher2,name:Teacher2,gender:Female,age:50,department:CSE,password:123,
 position:Associate Head,id:1731466955221,username:A,name:Testing1,gender:Male,age:35,department:CSE,password:a,
+position:Dean,id:1731557322569,username:ahjloh,name:angus,gender:Male,age:10,department:CSE,password:123,
+position:Instructor,id:1731557504619,username:jason,name:jason,gender:Male,age:20,department:CSE,password:yourmama,
+position:Instructor,id:1731564762451,username:derulo,name:derulo,gender:Male,age:21,department:cse,password:123,
+position:Dean,id:1731564828063,username:der,name:man,gender:Male,age:21,department:SUST,password:123,
