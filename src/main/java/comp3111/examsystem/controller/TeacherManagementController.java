@@ -97,7 +97,41 @@ public class TeacherManagementController {
     }
 
     @FXML
-    public void deleteTeacher(ActionEvent actionEvent) {
+    public boolean deleteTeacher(ActionEvent actionEvent) {
+        String username = teachUsernameInput.getText();
+        if (username.isEmpty())
+        {
+            MsgSender.showMsg("Username field cannot be empty. Please enter a valid username.");
+        }
+        else
+        {
+            for (Teacher teacher : allTeachers)
+            {
+                if (teacher.getUsername().equals(username))
+                {
+                    // found the teacher, show a confirmation message
+                    MsgSender.showConfirm("Delete Teacher", "Are you sure you want to delete teacher with username: " + username + " ?", () -> deleteTeacherFromDatabase(teacher));
+                    return true;
+                }
+            }
+            // username of teacher cannot be found
+            MsgSender.showMsg("Teacher cannot be found. Please enter a valid username.");
+        }
+        return false;
+    }
+
+    private void deleteTeacherFromDatabase(Teacher teacher)
+    {
+        try
+        {
+            String idString = String.valueOf(teacher.getId());
+            teacherDatabase.delByKey(idString);
+            MsgSender.showMsg("Teacher deleted successfully");
+        }catch (Exception e)
+        {
+            MsgSender.showMsg("Error deleting teacher");
+            e.printStackTrace();
+        }
     }
 
     @FXML
@@ -124,7 +158,7 @@ public class TeacherManagementController {
         boolean valid = validateAddInput();
         if (valid)
         {
-            addTeacherToDatabase();
+            MsgSender.showConfirm("Add Teacher", "Are you sure you want to add this teacher?", () -> addTeacherToDatabase());
         }
     }
 
@@ -148,6 +182,11 @@ public class TeacherManagementController {
             if (name.equals(teacher.getName()))
             {
                 MsgSender.showMsg("Name is the same. Please input a different name");
+                return false;
+            }
+            if (!name.matches("^[a-zA-Z]*$"))
+            {
+                MsgSender.showMsg("Name must only contain alphabets");
                 return false;
             }
         }
@@ -222,21 +261,6 @@ public class TeacherManagementController {
     }
 
     /**
-     * This function copies the details of the source teacher to the target teacher
-     *
-     * @param target    The target teacher object
-     * @param source    The source teacher object
-     */
-    private void copyTeacherDetails(Teacher target, Teacher source) {
-        target.setName(source.getName());
-        target.setAge(source.getAge());
-        target.setDepartment(source.getDepartment());
-        target.setPassword(source.getPassword());
-        target.setGender(source.getGender());
-        target.setPosition(source.getPosition());
-    }
-
-    /**
      * This function validates the input fields while adding a teacher
      *
      * @return boolean     True if the input is valid, false otherwise
@@ -254,6 +278,12 @@ public class TeacherManagementController {
         || teachGenderInput.getValue() == null || teachPosInput.getValue() == null)
         {
             MsgSender.showMsg("Please fill in all fields");
+            return false;
+        }
+        // validate that name only has alphabets
+        if (!name.matches("^[a-zA-Z]*$"))
+        {
+            MsgSender.showMsg("Name must only contain alphabets");
             return false;
         }
 
