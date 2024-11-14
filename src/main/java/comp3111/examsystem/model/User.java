@@ -41,4 +41,27 @@ public class User {
         return password;
     }
 
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public void setAge(String age) {
+        this.age = age;
+    }
+
+    public void setDepartment(String department) {
+        this.department = department;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 }
