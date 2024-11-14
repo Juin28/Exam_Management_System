@@ -128,7 +128,7 @@
                         </Button>
                      </children>
                   </HBox>
-                  <Button fx:id="submit" mnemonicParsing="false" text="Submit" onAction="#handleSubmit"/>
+                  <Button fx:id="submit" mnemonicParsing="false" onAction="#handleSubmit" text="Submit" />
                </children>
             </HBox>
          </children>

@@ -167,7 +167,7 @@ public class QuizViewController implements Initializable {
                 }
                 else{
                     Platform.runLater(() -> {
-                        MsgSender.showMsg("Time's Up!");
+                        handleSubmit();
                     });
                     timer.cancel();
                 }
