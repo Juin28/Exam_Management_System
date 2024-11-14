@@ -43,6 +43,7 @@ public class TeacherManagementController {
         teachGenderCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getGender()));
         teachDeptCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDepartment()));
         teachPasswordCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getPassword()));
+        teachPositionCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getPosition()));
 
         // Populate the table
         teachTable.setItems(teacherList);
@@ -510,5 +511,8 @@ public class TeacherManagementController {
 
     @FXML
     private TextField teachUsernameInput;
+
+    @FXML
+    private TableColumn<Teacher, String> teachPositionCol;
 
 }
