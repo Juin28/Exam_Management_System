@@ -6,3 +6,4 @@ position:Instructor,id:1731557504619,username:jason,name:jason,gender:Male,age:2
 position:Instructor,id:1731564762451,username:derulo,name:derulo,gender:Male,age:21,department:cse,password:123,
 position:Dean,id:1731567587720,username:der,name:john,gender:Male,age:21,department:SUST,password:123,
 position:Dean,id:1731567916902,username:john,name:john,gender:Male,age:21,department:CSE,password:123,
+position:Chair Professor,id:1731567753718,username:Teacher3,name:Teacher3,gender:Male,age:30,department:CSE,password:123,

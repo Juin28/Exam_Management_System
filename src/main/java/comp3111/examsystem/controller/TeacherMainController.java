@@ -33,6 +33,15 @@ public class TeacherMainController implements Initializable {
 
     @FXML
     public void openExamManageUI() {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("TeacherExamManagementUI.fxml"));
+            Stage stage = new Stage();
+            stage.setTitle("Exam Management");
+            stage.setScene(new Scene(fxmlLoader.load()));
+            stage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML
