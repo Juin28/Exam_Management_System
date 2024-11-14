@@ -30,6 +30,10 @@ public class QuizViewController implements Initializable {
     private String[] questionIds;
     private List<String> questions;
     private Map<Long, List<String>> selectedAnswers;
+    private int numOfCorrect = 0;
+    private int totalScore;
+    private int score = 0;
+    private Timer timer;
 
     @FXML
     private Label ansA;
@@ -78,8 +82,10 @@ public class QuizViewController implements Initializable {
         gradeDatabase = new Database<>(Grade.class);
         questions = new ArrayList<>();
         selectedAnswers = new HashMap<>();
+
         currentQuiz = StudentMainController.chosenQuiz;
         curStudent = StudentLoginController.loggedInStudent;
+        timer = new Timer();
 
         numQ.setText(currentQuiz.getNumQuestions());
         currQuiz.setText(currentQuiz.getCourseId() + " " + currentQuiz.getQuizName());
@@ -95,7 +101,8 @@ public class QuizViewController implements Initializable {
 
         primaryStage.setOnCloseRequest(event -> {
             checkAnswers();
-            MsgSender.showMsg("Quiz ended, your answers have been submitted.");
+            MsgSender.showMsg(numOfCorrect + "/" + currentQuiz.getNumQuestions() + " Correct, the precision is " + (numOfCorrect/Double.parseDouble(currentQuiz.getNumQuestions()))*100 + "%, the score is " + score + "/" + totalScore);
+            timer.cancel();
         });
     }
 
@@ -137,7 +144,7 @@ public class QuizViewController implements Initializable {
 
     // Helper function to set the timer
     private void setTimer(String time){
-        Timer timer = new Timer();
+//        Timer timer = new Timer();
         TimerTask task = new TimerTask() {
             int counter = Integer.parseInt(time)*60;
             @Override
@@ -192,20 +199,25 @@ public class QuizViewController implements Initializable {
     }
 
     private void checkAnswers(){
-        int score = 0;
+        score = 0;
+        numOfCorrect = 0;
         for(int i = 0; i < questionIds.length; ++i){
             Question ques = questionDatabase.queryByField("id", questionIds[i]).getFirst();
+            totalScore += Integer.parseInt(ques.getQuestionScore());
             List<String> choices = selectedAnswers.get(Long.parseLong(questionIds[i]));
-            Collections.sort(choices);
-            String ans = "";
-            for(int j = 0; j < choices.size(); ++j){
-                ans = ans.concat(choices.get(j));
+            if(choices != null){
+                Collections.sort(choices);
+                String ans = "";
+                for(int j = 0; j < choices.size(); ++j){
+                    ans = ans.concat(choices.get(j));
+                }
+                if(ans.equals(ques.getAnswer())){
+                    score += Integer.parseInt(ques.getQuestionScore());
+                    numOfCorrect += 1;
+                }
             }
-            if(ans.equals(ques.getAnswer())){
-                score += Integer.parseInt(ques.getQuestionScore());
-            }
+
         }
-//        System.out.println(score);
         Grade tmp = new Grade(String.valueOf(curStudent.getId()), String.valueOf(currentQuiz.getId()), String.valueOf(score));
         gradeDatabase.add(tmp);
     }
