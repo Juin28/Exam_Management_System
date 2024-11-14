@@ -30,7 +30,8 @@ public class TeacherManagementController {
 
         // initialize the choiceBoxes
         teachGenderInput.getItems().addAll("Male", "Female");
-        teachPosInput.getItems().addAll("Instructor", "Dean", "Professor", "Assistant Professor", "Teaching Assistant");
+        teachPosInput.getItems().addAll("Head", "Associate Head", "Chair Professor", "Professor", "Associate Professor","Assistant Professor",
+        "Senior Lecturer", "Lecturer");
 
         // load the Teacher Table
         loadTeacherTable();
