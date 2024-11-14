@@ -21,6 +21,9 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
+/**
+ * Controller for the Teacher's Exam Management page
+ */
 public class TeacherExamManagementController {
     private Database<Question> questionDatabase;
     private List<Question> allQuestions;
@@ -126,8 +129,11 @@ public class TeacherExamManagementController {
     @FXML
     private HBox questionTablesField;
 
+    /**
+     * Initialize the controller
+     */
     @FXML
-    void initialize() {
+    private void initialize() {
         this.questionDatabase = new Database<>(Question.class);
         allQuestions = questionDatabase.getAll();
         loadAllQuestions();
@@ -236,7 +242,6 @@ public class TeacherExamManagementController {
         examTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {
                 loadExamQuestions(newSelection.getId());
-//                examQuestionList = FXCollections.observableArrayList(getExamQuestionList(newSelection.getQuestionIDs()));
 
                 examNameInput.setText(newSelection.getQuizName());
                 examTimeInput.setText(newSelection.getQuizTime());
@@ -261,8 +266,12 @@ public class TeacherExamManagementController {
 
     }
 
+    /**
+     * Handle the add exam button action
+     * @param event the ActionEvent
+     */
     @FXML
-    public void addExam(ActionEvent event) {
+    private void addExam(ActionEvent event) {
         String examName = examNameInput.getText();
         String examTime = examTimeInput.getText();
         String courseID = courseIDInput.getValue();
@@ -292,12 +301,26 @@ public class TeacherExamManagementController {
         clearFields();
     }
 
+    /**
+     * Get the question IDs from the exam question list
+     * @param examQuestionList list of questions in the exam
+     * @return a string of question IDs concatenated by "|"
+     */
     private String getQuestionIDs(ObservableList<Question> examQuestionList) {
         return examQuestionList.stream()
                 .map(question -> String.valueOf(question.getId()))
                 .collect(Collectors.joining("|"));
     }
 
+    /**
+     * Check if the inputs for adding or updating an exam are valid
+     * @param examName the name of the exam
+     * @param examTime the time limit of the exam
+     * @param courseID the course ID of the exam
+     * @param publishStatus the publish status of the exam
+     * @param questionIDs the question IDs of the exam
+     * @return true if all inputs are valid, false otherwise
+     */
     private boolean validInputs(String examName, String examTime, String courseID, String publishStatus, String questionIDs) {
         // check if all fields are filled
         if (examName.isEmpty() || examTime.isEmpty() || courseID.isEmpty() || publishStatus.isEmpty()) {
@@ -329,6 +352,10 @@ public class TeacherExamManagementController {
         return true;
     }
 
+    /**
+     * Handle the delete exam button action
+     * @param event the ActionEvent
+     */
     @FXML
     public void deleteExam(ActionEvent event) {
         Quiz selectedQuiz = examTable.getSelectionModel().getSelectedItem();
@@ -356,6 +383,10 @@ public class TeacherExamManagementController {
         }
     }
 
+    /**
+     * Handle the update exam button action
+     * @param event the ActionEvent
+     */
     @FXML
     public void updateExam(ActionEvent event) {
         Quiz selectedQuiz = examTable.getSelectionModel().getSelectedItem();
@@ -407,6 +438,11 @@ public class TeacherExamManagementController {
         }
     }
 
+    /**
+     * Get the list of questions from the database
+     * @param questionIDs the string of question IDs concatenated by "|"
+     * @return the list of questions
+     */
     private List<Question> getExamQuestionList(String questionIDs) {
         List<String> questionIDsList = List.of(questionIDs.split("\\|"));
 
@@ -419,6 +455,10 @@ public class TeacherExamManagementController {
         }
     }
 
+    /**
+     * Handle the add question button action
+     * @param event the ActionEvent
+     */
     @FXML
     public void addQuestionToExams(ActionEvent event) {
         Question selectedQuestion = allQuestionsTable.getSelectionModel().getSelectedItem();
@@ -438,7 +478,6 @@ public class TeacherExamManagementController {
 
         try {
             examQuestionList.add(selectedQuestion);
-//            examQuestionsTable.getItems().setAll(examQuestionList);
         } catch (Exception e) {
             MsgSender.showMsg("An error occurred while adding the question to the exam.");
             e.printStackTrace();
@@ -449,6 +488,10 @@ public class TeacherExamManagementController {
         allQuestionsTable.getSelectionModel().clearSelection();
     }
 
+    /**
+     * Handle the remove question button action
+     * @param event the ActionEvent
+     */
     @FXML
     public void removeQuestionFromExam(ActionEvent event) {
         Question selectedQuestion = examQuestionsTable.getSelectionModel().getSelectedItem();
@@ -460,7 +503,6 @@ public class TeacherExamManagementController {
 
         try {
             examQuestionList.remove(selectedQuestion);
-//            examQuestionsTable.getItems().setAll(examQuestionList);
         } catch (Exception e) {
             MsgSender.showMsg("An error occurred while removing the question from the exam.");
             e.printStackTrace();
@@ -471,6 +513,10 @@ public class TeacherExamManagementController {
         examQuestionsTable.getSelectionModel().clearSelection();
     }
 
+    /**
+     * Handle the refresh button action
+     * @param event the ActionEvent
+     */
     @FXML
     public void refreshExamManagementPage(ActionEvent event) {
         if (examTable.getSelectionModel().getSelectedItem() != null || !examTimeInput.getText().isEmpty() ||
@@ -485,6 +531,10 @@ public class TeacherExamManagementController {
         }
     }
 
+    /**
+     * Handle the refresh button action
+     * @param event the ActionEvent
+     */
     private void refreshExamManagementPageConfirmed(ActionEvent event) {
         // reset all filters
         resetExamFilters(event);
@@ -501,6 +551,10 @@ public class TeacherExamManagementController {
         loadAllQuestions();
     }
 
+    /**
+     * Handle the reset exam filter button action
+     * @param event the ActionEvent
+     */
     @FXML
     public void resetExamFilters(ActionEvent event) {
         examNameFilterTextField.clear();
@@ -509,11 +563,19 @@ public class TeacherExamManagementController {
         loadQuizzes();
     }
 
+    /**
+     * Handle the filter exam button action
+     * @param event the ActionEvent
+     */
     @FXML
     public void filterQuizzes(ActionEvent event) {
         loadQuizzes();
     }
 
+    /**
+     * Handle the reset question filter button action
+     * @param event the ActionEvent
+     */
     @FXML
     public void resetQuestionFilters(ActionEvent event) {
         questionFilterTextField.clear();
@@ -522,23 +584,38 @@ public class TeacherExamManagementController {
         loadAllQuestions();
     }
 
+    /**
+     * Handle the filter question button action
+     * @param event the ActionEvent
+     */
     @FXML
     public void filterQuestions(ActionEvent event) {
         loadAllQuestions();
     }
 
+    /**
+     * Check if there is no filter applied for questions
+     * @return true if there is no filter applied, false otherwise
+     */
     private boolean noQuestionFilter() {
         return (questionFilterTextField.getText().isEmpty() &&
                 (typeFilterChoiceBox.getValue() == null || typeFilterChoiceBox.getValue().isEmpty()) &&
                 scoreFilterTextField.getText().isEmpty());
     }
 
+    /**
+     * Check if there is no filter applied for exams
+     * @return true if there is no filter applied, false otherwise
+     */
     private boolean noExamFilter() {
         return (examNameFilterTextField.getText().isEmpty() &&
                 (courseIDFilterChoiceBox.getValue() == null || courseIDFilterChoiceBox.getValue().isEmpty()) &&
                 (publishStatusFilterChoiceBox.getValue() == null || publishStatusFilterChoiceBox.getValue().isEmpty()));
     }
 
+    /**
+     * Load all questions from the database
+     */
     private void loadAllQuestions() {
         if (noQuestionFilter()) {
             try {
@@ -577,11 +654,17 @@ public class TeacherExamManagementController {
         allQuestionsTable.getItems().setAll(questionList);
     }
 
+    /**
+     * Load exam questions from the exam question list
+     */
     private void loadExamQuestions() {
-        // load exam questions in the exam question list
         examQuestionsTable.getItems().setAll(examQuestionList);
     }
 
+    /**
+     * Load exam questions from the database
+     * @param id the id of the exam
+     */
     private void loadExamQuestions(long id) {
         try {
             Quiz quiz = quizDatabase.queryByKey(Long.toString(id));
@@ -604,6 +687,9 @@ public class TeacherExamManagementController {
         }
     }
 
+    /**
+     * Load exams from the database
+     */
     private void loadQuizzes() {
         if (noExamFilter()) {
             try {
@@ -642,6 +728,9 @@ public class TeacherExamManagementController {
         examTable.getItems().setAll(quizList);
     }
 
+    /**
+     * Clear all fields
+     */
     private void clearFields() {
         examNameInput.clear();
         examTimeInput.clear();

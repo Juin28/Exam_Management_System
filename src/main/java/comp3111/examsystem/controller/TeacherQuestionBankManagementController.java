@@ -21,6 +21,9 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
+/**
+ * Controller for the Teacher's Question Bank Management page
+ */
 public class TeacherQuestionBankManagementController {
     private Database<Question> questionDatabase;
     private List<Question> allQuestions;
@@ -110,8 +113,11 @@ public class TeacherQuestionBankManagementController {
     @FXML
     private VBox scoreInput;
 
+    /**
+     * Initialize the controller
+     */
     @FXML
-    public void initialize() {
+    private void initialize() {
         this.questionDatabase = new Database<>(Question.class);
         allQuestions = questionDatabase.getAll();
         loadQuestions();
@@ -211,8 +217,12 @@ public class TeacherQuestionBankManagementController {
         });
     }
 
+    /**
+     * Add a question to the database
+     * @param event the ActionEvent
+     */
     @FXML
-    public void addQuestion(ActionEvent event) {
+    private void addQuestion(ActionEvent event) {
         String questionText = questionTextField.getText();
         String optionA = optionATextField.getText();
         String optionB = optionBTextField.getText();
@@ -243,6 +253,19 @@ public class TeacherQuestionBankManagementController {
         clearFields();
     }
 
+
+    /**
+     * Check if the inputs are valid
+     * @param questionText the question text
+     * @param optionA the option A
+     * @param optionB the option B
+     * @param optionC the option C
+     * @param optionD the option D
+     * @param answer the answer
+     * @param score the score
+     * @param type the type of question
+     * @return true if all inputs are valid, false otherwise
+     */
     private boolean validInputs(String questionText, String optionA, String optionB, String optionC, String optionD, String answer, String score, String type) {
         // check if all fields are filled
         if (questionText.isEmpty() || optionA.isEmpty() || optionB.isEmpty() ||
@@ -298,8 +321,12 @@ public class TeacherQuestionBankManagementController {
         return true;
     }
 
+    /**
+     * Delete a question from the database
+     * @param event the ActionEvent
+     */
     @FXML
-    void deleteQuestion(ActionEvent event) {
+    private void deleteQuestion(ActionEvent event) {
         Question selectedQuestion = questionTable.getSelectionModel().getSelectedItem();
 
         if (selectedQuestion == null) {
@@ -323,13 +350,21 @@ public class TeacherQuestionBankManagementController {
         }
     }
 
+    /**
+     * Filter the questions based on the filter criteria
+     * @param event the ActionEvent
+     */
     @FXML
-    void filterQuestions(ActionEvent event) {
+    private void filterQuestions(ActionEvent event) {
         loadQuestions();
     }
 
+    /**
+     * Refresh the question table
+     * @param event the ActionEvent
+     */
     @FXML
-    void refreshQuestion(ActionEvent event) {
+    private void refreshQuestion(ActionEvent event) {
         if (!questionTextField.getText().isEmpty() || !optionATextField.getText().isEmpty() ||
                 !optionBTextField.getText().isEmpty() || !optionCTextField.getText().isEmpty() ||
                 !optionDTextField.getText().isEmpty() || !answerTextField.getText().isEmpty() ||
@@ -343,6 +378,10 @@ public class TeacherQuestionBankManagementController {
         }
     }
 
+    /**
+     * Refresh the question table
+     * @param event the ActionEvent
+     */
     private void refreshQuestionConfirmed(ActionEvent event) {
         resetFilters(event);
         clearFields();
@@ -350,16 +389,24 @@ public class TeacherQuestionBankManagementController {
         loadQuestions();
     }
 
+    /**
+     * Reset the filters
+     * @param event the ActionEvent
+     */
     @FXML
-    void resetFilters(ActionEvent event) {
+    private void resetFilters(ActionEvent event) {
         questionFilterTextField.clear();
         scoreFilterTextField.clear();
         typeFilterChoiceBox.setValue("");
         loadQuestions();
     }
 
+    /**
+     * Update a question in the database
+     * @param event the ActionEvent
+     */
     @FXML
-    void updateQuestion(ActionEvent event) {
+    private void updateQuestion(ActionEvent event) {
         Question selectedQuestion = questionTable.getSelectionModel().getSelectedItem();
 
         if (selectedQuestion == null) {
@@ -404,12 +451,19 @@ public class TeacherQuestionBankManagementController {
         }
     }
 
+    /**
+     * Check if there is no filter applied
+     * @return true if no filter is applied, false otherwise
+     */
     private boolean noFilter() {
         return (questionFilterTextField.getText().isEmpty() &&
                 scoreFilterTextField.getText().isEmpty() &&
                 (typeFilterChoiceBox.getValue() == null || typeFilterChoiceBox.getValue().isEmpty()));
     }
 
+    /**
+     * Load the questions from the database
+     */
     private void loadQuestions() {
         if (noFilter()) {
             try {
@@ -445,6 +499,9 @@ public class TeacherQuestionBankManagementController {
         questionTable.getItems().setAll(questionList);
     }
 
+    /**
+     * Clear all the input fields
+     */
     private void clearFields() {
         questionTextField.clear();
         optionATextField.clear();
