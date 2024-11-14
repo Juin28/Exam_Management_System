@@ -17,6 +17,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class TeacherManagementController {
@@ -55,6 +56,24 @@ public class TeacherManagementController {
             teacherList = FXCollections.observableArrayList(allTeachers);
 
         }
+        else {
+            String usernameFilter = teachUsernameFilter.getText();
+            String nameFilter = teachNameFilter.getText();
+            String departmentFilter = teachDeptFilter.getText().toUpperCase();
+
+            List<Teacher> allTeachers = teacherDatabase.getAll();
+            List<Teacher> filteredTeachers = new ArrayList<>();
+
+            for (Teacher teacher : allTeachers) {
+                if ((usernameFilter.isEmpty() || usernameFilter.equals(teacher.getUsername())) &&
+                        (nameFilter.isEmpty() || nameFilter.equals(teacher.getName())) &&
+                        (departmentFilter.isEmpty() || departmentFilter.equals(teacher.getDepartment()))) {
+                    filteredTeachers.add(teacher);
+                }
+            }
+
+            teacherList = FXCollections.observableArrayList(filteredTeachers);
+        }
         teachTable.getItems().setAll(teacherList);
     }
 
@@ -90,10 +109,16 @@ public class TeacherManagementController {
 
     @FXML
     public void resetFilter(ActionEvent actionEvent) {
+        teachDeptFilter.clear();
+        teachNameFilter.clear();
+        teachUsernameFilter.clear();
+        loadTeacherTable();
     }
 
     @FXML
     public void filterTeacher(ActionEvent actionEvent) {
+        // filtering functionality is implemented in the loadTeacherTable function
+        loadTeacherTable();
     }
 
     @FXML
