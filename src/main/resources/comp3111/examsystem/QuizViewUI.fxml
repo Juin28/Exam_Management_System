@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="comp3111.examsystem.controller.QuizViewController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="comp3111.examsystem.controller.QuizViewController">
    <top>
       <HBox prefHeight="128.0" prefWidth="600.0" BorderPane.alignment="CENTER">
          <children>
@@ -128,7 +128,7 @@
                         </Button>
                      </children>
                   </HBox>
-                  <Button fx:id="submit" mnemonicParsing="false" text="Submit" />
+                  <Button fx:id="submit" mnemonicParsing="false" text="Submit" onAction="#handleSubmit"/>
                </children>
             </HBox>
          </children>

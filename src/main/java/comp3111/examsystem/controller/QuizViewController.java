@@ -11,10 +11,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
 
 import java.net.URL;
@@ -77,6 +74,9 @@ public class QuizViewController implements Initializable {
     @FXML
     private Label rTime;
 
+    @FXML
+    private Button submit;
+
     public void initialize(URL url, ResourceBundle resourceBundle) {
         questionDatabase = new Database<>(Question.class);
         gradeDatabase = new Database<>(Grade.class);
@@ -96,7 +96,7 @@ public class QuizViewController implements Initializable {
         Platform.runLater(this::setupCloseRequestHandler);
     }
 
-    private void setupCloseRequestHandler() {
+    public void setupCloseRequestHandler() {
         Stage primaryStage = (Stage) currQuiz.getScene().getWindow();
 
         primaryStage.setOnCloseRequest(event -> {
@@ -105,6 +105,15 @@ public class QuizViewController implements Initializable {
             timer.cancel();
         });
     }
+
+    @FXML
+    private void handleSubmit() {
+        checkAnswers();  // Check answers when submitting
+        MsgSender.showMsg(numOfCorrect + "/" + currentQuiz.getNumQuestions() + " Correct, the precision is " + (numOfCorrect / (double) Integer.parseInt(currentQuiz.getNumQuestions())) * 100 + "%, the score is " + score + "/" + totalScore);
+        Stage primaryStage = (Stage) submit.getScene().getWindow();
+        primaryStage.close();  // Close the window after submitting
+    }
+
 
     // Helper function to show question details
     private void showQuestionDet(Quiz currentQ) {
