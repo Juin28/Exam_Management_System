@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<FlowPane fx:id="rootPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="750.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="comp3111.examsystem.controller.TeacherExamManagementController">
+    <children>
+        <HBox fx:id="filterPanel" alignment="CENTER" prefHeight="90" prefWidth="1200.0" spacing="10.0">
+            <children>
+                <HBox fx:id="examFilterPanel" alignment="CENTER_LEFT" prefHeight="70.0" prefWidth="600.0" spacing="8.0">
+                    <children>
+                        <Label text="Exam Name:" />
+                        <TextField fx:id="examNameFilterTextField" prefHeight="26.0" prefWidth="94.0" />
+
+                        <Label text="Course ID:" />
+                        <ChoiceBox fx:id="courseIDFilterChoiceBox" prefHeight="26.0" prefWidth="83.0" />
+                        <Label layoutX="115.0" layoutY="10.0" text="Publish:" />
+                        <ChoiceBox fx:id="publishStatusFilterChoiceBox" layoutX="123.0" layoutY="10.0" prefHeight="26.0" prefWidth="72.0" />
+
+                        <Button fx:id="examFilterResetButton" mnemonicParsing="false" onAction="#resetExamFilters" text="Reset" />
+                        <Button fx:id="examFilterButton" layoutX="185.0" layoutY="10.0" mnemonicParsing="false" onAction="#filterQuizzes" text="Filter" />
+                    </children>
+                </HBox>
+                <HBox fx:id="questionFilterPanel" alignment="CENTER_RIGHT" prefHeight="70.0" prefWidth="600.0" spacing="6.0">
+                    <children>
+                        <Label text="Question:" />
+                        <TextField fx:id="questionFilterTextField" prefHeight="26.0" prefWidth="118.0" />
+                        <Label text="Type:" />
+                        <ChoiceBox fx:id="typeFilterChoiceBox" prefHeight="26.0" prefWidth="76.0" />
+                        <Label text="Score:" />
+                        <TextField fx:id="scoreFilterTextField" prefHeight="26.0" prefWidth="51.0">
+
+                            <opaqueInsets>
+                                <Insets bottom="10.0" />
+                            </opaqueInsets>
+
+                        </TextField>
+                        <Button fx:id="questionFilterResetButton" mnemonicParsing="false" onAction="#resetQuestionFilters" text="Reset" />
+                        <Button fx:id="questionFilterButton" mnemonicParsing="false" onAction="#filterQuestions" text="Filter" />
+                    </children>
+                </HBox>
+            </children>
+            <padding>
+                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+            </padding>
+            <FlowPane.margin>
+                <Insets bottom="10.0" top="10.0" />
+            </FlowPane.margin>
+        </HBox>
+        <HBox fx:id="examManagementPanel" alignment="CENTER_LEFT" prefHeight="550.0" prefWidth="1200.0">
+            <children>
+                <TableView fx:id="examTable" prefHeight="460.0" prefWidth="450.0">
+                    <columns>
+                        <TableColumn fx:id="examNameColumn" prefWidth="98.91385006904602" text="Exam Name" />
+                        <TableColumn fx:id="examCourseIDColumn" prefWidth="66.64290618896484" text="Course ID" />
+                        <TableColumn fx:id="examTimeColumn" prefWidth="78.11137390136719" text="Exam Time" />
+                        <TableColumn fx:id="examPublishStatusColumn" prefWidth="70.73745727539062" text="Publish" />
+                    </columns>
+                    <HBox.margin>
+                        <Insets />
+                    </HBox.margin>
+                </TableView>
+                <VBox fx:id="examManagementField" prefHeight="460.0" prefWidth="800.0">
+                    <children>
+                        <HBox fx:id="questionTablesField" prefHeight="382.0" prefWidth="775.0">
+                            <children>
+                                <TableView fx:id="examQuestionsTable" prefHeight="441.0" prefWidth="636.0">
+                                    <columns>
+                                        <TableColumn fx:id="examQuestionColumn" prefWidth="200.0" text="Question in Exam" />
+                                        <TableColumn fx:id="examQuestionTypeColumn" prefWidth="93.0" text="Type" />
+                                        <TableColumn fx:id="examQuestionScoreColumn" prefWidth="93.0" text="Score" />
+                                    </columns>
+                                </TableView>
+                                <TableView fx:id="allQuestionsTable" layoutX="10.0" layoutY="10.0" prefHeight="441.0" prefWidth="636.0">
+                                    <columns>
+                                        <TableColumn fx:id="questionColumn" prefWidth="200.0" text="Question" />
+                                        <TableColumn fx:id="questionTypeColumn" prefWidth="93.0" text="Type" />
+                                        <TableColumn fx:id="questionScoreColumn" prefWidth="93.0" text="Score" />
+                                    </columns>
+                                </TableView>
+                            </children>
+                        </HBox>
+                        <HBox alignment="CENTER" prefHeight="49.0" prefWidth="538.0" spacing="20.0">
+                            <children>
+                                <Button fx:id="removeQuestionButton" mnemonicParsing="false" onAction="#removeQuestionFromExam" text="Delete from left" />
+                                <Button fx:id="addQuestionButton" mnemonicParsing="false" onAction="#addQuestionToExams" text="Add to left" />
+                            </children>
+                            <VBox.margin>
+                                <Insets bottom="10.0" top="10.0" />
+                            </VBox.margin>
+                        </HBox>
+                        <VBox fx:id="questionInputFields" alignment="CENTER_LEFT">
+                            <children>
+
+                                <VBox fx:id="optionCInput">
+                                    <Label layoutX="25.0" layoutY="259.0" text="Exam Name:" />
+                                    <TextField fx:id="examNameInput" layoutX="25.0" layoutY="276.0">
+                                        <VBox.margin>
+                                            <Insets bottom="10.0" />
+                                        </VBox.margin>
+                                    </TextField>
+                                </VBox>
+
+                                <VBox fx:id="optionDInput">
+                                    <Label layoutX="25.0" layoutY="281.0" text="Exam Time:" />
+                                    <TextField fx:id="examTimeInput" layoutX="25.0" layoutY="298.0">
+                                        <VBox.margin>
+                                            <Insets bottom="10.0" />
+                                        </VBox.margin>
+                                    </TextField>
+                                </VBox>
+                                <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0">
+                                    <children>
+                                        <HBox prefHeight="100.0" prefWidth="280.0">
+                                            <children>
+                                                <VBox prefHeight="200.0" prefWidth="100.0">
+                                                    <children>
+                                                        <Label text="Course ID:" />
+                                                        <ChoiceBox fx:id="courseIDInput" prefHeight="26.0" prefWidth="160.0" />
+                                                    </children>
+                                                </VBox>
+                                            </children>
+                                        </HBox>
+                                        <HBox prefHeight="100.0" prefWidth="280.0">
+                                            <children>
+                                                <VBox prefHeight="200.0" prefWidth="100.0">
+                                                    <children>
+                                                        <Label text="Publish:" />
+                                                        <ChoiceBox fx:id="publishInput" prefHeight="26.0" prefWidth="160.0" />
+                                                    </children>
+                                                </VBox>
+                                            </children>
+                                        </HBox>
+                                    </children>
+                                </HBox>
+
+                            </children>
+                            <padding>
+                                <Insets left="10.0" right="10.0" />
+                            </padding>
+                        </VBox>
+                    </children>
+                </VBox>
+            </children>
+        </HBox>
+        <HBox fx:id="examManagementButtons" alignment="CENTER_RIGHT" prefHeight="90.0" prefWidth="1200.0" spacing="10.0">
+            <children>
+                <Button fx:id="deleteButton" mnemonicParsing="false" onAction="#deleteExam" text="Delete" />
+
+                <Button fx:id="refreshButton" mnemonicParsing="false" onAction="#refreshExamManagementPage" text="Refresh">
+                    <HBox.margin>
+                        <Insets left="10.0" right="20.0" />
+                    </HBox.margin>
+                </Button>
+
+                <Button fx:id="addButton" mnemonicParsing="false" onAction="#addExam" text="Add">
+                    <HBox.margin>
+                        <Insets left="20.0" right="10.0" />
+                    </HBox.margin>
+                </Button>
+
+                <Button fx:id="updateButton" mnemonicParsing="false" onAction="#updateExam" text="Update" textAlignment="RIGHT">
+                    <HBox.margin>
+                        <Insets right="15.0" />
+                    </HBox.margin>
+                </Button>
+            </children>
+
+            <padding>
+                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+            </padding>
+        </HBox>
+    </children>
+</FlowPane>

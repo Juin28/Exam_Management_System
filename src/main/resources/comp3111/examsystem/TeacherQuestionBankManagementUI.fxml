@@ -2,7 +2,6 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
@@ -12,114 +11,128 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="comp3111.examsystem.controller.TeacherQuestionBankManagementController">
+<FlowPane fx:id="rootPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="650.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="comp3111.examsystem.controller.TeacherQuestionBankManagementController">
     <children>
-        <FlowPane prefHeight="200.0" prefWidth="200.0" prefWrapLength="700.0" fx:id="rootPane">
+        <HBox fx:id="filterManagementFields" alignment="CENTER" prefHeight="90" spacing="10.0">
             <children>
-                <HBox alignment="CENTER" prefHeight="46.0" prefWidth="800.0" spacing="10.0">
-                    <children>
-                        <Label text="Question" />
-                        <TextField fx:id="questionFilterTextField" />
+                <Label text="Question" />
+                <TextField fx:id="questionFilterTextField" />
 
-                        <Label text="Type" />
-                        <ChoiceBox fx:id="typeFilterChoiceBox" prefWidth="150.0">
-                            <VBox.margin>
-                                <Insets bottom="10.0" />
-                            </VBox.margin>
-                        </ChoiceBox>
+                <Label text="Type" />
+                <ChoiceBox fx:id="typeFilterChoiceBox" prefWidth="150.0">
+                    <VBox.margin>
+                        <Insets bottom="10.0" />
+                    </VBox.margin>
+                </ChoiceBox>
 
-                        <Label text="Score" />
-                        <TextField fx:id="scoreFilterTextField">
+                <Label text="Score" />
+                <TextField fx:id="scoreFilterTextField">
 
-                            <opaqueInsets>
-                                <Insets bottom="10.0" />
-                            </opaqueInsets>
+                    <opaqueInsets>
+                        <Insets bottom="10.0" />
+                    </opaqueInsets>
 
-                        </TextField>
+                </TextField>
 
-                        <Button fx:id="resetButton" mnemonicParsing="false" onAction="#resetFilters" text="Reset" />
+                <Button fx:id="resetButton" mnemonicParsing="false" onAction="#resetFilters" text="Reset" />
 
-                        <Button fx:id="filterButton" mnemonicParsing="false" onAction="#filterQuestions" text="Filter" />
-                    </children>
-                    <padding>
-                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                    </padding>
-                    <FlowPane.margin>
-                        <Insets bottom="10.0" top="10.0" />
-                    </FlowPane.margin>
-                </HBox>
-                <TableView fx:id="questionTable" prefHeight="479.0" prefWidth="637.0">
+                <Button fx:id="filterButton" mnemonicParsing="false" onAction="#filterQuestions" text="Filter" />
+            </children>
+            <padding>
+                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+            </padding>
+            <FlowPane.margin>
+                <Insets bottom="10.0" top="10.0" />
+            </FlowPane.margin>
+        </HBox>
+        <HBox fx:id="tableAndQuestionInputFields" alignment="CENTER" prefHeight="452.0" prefWidth="821.0" spacing="10.0">
+            <children>
+                <TableView fx:id="questionTable">
                     <columns>
                         <TableColumn fx:id="questionColumn" prefWidth="188" text="Question" />
-
                         <TableColumn fx:id="optionAColumn" prefWidth="76.4" text="Option A" />
-
                         <TableColumn fx:id="optionBColumn" prefWidth="76.4" text="Option B" />
-
                         <TableColumn fx:id="optionCColumn" prefWidth="76.4" text="Option C" />
-
                         <TableColumn fx:id="optionDColumn" prefWidth="76.4" text="Option D" />
-
                         <TableColumn fx:id="answerColumn" prefWidth="38.2" text="Answer" />
-
                         <TableColumn fx:id="typeColumn" prefWidth="63.9" text="Type" />
-
                         <TableColumn fx:id="scoreColumn" prefWidth="38.2" text="Score" />
                     </columns>
+                    <HBox.margin>
+                        <Insets right="5.0" />
+                    </HBox.margin>
                 </TableView>
-                <VBox alignment="CENTER_LEFT" prefHeight="455.0" prefWidth="163.0">
+                <VBox fx:id="questionInputFields" alignment="CENTER_LEFT">
                     <children>
-                        <Label text="Question:" />
-                        <TextField fx:id="questionTextField" prefHeight="46.0" prefWidth="164.0">
-                            <VBox.margin>
-                                <Insets bottom="10.0" />
-                            </VBox.margin>
-                        </TextField>
 
-                        <Label layoutX="25.0" layoutY="216.0" text="Option A:" />
-                        <TextField fx:id="optionATextField" layoutX="25.0" layoutY="233.0">
-                            <VBox.margin>
-                                <Insets bottom="10.0" />
-                            </VBox.margin>
-                        </TextField>
+                        <VBox fx:id="questionInput">
+                            <Label text="Question:" />
+                            <TextField fx:id="questionTextField">
+                                <VBox.margin>
+                                    <Insets bottom="10.0" />
+                                </VBox.margin>
+                            </TextField>
+                        </VBox>
 
-                        <Label layoutX="25.0" layoutY="238.0" text="Option B:" />
-                        <TextField fx:id="optionBTextField" layoutX="25.0" layoutY="255.0">
-                            <VBox.margin>
-                                <Insets bottom="10.0" />
-                            </VBox.margin>
-                        </TextField>
+                        <VBox fx:id="optionAInput">
+                            <Label layoutX="25.0" layoutY="216.0" text="Option A:" />
+                            <TextField fx:id="optionATextField" layoutX="25.0" layoutY="233.0">
+                                <VBox.margin>
+                                    <Insets bottom="10.0" />
+                                </VBox.margin>
+                            </TextField>
+                        </VBox>
 
-                        <Label layoutX="25.0" layoutY="259.0" text="Option C:" />
-                        <TextField fx:id="optionCTextField" layoutX="25.0" layoutY="276.0">
-                            <VBox.margin>
-                                <Insets bottom="10.0" />
-                            </VBox.margin>
-                        </TextField>
+                        <VBox fx:id="optionBInput">
+                            <Label layoutX="25.0" layoutY="238.0" text="Option B:" />
+                            <TextField fx:id="optionBTextField" layoutX="25.0" layoutY="255.0">
+                                <VBox.margin>
+                                    <Insets bottom="10.0" />
+                                </VBox.margin>
+                            </TextField>
+                        </VBox>
 
-                        <Label layoutX="25.0" layoutY="281.0" text="Option D:" />
-                        <TextField fx:id="optionDTextField" layoutX="25.0" layoutY="298.0">
-                            <VBox.margin>
-                                <Insets bottom="10.0" />
-                            </VBox.margin>
-                        </TextField>
+                        <VBox fx:id="optionCInput">
+                            <Label layoutX="25.0" layoutY="259.0" text="Option C:" />
+                            <TextField fx:id="optionCTextField" layoutX="25.0" layoutY="276.0">
+                                <VBox.margin>
+                                    <Insets bottom="10.0" />
+                                </VBox.margin>
+                            </TextField>
+                        </VBox>
 
-                        <Label layoutX="25.0" layoutY="302.0" text="Answer:" />
-                        <TextField fx:id="answerTextField" layoutX="25.0" layoutY="319.0">
-                            <VBox.margin>
-                                <Insets bottom="10.0" />
-                            </VBox.margin>
-                        </TextField>
+                        <VBox fx:id="optionDInput">
+                            <Label layoutX="25.0" layoutY="281.0" text="Option D:" />
+                            <TextField fx:id="optionDTextField" layoutX="25.0" layoutY="298.0">
+                                <VBox.margin>
+                                    <Insets bottom="10.0" />
+                                </VBox.margin>
+                            </TextField>
+                        </VBox>
 
-                        <Label text="Type" />
-                        <ChoiceBox fx:id="typeChoiceBox" prefWidth="150.0">
-                            <VBox.margin>
-                                <Insets bottom="10.0" />
-                            </VBox.margin>
-                        </ChoiceBox>
+                        <VBox fx:id="answerInput">
+                            <Label layoutX="25.0" layoutY="302.0" text="Answer:" />
+                            <TextField fx:id="answerTextField" layoutX="25.0" layoutY="319.0">
+                                <VBox.margin>
+                                    <Insets bottom="10.0" />
+                                </VBox.margin>
+                            </TextField>
+                        </VBox>
 
-                        <Label text="Score:" />
-                        <TextField fx:id="scoreTextField" />
+                        <VBox fx:id="typeInput">
+                            <Label text="Type" />
+                            <ChoiceBox fx:id="typeChoiceBox">
+                                <VBox.margin>
+                                    <Insets bottom="10.0" />
+                                </VBox.margin>
+                            </ChoiceBox>
+                        </VBox>
+
+                        <VBox fx:id="scoreInput">
+                            <Label text="Score:" />
+                            <TextField fx:id="scoreTextField" />
+                        </VBox>
+
                     </children>
 
                     <FlowPane.margin>
@@ -127,33 +140,37 @@
                     </FlowPane.margin>
 
                     <padding>
-                        <Insets left="15.0" right="15.0" />
+                        <Insets left="5.0" right="5.0" />
                     </padding>
                 </VBox>
-                <HBox alignment="CENTER_RIGHT" prefHeight="59.0" prefWidth="800.0" spacing="10.0">
-                    <children>
-                        <Button fx:id="deleteButton" mnemonicParsing="false" onAction="#deleteQuestion" text="Delete" />
-
-                        <Button fx:id="refreshButton" mnemonicParsing="false" onAction="#refreshQuestion" text="Refresh">
-                        <HBox.margin>
-                            <Insets left="10.0" right="20.0" />
-                        </HBox.margin>
-                        </Button>
-
-                        <Button fx:id="addButton" mnemonicParsing="false" onAction="#addQuestion" text="Add">
-                        <HBox.margin>
-                            <Insets left="20.0" right="10.0" />
-                        </HBox.margin>
-                        </Button>
-
-                        <Button fx:id="updateButton" mnemonicParsing="false" onAction="#updateQuestion" text="Update" textAlignment="RIGHT" />
-                    </children>
-
-                    <padding>
-                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                    </padding>
-                </HBox>
             </children>
-        </FlowPane>
+        </HBox>
+        <HBox fx:id="questionManagementButtons" alignment="CENTER_RIGHT" prefHeight="90" prefWidth="820.0" spacing="10.0">
+            <children>
+                <Button fx:id="deleteButton" mnemonicParsing="false" onAction="#deleteQuestion" text="Delete" />
+
+                <Button fx:id="refreshButton" mnemonicParsing="false" onAction="#refreshQuestion" text="Refresh">
+                    <HBox.margin>
+                        <Insets left="10.0" right="20.0" />
+                    </HBox.margin>
+                </Button>
+
+                <Button fx:id="addButton" mnemonicParsing="false" onAction="#addQuestion" text="Add">
+                    <HBox.margin>
+                        <Insets left="20.0" right="10.0" />
+                    </HBox.margin>
+                </Button>
+
+                <Button fx:id="updateButton" mnemonicParsing="false" onAction="#updateQuestion" text="Update" textAlignment="RIGHT">
+                    <HBox.margin>
+                        <Insets right="15.0" />
+                    </HBox.margin>
+                </Button>
+            </children>
+
+            <padding>
+                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+            </padding>
+        </HBox>
     </children>
-</VBox>
+</FlowPane>
