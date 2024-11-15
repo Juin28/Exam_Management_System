@@ -1,6 +1,5 @@
 package comp3111.examsystem.controller;
 
-import comp3111.examsystem.model.Question;
 import comp3111.examsystem.model.Teacher;
 import comp3111.examsystem.service.Database;
 import comp3111.examsystem.service.MsgSender;
@@ -9,12 +8,9 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TextField;
-import javafx.scene.control.TableView;
-import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.control.*;
+import javafx.scene.input.MouseEvent;
 
 
 import java.util.ArrayList;
@@ -44,6 +40,39 @@ public class TeacherManagementController {
         teachDeptCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDepartment()));
         teachPasswordCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getPassword()));
         teachPositionCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getPosition()));
+
+        // Set up the listener for the table selection
+        teachTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+            if (newSelection != null) {
+                teachNameInput.setText(newSelection.getName());
+                teachUsernameInput.setText(newSelection.getUsername());
+                teachDeptInput.setText(newSelection.getDepartment());
+                teachAgeInput.setText(newSelection.getAge());
+                teachPosInput.setValue(newSelection.getPosition());
+                teachGenderInput.setValue(newSelection.getGender());
+                teachPasswordInput.setText(newSelection.getPassword());
+            }
+        });
+
+        // Clear the selection when clicking on the table itself with no question selected
+        teachTable.setRowFactory(tv -> {
+            TableRow<Teacher> row = new TableRow<>();
+            row.setOnMouseClicked(event -> {
+                if (row.isEmpty()) {
+                    teachTable.getSelectionModel().clearSelection();
+                    clearFields();
+                }
+            });
+            return row;
+        });
+
+        // Add a mouse click event to the rootPane
+        rootPane.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> {
+            // Check if the click is outside the TableView
+            if (!teachTable.isHover()) {
+                clearFields();
+            }
+        });
 
         // Populate the table
         teachTable.setItems(teacherList);
@@ -162,11 +191,7 @@ public class TeacherManagementController {
     }
 
     @FXML
-    public void refreshTeacher(ActionEvent actionEvent) {
-        // this function will reset all the filters, reload the table and clear the input fields
-        teachDeptFilter.clear();
-        teachNameFilter.clear();
-        teachUsernameFilter.clear();
+    private void clearFields() {
         teachUsernameInput.clear();
         teachNameInput.clear();
         teachAgeInput.clear();
@@ -174,6 +199,17 @@ public class TeacherManagementController {
         teachPasswordInput.clear();
         teachGenderInput.setValue(null);
         teachPosInput.setValue(null);
+    }
+
+    @FXML
+    public void refreshTeacher(ActionEvent actionEvent) {
+        // this function will reset all the filters, reload the table and clear the input fields
+        teachDeptFilter.clear();
+        teachNameFilter.clear();
+        teachUsernameFilter.clear();
+
+        // clear input fields
+        clearFields();
 
         // reload the teacher Table
         loadTeacherTable();
@@ -514,5 +550,8 @@ public class TeacherManagementController {
 
     @FXML
     private TableColumn<Teacher, String> teachPositionCol;
+
+    @FXML
+    private AnchorPane rootPane;
 
 }
