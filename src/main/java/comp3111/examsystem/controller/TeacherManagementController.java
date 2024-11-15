@@ -117,7 +117,6 @@ public class TeacherManagementController {
 
     @FXML
     public boolean updateTeacher(ActionEvent actionEvent) {
-        System.out.println("Updating Teacher");
         boolean found = false;
         if (teachUsernameInput.getText().isEmpty()) {
             MsgSender.showMsg("Username field cannot be empty. Please enter a valid username.");
@@ -228,7 +227,6 @@ public class TeacherManagementController {
 
     @FXML
     public void addTeacher(ActionEvent actionEvent) {
-        System.out.println("Adding Teacher");
         boolean valid = validateAddInput();
         if (valid)
         {
