@@ -117,34 +117,21 @@ public class TeacherManagementController {
 
     @FXML
     public boolean updateTeacher(ActionEvent actionEvent) {
-        boolean found = false;
-        if (teachUsernameInput.getText().isEmpty()) {
-            MsgSender.showMsg("Username field cannot be empty. Please enter a valid username.");
+        Teacher teacher = teachTable.getSelectionModel().getSelectedItem();
+        List<String> changes = new ArrayList<>();
+
+        boolean valid = validateUpdateInput(teacher, changes);
+        if (valid && !changes.isEmpty()) {
+            // successfully validated the changes, show a confirmation message
+            MsgSender.showUpdateConfirm("Update Teacher: " + teacher.getUsername(), changes, () -> updateTeacherInDatabase(teacher));
+            return true;
+        }
+        // no changes detected
+        if (valid) {
+            MsgSender.showMsg("No changes detected");
             return false;
         }
-        for (Teacher teacher : allTeachers) {
-            if (teacher.getUsername().equals(teachUsernameInput.getText())) {
-                // found the teacher, we now validate the changes
-                found = true;
-                List<String> changes = new ArrayList<>();
-                boolean valid = validateUpdateInput(teacher, changes);
-                if (valid && !changes.isEmpty()) {
-                    // successfully validated the changes, show a confirmation message
-                    MsgSender.showUpdateConfirm("Update Teacher: " + teacher.getUsername(), changes, () -> updateTeacherInDatabase(teacher));
-                    return true;
-                }
-                // no changes detected
-                if (valid) {
-                    MsgSender.showMsg("No changes detected");
-                    return false;
-                }
-            }
-        }
 
-        // username of teacher cannot be found, means that the user has tried to change the username
-        if (!found) {
-            MsgSender.showMsg("Username cannot be changed");
-        }
         return false;
     }
 
@@ -163,27 +150,11 @@ public class TeacherManagementController {
     }
 
     @FXML
-    public boolean deleteTeacher(ActionEvent actionEvent) {
-        String username = teachUsernameInput.getText();
-        if (username.isEmpty())
-        {
-            MsgSender.showMsg("Username field cannot be empty. Please enter a valid username.");
-        }
-        else
-        {
-            for (Teacher teacher : allTeachers)
-            {
-                if (teacher.getUsername().equals(username))
-                {
-                    // found the teacher, show a confirmation message
-                    MsgSender.showConfirm("Delete Teacher", "Are you sure you want to delete teacher with username: " + username + " ?", () -> deleteTeacherFromDatabase(teacher));
-                    return true;
-                }
-            }
-            // username of teacher cannot be found
-            MsgSender.showMsg("Teacher cannot be found. Please enter a valid username.");
-        }
-        return false;
+    public void deleteTeacher(ActionEvent actionEvent) {
+        // delete teacher according to selection model
+        Teacher teacher = teachTable.getSelectionModel().getSelectedItem();
+        String username = teacher.getUsername();
+        MsgSender.showConfirm("Delete Teacher", "Are you sure you want to delete teacher with username: " + username + " ?", () -> deleteTeacherFromDatabase(teacher));
     }
 
     private void deleteTeacherFromDatabase(Teacher teacher)
