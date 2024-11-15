@@ -54,7 +54,7 @@ public class TeacherManagementController {
             }
         });
 
-        // Clear the selection when clicking on the table itself with no question selected
+        // Clear the selection when clicking on the table itself with no teacher selected
         teachTable.setRowFactory(tv -> {
             TableRow<Teacher> row = new TableRow<>();
             row.setOnMouseClicked(event -> {
