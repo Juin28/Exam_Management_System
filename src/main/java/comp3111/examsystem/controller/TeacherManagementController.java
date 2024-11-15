@@ -118,6 +118,7 @@ public class TeacherManagementController {
     @FXML
     public boolean updateTeacher(ActionEvent actionEvent) {
         System.out.println("Updating Teacher");
+        boolean found = false;
         if (teachUsernameInput.getText().isEmpty()) {
             MsgSender.showMsg("Username field cannot be empty. Please enter a valid username.");
             return false;
@@ -125,17 +126,26 @@ public class TeacherManagementController {
         for (Teacher teacher : allTeachers) {
             if (teacher.getUsername().equals(teachUsernameInput.getText())) {
                 // found the teacher, we now validate the changes
-                boolean valid = validateUpdateInput(teacher);
-                if (valid) {
+                found = true;
+                List<String> changes = new ArrayList<>();
+                boolean valid = validateUpdateInput(teacher, changes);
+                if (valid && !changes.isEmpty()) {
                     // successfully validated the changes, show a confirmation message
-                    MsgSender.showConfirm("Update Teacher", "Are you sure you want to update teacher with username: " + teacher.getUsername() + " ?", () -> updateTeacherInDatabase(teacher));
+                    MsgSender.showUpdateConfirm("Update Teacher: " + teacher.getUsername(), changes, () -> updateTeacherInDatabase(teacher));
+                    return true;
                 }
-                return true;
+                // no changes detected
+                if (valid) {
+                    MsgSender.showMsg("No changes detected");
+                    return false;
+                }
             }
         }
 
-        // username of teacher cannot be found
-        MsgSender.showMsg("Teacher cannot be found. Please enter a valid username.");
+        // username of teacher cannot be found, means that the user has tried to change the username
+        if (!found) {
+            MsgSender.showMsg("Username cannot be changed");
+        }
         return false;
     }
 
@@ -231,95 +241,96 @@ public class TeacherManagementController {
      *
      * @return Teacher     returns the updated Teacher object
      */
-    public boolean validateUpdateInput(Teacher teacher)
+    public boolean validateUpdateInput(Teacher teacher, List<String>changes)
     {
         // found the teacher, we now validate the rest of the inputs
+        String username = teachUsernameInput.getText();
         String name = teachNameInput.getText();
         String age = teachAgeInput.getText();
         String department = teachDeptInput.getText();
         String password = teachPasswordInput.getText();
+        String gender = teachGenderInput.getValue();
+        String position = teachPosInput.getValue();
 
-        // check which inputs are not null, we then use that to determine which fields to update
-        if (!name.isEmpty())
+        // check that all fields are filled
+        if (username.isEmpty() || name.isEmpty() || age.isEmpty() || department.isEmpty() || password.isEmpty() || gender.isEmpty() || position.isEmpty())
         {
-            // name is the same, prompt a different name
-            if (name.equals(teacher.getName()))
-            {
-                MsgSender.showMsg("Name is the same. Please input a different name");
-                return false;
-            }
-            if (!name.matches("^[a-zA-Z]*$"))
-            {
-                MsgSender.showMsg("Name must only contain alphabets");
-                return false;
-            }
+            MsgSender.showMsg("Please fill in all fields");
+            return false;
         }
 
-        if (!age.isEmpty())
+        // check that the username is the same
+        if (!username.equals(teacher.getUsername()))
         {
-            if (!validateAge(age))
-            {
-                MsgSender.showMsg("Please input a valid age");
-                return false;
-            }
-            // age is the same, prompt a different age
-            if (age.equals(teacher.getAge()))
-            {
-                MsgSender.showMsg("Age is the same. Please input a different age");
-                return false;
-            }
+            MsgSender.showMsg("Username must be the same!");
+            return false;
         }
-        if (!department.isEmpty())
-        {
-            department = department.toUpperCase();
-            if (!validateDepartment(department))
-            {
-                MsgSender.showMsg("Please input a valid department");
-                return false;
-            }
 
-            // department is the same, prompt a different department
-            if (department.equals(teacher.getDepartment()))
-            {
-                MsgSender.showMsg("Department is the same. Please input a different department");
-                return false;
-            }
-        }
-        if (!password.isEmpty())
+        // check the fields that are different, show a confirmation message to verify that
+        // if name is not in alphabets, return false
+        if (!name.matches("^[a-zA-Z]*$"))
         {
-            // password is the same, prompt a different password
-            if (password.equals(teacher.getPassword()))
-            {
-                MsgSender.showMsg("Password is the same. Please input a different password");
-                return false;
-            }
+            MsgSender.showMsg("Name must only contain alphabets");
+            return false;
         }
-        if (teachGenderInput.getValue() != null)
+
+        // add name into "changes" array if the name is different
+        if (!name.equals(teacher.getName()))
         {
-            // gender is the same, prompt a different gender
-            if (teachGenderInput.getValue().equals(teacher.getGender()))
-            {
-                MsgSender.showMsg("Gender is the same. Please input a different gender");
-                return false;
-            }
+            changes.add("Name: "+ name);
         }
-        if (teachPosInput.getValue() != null)
+
+        // validate the age
+        if (!validateAge(age))
         {
-            // position is the same, prompt a different position
-            if (teachPosInput.getValue().equals(teacher.getPosition()))
-            {
-                MsgSender.showMsg("Position is the same. Please input a different position");
-                return false;
-            }
+            return false;
+        }
+
+        // age is different, add into "changes" array
+        if (!age.equals(teacher.getAge()))
+        {
+            changes.add("Age: "+ age);
+        }
+
+        department = department.toUpperCase();
+        // validate the department
+        if (!validateDepartment(department))
+        {
+            MsgSender.showMsg("Please input a valid department");
+            return false;
+        }
+
+        // department is not the same, add into "changes" array
+        if (!department.equals(teacher.getDepartment()))
+        {
+            changes.add("Department: "+ department);
+        }
+
+        // password is not the same, add into "changes" array
+        if (!password.equals(teacher.getPassword()))
+        {
+            changes.add("Password: "+ password);
+        }
+
+        // gender is not the same, add into "changes" array
+        if (!gender.equals(teacher.getGender()))
+        {
+            changes.add("Gender: "+ gender);
+        }
+
+        // position is not the same, add into "changes" array
+        if (!position.equals(teacher.getPosition()))
+        {
+            changes.add("Position: "+ position);
         }
 
         // successfully validated input, set the corresponding values and return true
-        if (!name.isEmpty()){teacher.setName(name);}
-        if (!age.isEmpty()){teacher.setAge(age);}
-        if (!department.isEmpty()){teacher.setDepartment(department);}
-        if (!password.isEmpty()){teacher.setPassword(password);}
-        if (teachGenderInput.getValue() != null){teacher.setGender(teachGenderInput.getValue());}
-        if (teachPosInput.getValue() != null){teacher.setPosition(teachPosInput.getValue());}
+        teacher.setName(name);
+        teacher.setAge(age);
+        teacher.setDepartment(department);
+        teacher.setPassword(password);
+        teacher.setGender(gender);
+        teacher.setPosition(teachPosInput.getValue());
 
         return true;
     }
