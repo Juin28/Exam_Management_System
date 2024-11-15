@@ -53,7 +53,7 @@
                               </TableView>
                            </children>
                         </AnchorPane>
-                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="331.0" prefWidth="194.0">
+                      <AnchorPane fx:id="AnchorWithInputs" minHeight="0.0" minWidth="0.0" prefHeight="331.0" prefWidth="194.0">
                            <children>
                               <Text layoutX="14.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Username:" />
                               <Text layoutX="15.0" layoutY="71.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Name:" />

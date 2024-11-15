@@ -70,7 +70,8 @@ public class TeacherManagementController {
         rootPane.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> {
             // Check if the click is outside the TableView
             if (!teachTable.isHover()) {
-                clearFields();
+                if (!AnchorWithInputs.isHover())
+                {clearFields();}
             }
         });
 
@@ -553,5 +554,8 @@ public class TeacherManagementController {
 
     @FXML
     private AnchorPane rootPane;
+
+    @FXML
+    private AnchorPane AnchorWithInputs;
 
 }
