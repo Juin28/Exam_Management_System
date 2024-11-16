@@ -337,7 +337,7 @@ public class CourseManagementController {
         {
             for (Quiz quiz : quizzesToDelete)
             {
-                if (grade.getQuestionId() == quiz.getId())
+                if (Long.parseLong(grade.getQuestionId()) == quiz.getId())
                 {
                     // TODO: implement grade deletion
                     try
