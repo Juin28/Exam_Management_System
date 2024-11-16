@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="comp3111.examsystem.controller.QuizViewController">
+   <top>
+      <HBox prefHeight="128.0" prefWidth="600.0" BorderPane.alignment="CENTER">
+         <children>
+            <VBox prefHeight="128.0" prefWidth="628.0">
+               <children>
+                  <HBox prefHeight="100.0" prefWidth="200.0">
+                     <children>
+                        <Label fx:id="currQuiz" alignment="CENTER" prefHeight="58.0" prefWidth="600.0" text="Current Quiz" textAlignment="CENTER">
+                           <font>
+                              <Font size="37.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </HBox>
+                  <HBox prefHeight="77.0" prefWidth="600.0">
+                     <children>
+                        <Label prefHeight="17.0" prefWidth="94.0" text="Total Questions : ">
+                           <HBox.margin>
+                              <Insets left="250.0" />
+                           </HBox.margin>
+                        </Label>
+                        <Label fx:id="numQ" prefHeight="17.0" prefWidth="133.0" text="0" />
+                     </children>
+                  </HBox>
+                  <HBox prefHeight="100.0" prefWidth="200.0">
+                     <children>
+                        <Label text="Remaining Time : ">
+                           <HBox.margin>
+                              <Insets left="250.0" />
+                           </HBox.margin>
+                        </Label>
+                        <Label fx:id="rTime" text="0" />
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+         </children>
+      </HBox>
+   </top>
+   <left>
+      <ListView fx:id="questionList" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
+   </left>
+   <center>
+      <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
+         <children>
+            <HBox prefHeight="30.0" prefWidth="400.0">
+               <children>
+                  <Label fx:id="currQNum" text="Question Number">
+                     <HBox.margin>
+                        <Insets left="135.0" />
+                     </HBox.margin>
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </Label>
+               </children>
+            </HBox>
+            <HBox prefHeight="121.0" prefWidth="400.0">
+               <children>
+                  <Label fx:id="question" alignment="TOP_LEFT" prefHeight="115.0" prefWidth="401.0" text="Question">
+                     <HBox.margin>
+                        <Insets left="10.0" />
+                     </HBox.margin>
+                  </Label>
+               </children>
+            </HBox>
+            <HBox prefHeight="100.0" prefWidth="400.0">
+               <children>
+                  <RadioButton fx:id="choiceA" mnemonicParsing="false" prefHeight="74.0" prefWidth="48.0" text="A">
+                     <HBox.margin>
+                        <Insets left="10.0" />
+                     </HBox.margin>
+                  </RadioButton>
+                  <Label fx:id="ansA" alignment="CENTER" prefHeight="45.0" prefWidth="341.0" text="choiceADesc" />
+               </children>
+            </HBox>
+            <HBox prefHeight="100.0" prefWidth="200.0">
+               <children>
+                  <RadioButton fx:id="choiceB" mnemonicParsing="false" prefHeight="74.0" prefWidth="48.0" text="B">
+                     <HBox.margin>
+                        <Insets left="10.0" />
+                     </HBox.margin>
+                  </RadioButton>
+                  <Label fx:id="ansB" alignment="CENTER" prefHeight="45.0" prefWidth="341.0" text="choiceBDesc" />
+               </children>
+            </HBox>
+            <HBox prefHeight="100.0" prefWidth="200.0">
+               <children>
+                  <RadioButton fx:id="choiceC" mnemonicParsing="false" prefHeight="74.0" prefWidth="48.0" text="C">
+                     <HBox.margin>
+                        <Insets left="10.0" />
+                     </HBox.margin>
+                  </RadioButton>
+                  <Label fx:id="ansC" alignment="CENTER" prefHeight="45.0" prefWidth="341.0" text="choiceCDesc" />
+               </children>
+            </HBox>
+            <HBox prefHeight="100.0" prefWidth="200.0">
+               <children>
+                  <RadioButton fx:id="choiceD" mnemonicParsing="false" prefHeight="74.0" prefWidth="48.0" text="D">
+                     <HBox.margin>
+                        <Insets left="10.0" />
+                     </HBox.margin>
+                  </RadioButton>
+                  <Label fx:id="ansD" alignment="CENTER" prefHeight="45.0" prefWidth="341.0" text="choiceDDesc" />
+               </children>
+            </HBox>
+            <HBox prefHeight="100.0" prefWidth="200.0">
+               <children>
+                  <HBox prefHeight="100.0" prefWidth="200.0">
+                     <children>
+                        <Button fx:id="next" mnemonicParsing="false" text="Next" onAction="#handleNext">
+                           <HBox.margin>
+                              <Insets left="10.0" />
+                           </HBox.margin>
+                        </Button>
+                     </children>
+                  </HBox>
+                  <Button fx:id="submit" mnemonicParsing="false" onAction="#handleSubmit" text="Submit" />
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+   </center>
+</BorderPane>

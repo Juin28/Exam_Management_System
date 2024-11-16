@@ -25,6 +25,8 @@ public class StudentLoginController implements Initializable {
     @FXML
     private PasswordField passwordTxt;
     private Database<Student> studentDatabase;
+    // variable to keep track of the loggedInStudent
+    public static Student loggedInStudent;
 
     public void initialize(URL location, ResourceBundle resources) {
         studentDatabase = new Database<>(Student.class);
@@ -37,7 +39,7 @@ public class StudentLoginController implements Initializable {
         // list to store student with the given username
         List<Student> studentList = studentDatabase.queryByField("username", usernameTxt.getText());
         // if the student does not exist
-        if(studentList.isEmpty()){
+        if(studentList == null || studentList.isEmpty()){
             MsgSender.showMsg("This user does not exist. Please register for an account.");
         }
         // if the student exists
@@ -49,6 +51,7 @@ public class StudentLoginController implements Initializable {
             }
             // if passwords match
             else{
+                loggedInStudent = studentList.getFirst();
                 stage.setTitle("Hi " + usernameTxt.getText() +", Welcome to HKUST Examination System");
                 try {
                     stage.setScene(new Scene(fxmlLoader.load()));
