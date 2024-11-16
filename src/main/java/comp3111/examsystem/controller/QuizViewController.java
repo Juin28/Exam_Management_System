@@ -141,6 +141,7 @@ public class QuizViewController implements Initializable {
                 score + "/" + totalScore);
         Stage primaryStage = (Stage) submit.getScene().getWindow();
         primaryStage.close();  // Close the window after submitting
+        timer.cancel();
     }
 
     @FXML
