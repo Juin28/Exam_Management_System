@@ -6,9 +6,6 @@ public class Grade {
     public String questionId;
     public String studentScore;
 
-//    public Grade(int studentScore) {
-//        this.studentScore = studentScore;
-//    }
     public Grade(){
         this.studentId = "studentId";
         this.questionId = "questionId";
@@ -46,10 +43,4 @@ public class Grade {
     public void setStudentId(String studentId) {
         this.studentId = studentId;
     }
-
-//    public void setStudentScore(int studentId, int questionId, int studentScore) {
-//        this.studentId = studentId;
-//        this.questionId = questionId;
-//        this.studentScore = studentScore;
-//    }
 }
