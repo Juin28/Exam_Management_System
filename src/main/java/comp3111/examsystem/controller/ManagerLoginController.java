@@ -1,6 +1,10 @@
 package comp3111.examsystem.controller;
 
 import comp3111.examsystem.Main;
+import comp3111.examsystem.service.MsgSender;
+import comp3111.examsystem.service.Database;
+import comp3111.examsystem.model.Manager;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -10,12 +14,10 @@ import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
-import comp3111.examsystem.service.MsgSender;
 
 public class ManagerLoginController implements Initializable {
     @FXML
@@ -23,8 +25,16 @@ public class ManagerLoginController implements Initializable {
     @FXML
     private PasswordField passwordTxt;
 
-    public void initialize(URL location, ResourceBundle resources) {
+    private Database<Manager> managerDatabase;
+    private List<Manager> allManagers;
 
+    public void initialize(URL location, ResourceBundle resources) {
+        this.managerDatabase = new Database<>(Manager.class);
+        if (managerDatabase.queryByField("username", "admin").isEmpty()) {
+            // admin does not exist, create an admin and insert into the database
+            Manager manager = new Manager();
+            managerDatabase.add(manager);
+        }
     }
 
     @FXML
@@ -63,13 +73,14 @@ public class ManagerLoginController implements Initializable {
     {
         // since there is only one manager, hardcode the username and password
         // to ""admin" and "admin" respectively
-        if (username.equals("admin") && password.equals("admin")) {
-            System.out.println("Manager login successfully");
-            return true;
-        } else {
-            System.out.println("Manager login failed");
-            return false;
+        for(Manager manager: managerDatabase.getAll()) {
+            if (manager.getUsername().equals(username) && manager.getPassword().equals(password)) {
+                System.out.println("Manager login successfully");
+                return true;
+            }
         }
+        System.out.println("Manager login failed");
+        return false;
     }
 
 }
