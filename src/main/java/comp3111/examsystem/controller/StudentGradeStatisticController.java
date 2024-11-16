@@ -151,7 +151,12 @@ public class StudentGradeStatisticController implements Initializable {
         for(int i = 0; i < gradeDatabase.getAll().size(); ++i){
             Grade grade = gradeDatabase.getAll().get(i);
             if(grade.getStudentId().equals(String.valueOf(currStudent.getId()))){
-                Quiz q = quizDatabase.queryByField("id",grade.getQuestionId()).getFirst();
+                List<Quiz> quizzes = quizDatabase.queryByField("id",grade.getQuestionId());
+                if (quizzes.isEmpty()) {
+                    System.err.println("No quiz found for ID: " + grade.getQuestionId());
+                    continue; // Skip this grade if no quiz is found
+                }
+                Quiz q = quizzes.getFirst();
                 for(Course c : courseDatabase.getAll()){
                     if(c.getCourseID().equals(q.getCourseID())){
                         coursesList.add(c.getCourseName());
@@ -159,7 +164,13 @@ public class StudentGradeStatisticController implements Initializable {
                 }
             }
         }
-        courseCombox.getItems().addAll(coursesList);
+        List<String> toShow = new ArrayList<>();
+        for(String c : coursesList){
+            if (!toShow.contains(c)){
+                toShow.add(c);
+            }
+        }
+        courseCombox.getItems().addAll(toShow);
     }
 
     private void initTable() {
@@ -223,9 +234,10 @@ public class StudentGradeStatisticController implements Initializable {
 
     @FXML
     void query(ActionEvent event) {
+        barChart.getData().clear();
+        ObservableList<GradeTableRow> tmp = FXCollections.observableArrayList();
         for (GradeTableRow row : gradeRows) {
             if(row.getCourseName().equals(courseCombox.getValue())){
-                barChart.getData().clear();
                 // Create a series for the chart
                 XYChart.Series<String, Number> series = new XYChart.Series<>();
 
@@ -235,7 +247,6 @@ public class StudentGradeStatisticController implements Initializable {
                 series.getData().add(new XYChart.Data<>(examName, score));
 
                 // Add the series to the chart
-                ObservableList<GradeTableRow> tmp = FXCollections.observableArrayList();
                 tmp.add(new GradeTableRow(
                                 row.getCourseName(),
                                 row.getExamName(),
