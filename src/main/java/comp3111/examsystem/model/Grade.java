@@ -2,32 +2,29 @@ package comp3111.examsystem.model;
 
 public class Grade {
     public long id;
-    public long studentId;
-    public long questionId;
+    public String studentId;
+    public String questionId;
     public String studentScore;
 
-    //    public Grade(int studentScore) {
-//        this.studentScore = studentScore;
-//    }
     public Grade(){
-        this.studentId = 0;
-        this.questionId = 0;
+        this.studentId = "studentId";
+        this.questionId = "questionId";
         this.studentScore = "studentScore";
         this.id = 0;
     }
 
-    public Grade(long studentId, long questionId, String studentScore){
+    public Grade(String studentId, String questionId, String studentScore){
         this.studentId = studentId;
         this.questionId = questionId;
         this.studentScore = studentScore;
         this.id = 0;
     }
 
-    public long getQuestionId() {
+    public String getQuestionId() {
         return questionId;
     }
 
-    public void setQuestionId(long questionId) {
+    public void setQuestionId(String questionId) {
         this.questionId = questionId;
     }
 
@@ -39,11 +36,11 @@ public class Grade {
         this.studentScore = studentScore;
     }
 
-    public long getStudentId() {
+    public String getStudentId() {
         return studentId;
     }
 
-    public void setStudentId(long studentId) {
+    public void setStudentId(String studentId) {
         this.studentId = studentId;
     }
 

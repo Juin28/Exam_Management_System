@@ -328,27 +328,6 @@ public class CourseManagementController {
         return true;
     }
 
-
-
-
-//    private boolean validateDeletion(Course course)
-//    {
-//        // check if any quizzes are associated with the course
-//        // if they are, ask the manager if he wants to delete the course, and all the quizzes associated with it
-//        // initialize the database
-//        this.quizDatabase = new Database<>(Quiz.class);
-//        allQuizzes = quizDatabase.getAll();
-//
-//        List<Quiz> quizzesToDelete = new ArrayList<>();
-//        for (Quiz quiz : allQuizzes)
-//        {
-//            if (quiz.getCourseID().equals(course.getCourseID()))
-//            {
-//                quizzesToDelete.add(quiz);
-//            }
-//        }
-//    }
-
     private void deleteCourseAndQuizzes(Course course, List<Quiz> quizzesToDelete)
     {
         // delete the grades associated with the quizzes first
