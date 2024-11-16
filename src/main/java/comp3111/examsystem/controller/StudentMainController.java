@@ -39,41 +39,36 @@ public class StudentMainController implements Initializable {
         // initializing the quizDatabase
         quizDatabase = new Database<>(Quiz.class);
         gradeDatabase = new Database<>(Grade.class);
-        // test data for quizDatabase
-//        Quiz tmpCourse = new Quiz("Quiz1", "30", "3", 0, "COMP3111", "Q1");
-//        Quiz tmpCourse2 = new Quiz("Quiz3", "60", "5", 0, "COMP3511", "Q1");
-//        quizDatabase.add(tmpCourse1);
-//        quizDatabase.add(tmpCourse2);
-//        Grade grade1 = new Grade("1731479984127", "1731501546532", "0");
-//        Grade grade2 = new Grade("1731479984127", "1731502244132", "0");
-//        gradeDatabase.add(grade1);
-//        gradeDatabase.add(grade2);
         quizzes = new ArrayList<>();
         studentGrades = new ArrayList<>();
         student = StudentLoginController.loggedInStudent;
-
         for(int i = 0; i < gradeDatabase.getAll().size(); ++i){
             if(gradeDatabase.getAll().get(i).getStudentId().equals(Long.toString(student.getId()))){
                 studentGrades.add(gradeDatabase.getAll().get(i));
             }
         }
-//        System.out.println(studentGrades);
         // formatting the quiz information
         for(int i = 0; i < quizDatabase.getAll().size(); ++i){
             Quiz quiz = quizDatabase.getAll().get(i);
             String quizId = Long.toString(quiz.getId());
+            String quizPublished = quiz.getPublishStatus();
+            if (quizPublished.equals("yes")){
+                quizPublished = "true";
+            }
+            else{
+                quizPublished = "false";
+            }
             boolean taken = false;
 
             // filtering out quizzes that have already been taken
             for(int j = 0; j < studentGrades.size(); ++j){
                 if(studentGrades.get(j).getQuestionId().equals(quizId)){
-//                    System.out.println("this quiz has been taken");
                     taken = true;
                 }
             }
             // only display quizzes that have not been taken
-            if (!taken){
-                String tmp = quiz.getCourseId();
+            if (!taken && Boolean.parseBoolean(quizPublished)){
+                String tmp = quiz.getCourseID();
                 tmp = tmp.concat(" | ");
                 tmp = tmp.concat(quiz.getQuizName());
                 // adding each quiz to the quizzes list
@@ -95,7 +90,7 @@ public class StudentMainController implements Initializable {
         else{
             // Remove spaces and split the by "|"
             String[] parts = formatString(examCombox.getValue());
-            List<Quiz> listOfQuizzes = quizDatabase.queryByField("courseId", parts[0]);
+            List<Quiz> listOfQuizzes = quizDatabase.queryByField("courseID", parts[0]);
             // Setting the chosenQuiz
             for(int i = 0; i < listOfQuizzes.size(); ++i){
                 if(listOfQuizzes.get(i).getQuizName().equals(parts[1])){

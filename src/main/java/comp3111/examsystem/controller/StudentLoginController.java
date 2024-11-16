@@ -39,7 +39,7 @@ public class StudentLoginController implements Initializable {
         // list to store student with the given username
         List<Student> studentList = studentDatabase.queryByField("username", usernameTxt.getText());
         // if the student does not exist
-        if(studentList.isEmpty()){
+        if(studentList == null || studentList.isEmpty()){
             MsgSender.showMsg("This user does not exist. Please register for an account.");
         }
         // if the student exists

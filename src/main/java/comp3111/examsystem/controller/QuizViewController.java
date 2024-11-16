@@ -15,13 +15,17 @@ import javafx.scene.control.*;
 import javafx.stage.Stage;
 
 import java.net.URL;
+import java.text.DecimalFormat;
 import java.util.*;
 
 public class QuizViewController implements Initializable {
     private Student curStudent;
     private Database<Question> questionDatabase;
     private Database<Grade> gradeDatabase;
+    private DecimalFormat df;
 
+    // variable to store number of questions
+    private int totalNumQ;
     // variable to store current quiz
     private Quiz currentQuiz;
     // variable to store current question
@@ -97,12 +101,14 @@ public class QuizViewController implements Initializable {
         currentQuiz = StudentMainController.chosenQuiz;
         curStudent = StudentLoginController.loggedInStudent;
         timer = new Timer();
+        df = new DecimalFormat();
+        df.setMaximumFractionDigits(2);
 
-        numQ.setText(currentQuiz.getNumQuestions());
-        currQuiz.setText(currentQuiz.getCourseId() + " " + currentQuiz.getQuizName());
+        showQuestions(currentQuiz);
+        numQ.setText(String.valueOf(totalNumQ));
+        currQuiz.setText(currentQuiz.getCourseID() + " " + currentQuiz.getQuizName());
 
         setTimer(currentQuiz.getQuizTime());
-        showQuestions(currentQuiz);
         showQuestionDet();
         Platform.runLater(this::setupCloseRequestHandler);
     }
@@ -116,9 +122,9 @@ public class QuizViewController implements Initializable {
                     "Are you sure you want to submit the quiz and exit?",
                     () -> {
                         checkAnswers();
-                        MsgSender.showMsg(numOfCorrect + "/" + currentQuiz.getNumQuestions() +
+                        MsgSender.showMsg(numOfCorrect + "/" + totalNumQ +
                                 " Correct, the precision is " +
-                                (numOfCorrect/Double.parseDouble(currentQuiz.getNumQuestions()))*100 +
+                                df.format((numOfCorrect/totalNumQ)*100) +
                                 "%, the score is " + score + "/" + totalScore);
                         timer.cancel();
                         primaryStage.close(); // Close the window after confirmation
@@ -129,7 +135,10 @@ public class QuizViewController implements Initializable {
     @FXML
     private void handleSubmit() {
         checkAnswers();  // Check answers when submitting
-        MsgSender.showMsg(numOfCorrect + "/" + currentQuiz.getNumQuestions() + " Correct, the precision is " + (numOfCorrect / (double) Integer.parseInt(currentQuiz.getNumQuestions())) * 100 + "%, the score is " + score + "/" + totalScore);
+        MsgSender.showMsg(numOfCorrect + "/" +
+                totalNumQ + " Correct, the precision is " +
+                df.format((numOfCorrect / (double) totalNumQ) * 100) + "%, the score is " +
+                score + "/" + totalScore);
         Stage primaryStage = (Stage) submit.getScene().getWindow();
         primaryStage.close();  // Close the window after submitting
     }
@@ -195,7 +204,8 @@ public class QuizViewController implements Initializable {
 
     // Helper function to show allQuestionDesc in the sidebar
     private void showQuestions(Quiz quiz){
-        questionIds = StudentMainController.splitByPipe(quiz.getQuestions());
+        questionIds = StudentMainController.splitByPipe(quiz.getQuestionIDs());
+        totalNumQ = questionIds.length;
         for(int i = 0; i < questionIds.length; ++i){
             Question q = questionDatabase.queryByField("id", questionIds[i]).getFirst();
             allQuestionDesc.add(q.questionDescription);
