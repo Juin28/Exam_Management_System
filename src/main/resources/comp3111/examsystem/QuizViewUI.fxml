@@ -121,7 +121,7 @@
                <children>
                   <HBox prefHeight="100.0" prefWidth="200.0">
                      <children>
-                        <Button fx:id="next" mnemonicParsing="false" text="Next">
+                        <Button fx:id="next" mnemonicParsing="false" text="Next" onAction="#handleNext">
                            <HBox.margin>
                               <Insets left="10.0" />
                            </HBox.margin>

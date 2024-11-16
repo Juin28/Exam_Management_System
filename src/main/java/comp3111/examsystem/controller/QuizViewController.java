@@ -21,12 +21,23 @@ public class QuizViewController implements Initializable {
     private Student curStudent;
     private Database<Question> questionDatabase;
     private Database<Grade> gradeDatabase;
+
+    // variable to store current quiz
     private Quiz currentQuiz;
+    // variable to store current question
     private Question currQuestion;
+    // variable to store the current question index
+    private int currentQuestionIndex;
+    // variable to store the question description
     private String questionDesc;
+    // array to store questionIds
     private String[] questionIds;
-    private List<String> questions;
+    // list to store all question descriptions
+    private List<String> allQuestionDesc;
+    // hashmap to store selected answers with id as key and list of answers as values
     private Map<Long, List<String>> selectedAnswers;
+
+
     private int numOfCorrect = 0;
     private int totalScore;
     private int score = 0;
@@ -80,7 +91,7 @@ public class QuizViewController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         questionDatabase = new Database<>(Question.class);
         gradeDatabase = new Database<>(Grade.class);
-        questions = new ArrayList<>();
+        allQuestionDesc = new ArrayList<>();
         selectedAnswers = new HashMap<>();
 
         currentQuiz = StudentMainController.chosenQuiz;
@@ -92,17 +103,26 @@ public class QuizViewController implements Initializable {
 
         setTimer(currentQuiz.getQuizTime());
         showQuestions(currentQuiz);
-        showQuestionDet(currentQuiz);
+        showQuestionDet();
         Platform.runLater(this::setupCloseRequestHandler);
     }
 
     public void setupCloseRequestHandler() {
         Stage primaryStage = (Stage) currQuiz.getScene().getWindow();
-
         primaryStage.setOnCloseRequest(event -> {
-            checkAnswers();
-            MsgSender.showMsg(numOfCorrect + "/" + currentQuiz.getNumQuestions() + " Correct, the precision is " + (numOfCorrect/Double.parseDouble(currentQuiz.getNumQuestions()))*100 + "%, the score is " + score + "/" + totalScore);
-            timer.cancel();
+            event.consume(); // Prevent the window from closing immediately
+            MsgSender.showConfirm(
+                    "Confirm Submit",
+                    "Are you sure you want to submit the quiz and exit?",
+                    () -> {
+                        checkAnswers();
+                        MsgSender.showMsg(numOfCorrect + "/" + currentQuiz.getNumQuestions() +
+                                " Correct, the precision is " +
+                                (numOfCorrect/Double.parseDouble(currentQuiz.getNumQuestions()))*100 +
+                                "%, the score is " + score + "/" + totalScore);
+                        timer.cancel();
+                        primaryStage.close(); // Close the window after confirmation
+                    });
         });
     }
 
@@ -114,20 +134,52 @@ public class QuizViewController implements Initializable {
         primaryStage.close();  // Close the window after submitting
     }
 
+    @FXML
+    private void handleNext() {
+        if (currentQuestionIndex < allQuestionDesc.size() - 1) {
+            currentQuestionIndex++;
+            updateQuestionUI();
+        } else {
+            MsgSender.showMsg("This is the last question.");
+        }
+    }
+
+    private void updateQuestionUI() {
+        // Get the next question description
+        questionDesc = allQuestionDesc.get(currentQuestionIndex);
+
+        // Update the question details in the UI
+        currQuestion = questionDatabase.queryByField("questionDescription", questionDesc).getFirst();
+        question.setText(questionDesc);
+        currQNum.setText("Question " + (currentQuestionIndex + 1));
+
+        // Set the answer descriptions
+        setAnsDescriptions(currQuestion);
+
+        // Load the selected answers for this question (if any)
+        loadSelectedAnswers();
+    }
 
     // Helper function to show question details
-    private void showQuestionDet(Quiz currentQ) {
+    private void showQuestionDet() {
+        setChoiceListeners();
+        questionDesc = allQuestionDesc.getFirst();
+        currQNum.setText("Question 1");
+        question.setText(questionDesc);
+        currQuestion = questionDatabase.queryByField("questionDescription", questionDesc).getFirst();
+        setAnsDescriptions(currQuestion);
         questionList.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observableValue, String s, String t1) {
                 questionDesc = questionList.getSelectionModel().getSelectedItem();
                 currQuestion = questionDatabase.queryByField("questionDescription", questionDesc).getFirst();
                 question.setText(questionDesc);
+                currQNum.setText("Question " + (allQuestionDesc.indexOf(questionDesc)+1));
+                currentQuestionIndex = allQuestionDesc.indexOf(questionDesc);
                 setAnsDescriptions(currQuestion);
                 // Load selected answer for this question, if available
                 loadSelectedAnswers();
-                setChoiceListeners();
-                System.out.println(selectedAnswers);
+//                setChoiceListeners();
             }
         });
         Platform.runLater(this::setupCloseRequestHandler);
@@ -141,14 +193,14 @@ public class QuizViewController implements Initializable {
         ansD.setText(question.getOptionD());
     }
 
-    // Helper function to show questions in the side bar
+    // Helper function to show allQuestionDesc in the sidebar
     private void showQuestions(Quiz quiz){
         questionIds = StudentMainController.splitByPipe(quiz.getQuestions());
         for(int i = 0; i < questionIds.length; ++i){
             Question q = questionDatabase.queryByField("id", questionIds[i]).getFirst();
-            questions.add(q.questionDescription);
+            allQuestionDesc.add(q.questionDescription);
         }
-        questionList.getItems().addAll(questions);
+        questionList.getItems().addAll(allQuestionDesc);
     }
 
     // Helper function to set the timer
