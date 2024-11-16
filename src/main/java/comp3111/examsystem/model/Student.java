@@ -15,6 +15,12 @@ public class Student extends User {
         this.id = id;
     }
 
+    // Constructor For Student
+    public Student(String username, String name, String gender, String age, String department, String password, long id) {
+        super(username, name, gender, age, department, password);
+        this.id = id;
+    }
+
     // Getter For Id
     public long getId() {
         return id;
