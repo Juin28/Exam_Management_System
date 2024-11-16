@@ -334,6 +334,10 @@ public class TeacherManagementController {
             MsgSender.showMsg("Please fill in all fields");
             return false;
         }
+        
+        // validate the username
+        if(!validateUsername(username)){return false;}
+
         // validate that name only has alphabets
         if (!name.matches("^[a-zA-Z]*$"))
         {
@@ -343,9 +347,6 @@ public class TeacherManagementController {
 
         // validate the age
         if(!validateAge(age)){return false;}
-
-        // validate the username
-        if(!validateUsername(username)){return false;}
 
         // validate the department
         department = department.toUpperCase();
