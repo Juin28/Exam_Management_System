@@ -4,41 +4,30 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Quiz {
-    public long id;
-    public String courseId;
-    public String quizName;
-    public String quizTime;
-    public String numQuestions;
-    public String isPublished;
-    public String questions;    // storing Question ids instead of Question objects
+    private long id;
+    private String quizName;
+    private String quizTime;
+    private String courseID;
+    private String publishStatus;
+    private String questionIDs;     // storing Question ids by concatenating them with "|"
 
-    // default constructor
-    public Quiz (){
+    // Default constructor
+    public Quiz() {
         this.id = 0;
-        this.courseId = "courseId";
         this.quizName = "quizName";
-        this.quizTime = "quizTime";
-        this.numQuestions = "numQuestions";
-        this.isPublished = "false";
-        this.questions = "hi";
+        this.quizTime = "60";
+        this.courseID = "courseID";
+        this.publishStatus = "no";
+        this.questionIDs = "";
     }
 
-    public Quiz(String quizName, String quizTime, String numQuestions, long id, String courseId, String questions) {
+    public Quiz(String quizName, String quizTime, String courseID, String publishStatus, long id, String questionIDs) {
         this.id = id;
-        this.courseId = courseId;
         this.quizName = quizName;
         this.quizTime = quizTime;
-        this.numQuestions = numQuestions;
-        this.isPublished = "false";
-        this.questions = questions;
-    }
-
-    public String getCourseId() {
-        return courseId;
-    }
-
-    public void setCourseId(String courseId) {
-        this.courseId = courseId;
+        this.courseID = courseID;
+        this.publishStatus = publishStatus;
+        this.questionIDs = questionIDs;
     }
 
     public long getId() {
@@ -53,23 +42,43 @@ public class Quiz {
         return quizTime;
     }
 
-    public String getNumQuestions() {
-        return numQuestions;
+    public String getCourseID() {
+        return courseID;
     }
 
-    public String isPublished() {
-        return isPublished;
+    public String getPublishStatus() {
+        return publishStatus;
     }
 
     public void publish() {
-        this.isPublished = "true";
+        this.publishStatus = "yes";
     }
 
-    public String getQuestions() {
-        return questions;
+    public String getQuestionIDs() {
+        return questionIDs;
     }
 
-//    public void addQuestion(Question question) {
-//        questions.add(question.getId());
-//    }
+    public void addQuestion(String questionID) {
+        questionIDs += questionID + "|";
+    }
+
+    public void setQuizName(String quizName) {
+        this.quizName = quizName;
+    }
+
+    public void setQuizTime(String quizTime) {
+        this.quizTime = quizTime;
+    }
+
+    public void setCourseID(String courseID) {
+        this.courseID = courseID;
+    }
+
+    public void setPublishStatus(String publishStatus) {
+        this.publishStatus = publishStatus;
+    }
+
+    public void setQuestionIDs(String questionIDs) {
+        this.questionIDs = questionIDs;
+    }
 }

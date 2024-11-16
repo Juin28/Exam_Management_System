@@ -21,7 +21,12 @@ public class Teacher extends User {
         return position;
     }
 
+    public void setPosition(String position) {
+        this.position = position;
+    }
+
     public long getId() {
         return id;
     }
+
 }

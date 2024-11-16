@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
+import comp3111.examsystem.service.MsgSender;
 
 public class ManagerLoginController implements Initializable {
     @FXML
@@ -28,23 +29,19 @@ public class ManagerLoginController implements Initializable {
 
     @FXML
     public void login(ActionEvent e) {
-        boolean loginStatus = handleManagerLogin();
+        // get the username and password
+        String username = usernameTxt.getText();
+        String password = passwordTxt.getText();
+
+        // call handleManagerLogin to validate the credentials
+        boolean loginStatus = handleManagerLogin(username,password);
         String message = loginStatus ? "Login successful" : "Login failed, please try again";
 
         // Display popup for login status
-        try {
-            FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("LoginPopup.fxml"));
-            Stage popupStage = new Stage();
-            popupStage.setTitle("Hint");
-            popupStage.setScene(new Scene(fxmlLoader.load()));
-
-            LoginPopupController controller = fxmlLoader.getController();
-            controller.setMessage(message);
-            controller.setManagerLoginController(this, loginStatus, e.getSource());
-
-            popupStage.show();
-        } catch (IOException e1) {
-            e1.printStackTrace();
+        MsgSender.showMsg(message);
+        // if the login status is successful, show the managerUI
+        if (loginStatus) {
+            showManagerUI(e.getSource());
         }
     }
 
@@ -62,12 +59,8 @@ public class ManagerLoginController implements Initializable {
         ((Stage) ((Button) eventSource).getScene().getWindow()).close();
     }
 
-    public boolean handleManagerLogin()
+    public boolean handleManagerLogin(String username, String password)
     {
-        // get the username and password
-        String username = usernameTxt.getText();
-        String password = passwordTxt.getText();
-
         // since there is only one manager, hardcode the username and password
         // to ""admin" and "admin" respectively
         if (username.equals("admin") && password.equals("admin")) {

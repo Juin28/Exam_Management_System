@@ -12,6 +12,9 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import java.util.List;
 
+/**
+ * Controller for the Teacher's Registration page
+ */
 public class TeacherRegisterController {
     private Database<Teacher> teacherDatabase;
     private List<Teacher> allTeachers;
@@ -37,12 +40,18 @@ public class TeacherRegisterController {
     @FXML
     private Button closeButton;
 
+    /**
+     * Initialize the controller
+     */
     @FXML
     public void initialize() {
         this.teacherDatabase = new Database<>(Teacher.class);
         allTeachers = teacherDatabase.getAll();
     }
 
+    /**
+     * Handle the registration button action
+     */
     @FXML
     public void register() {
         String username = usernameTxt.getText();
@@ -73,12 +82,28 @@ public class TeacherRegisterController {
         }
     }
 
+    /**
+     * Close the registration window
+     */
     @FXML
     public void closeWindow() {
         Stage stage = (Stage) usernameTxt.getScene().getWindow();
         stage.close();
     }
 
+
+    /**
+     * Validate the inputs
+     * @param username the username of the teacher
+     * @param name the name of the teacher
+     * @param gender the gender of the teacher
+     * @param ageStr the age of the teacher
+     * @param position the position of the teacher
+     * @param department the department of the teacher
+     * @param password the password of the teacher
+     * @param confirmPassword the confirm password of the teacher
+     * @return true if the inputs are valid, false otherwise
+     */
     private boolean validInputs(String username, String name, String gender, String ageStr, String position, String department, String password, String confirmPassword) {
         if (username.isEmpty() || name.isEmpty() || gender == null ||
                 ageStr.isEmpty() || position == null || department.isEmpty() ||

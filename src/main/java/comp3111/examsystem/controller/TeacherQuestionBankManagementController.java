@@ -14,10 +14,16 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.control.skin.TableColumnHeader;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 
+/**
+ * Controller for the Teacher's Question Bank Management page
+ */
 public class TeacherQuestionBankManagementController {
     private Database<Question> questionDatabase;
     private List<Question> allQuestions;
@@ -81,9 +87,37 @@ public class TeacherQuestionBankManagementController {
     private Button updateButton;
     @FXML
     private FlowPane rootPane;
+    @FXML
+    private VBox questionInputFields;
+    @FXML
+    private HBox filterManagementFields;
+    @FXML
+    private HBox questionManagementButtons;
+    @FXML
+    private HBox tableAndQuestionInputFields;
 
     @FXML
-    public void initialize() {
+    private VBox questionInput;
+    @FXML
+    private VBox optionAInput;
+    @FXML
+    private VBox optionBInput;
+    @FXML
+    private VBox optionCInput;
+    @FXML
+    private VBox optionDInput;
+    @FXML
+    private VBox answerInput;
+    @FXML
+    private VBox typeInput;
+    @FXML
+    private VBox scoreInput;
+
+    /**
+     * Initialize the controller
+     */
+    @FXML
+    private void initialize() {
         this.questionDatabase = new Database<>(Question.class);
         allQuestions = questionDatabase.getAll();
         loadQuestions();
@@ -92,16 +126,63 @@ public class TeacherQuestionBankManagementController {
         typeFilterChoiceBox.getItems().addAll("Single", "Multiple", "");
         typeFilterChoiceBox.setValue("");
 
+        // Handle resize of width of different components when the window is resized
+        rootPane.widthProperty().addListener((obs, oldVal, newVal) -> {
+            // Handle resize of filters components
+            filterManagementFields.setPrefWidth(newVal.doubleValue());
+
+            // Handle resize of question table
+            double tableWidth = newVal.doubleValue() * 0.70;
+            questionTable.setPrefWidth(tableWidth);
+            questionColumn.setPrefWidth(tableWidth * 0.24);
+            optionAColumn.setPrefWidth(tableWidth * 0.12);
+            optionBColumn.setPrefWidth(tableWidth * 0.12);
+            optionCColumn.setPrefWidth(tableWidth * 0.12);
+            optionDColumn.setPrefWidth(tableWidth * 0.12);
+            answerColumn.setPrefWidth(tableWidth * 0.09);
+            typeColumn.setPrefWidth(tableWidth * 0.1);
+            scoreColumn.setPrefWidth(tableWidth * 0.085);
+
+            // Handle resize of question input fields
+            double questionInputWidth = newVal.doubleValue() * 0.28;
+            questionInputFields.setPrefWidth(questionInputWidth);
+            typeChoiceBox.setPrefWidth(questionInputWidth);
+
+            // Handle resize of question management buttons
+            questionManagementButtons.setPrefWidth(newVal.doubleValue());
+        });
+
+        // Handle resize of height different components when the window is resized
+        rootPane.heightProperty().addListener((obs, oldVal, newVal) -> {
+            // Handle resize of filters components
+            filterManagementFields.setPrefHeight(newVal.doubleValue() * 0.10);
+
+            // Handle resize of question table and input fields
+            double tableHeight = newVal.doubleValue() * 0.60;
+            tableAndQuestionInputFields.setPrefHeight(tableHeight);
+            questionInput.setPadding(new Insets(0, 0, tableHeight * 0.03, 0));
+            optionAInput.setPadding(new Insets(0, 0, tableHeight * 0.03, 0));
+            optionBInput.setPadding(new Insets(0, 0, tableHeight * 0.03, 0));
+            optionCInput.setPadding(new Insets(0, 0, tableHeight * 0.03, 0));
+            optionDInput.setPadding(new Insets(0, 0, tableHeight * 0.03, 0));
+            answerInput.setPadding(new Insets(0, 0, tableHeight * 0.03, 0));
+            typeInput.setPadding(new Insets(0, 0, tableHeight * 0.03, 0));
+
+            // Handle resize of question management buttons
+            questionManagementButtons.setPrefHeight(newVal.doubleValue() * 0.15);
+        });
+
         // Set up columns to extract data from each Question object
         questionColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getQuestionDescription()));
         optionAColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getOptionA()));
         optionBColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getOptionB()));
         optionCColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getOptionC()));
         optionDColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getOptionD()));
-        answerColumn.setCellValueFactory(cellData -> new SimpleStringProperty(new String(cellData.getValue().getAnswer())));
+        answerColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getAnswer()));
         typeColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getQuestionType()));
         scoreColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getQuestionScore()));
 
+        // Set up the listener for the table selection
         questionTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {
                 questionTextField.setText(newSelection.getQuestionDescription());
@@ -136,8 +217,12 @@ public class TeacherQuestionBankManagementController {
         });
     }
 
+    /**
+     * Add a question to the database
+     * @param event the ActionEvent
+     */
     @FXML
-    public void addQuestion(ActionEvent event) {
+    private void addQuestion(ActionEvent event) {
         String questionText = questionTextField.getText();
         String optionA = optionATextField.getText();
         String optionB = optionBTextField.getText();
@@ -158,17 +243,30 @@ public class TeacherQuestionBankManagementController {
             // Store the question information in the database
             questionDatabase.add(newQuestion);
 
-            MsgSender.showMsg("Question added successfully.");
-            loadQuestions();
-            clearFields();
         } catch (Exception e) {
-            e.printStackTrace();
             MsgSender.showMsg("An error occurred while adding the question.");
+            e.printStackTrace();
+            throw new RuntimeException(e);
         }
-
+        MsgSender.showMsg("Question added successfully.");
+        loadQuestions();
+        clearFields();
     }
 
-    public boolean validInputs(String questionText, String optionA, String optionB, String optionC, String optionD, String answer, String score, String type) {
+
+    /**
+     * Check if the inputs are valid
+     * @param questionText the question text
+     * @param optionA the option A
+     * @param optionB the option B
+     * @param optionC the option C
+     * @param optionD the option D
+     * @param answer the answer
+     * @param score the score
+     * @param type the type of question
+     * @return true if all inputs are valid, false otherwise
+     */
+    private boolean validInputs(String questionText, String optionA, String optionB, String optionC, String optionD, String answer, String score, String type) {
         // check if all fields are filled
         if (questionText.isEmpty() || optionA.isEmpty() || optionB.isEmpty() ||
                 optionC.isEmpty() || optionD.isEmpty() || answer.isEmpty() ||
@@ -223,8 +321,12 @@ public class TeacherQuestionBankManagementController {
         return true;
     }
 
+    /**
+     * Delete a question from the database
+     * @param event the ActionEvent
+     */
     @FXML
-    void deleteQuestion(ActionEvent event) {
+    private void deleteQuestion(ActionEvent event) {
         Question selectedQuestion = questionTable.getSelectionModel().getSelectedItem();
 
         if (selectedQuestion == null) {
@@ -232,36 +334,79 @@ public class TeacherQuestionBankManagementController {
             return;
         }
 
-        String idString = String.valueOf(selectedQuestion.getId());
-        questionDatabase.delByKey(idString);
-        clearFields();
-        questionTable.getSelectionModel().clearSelection();
+        try {
+            String idString = String.valueOf(selectedQuestion.getId());
+            MsgSender.showConfirm("Question Delete Confirmation", "Are you sure you want to delete the question?", () -> {
+                questionDatabase.delByKey(idString);
+                MsgSender.showMsg("Question deleted successfully.");
+                questionTable.getSelectionModel().clearSelection();
+                clearFields();
+                loadQuestions();
+            });
+        } catch (Exception e) {
+            MsgSender.showMsg("An error occurred while deleting the question.");
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * Filter the questions based on the filter criteria
+     * @param event the ActionEvent
+     */
+    @FXML
+    private void filterQuestions(ActionEvent event) {
         loadQuestions();
     }
 
+    /**
+     * Refresh the question table
+     * @param event the ActionEvent
+     */
     @FXML
-    void filterQuestions(ActionEvent event) {
-        loadQuestions();
+    private void refreshQuestion(ActionEvent event) {
+        if (!questionTextField.getText().isEmpty() || !optionATextField.getText().isEmpty() ||
+                !optionBTextField.getText().isEmpty() || !optionCTextField.getText().isEmpty() ||
+                !optionDTextField.getText().isEmpty() || !answerTextField.getText().isEmpty() ||
+                !scoreTextField.getText().isEmpty() || typeChoiceBox.getValue() != null) {
+            MsgSender.showConfirm("Refresh Confirmation", "Refreshing will clear all fields and any unsaved changes will be lost. Are you sure you want to refresh?", () -> {
+                refreshQuestionConfirmed(event);
+            });
+            return;
+        } else {
+            refreshQuestionConfirmed(event);
+        }
     }
 
-    @FXML
-    void refreshQuestion(ActionEvent event) {
+    /**
+     * Refresh the question table
+     * @param event the ActionEvent
+     */
+    private void refreshQuestionConfirmed(ActionEvent event) {
         resetFilters(event);
         clearFields();
         questionTable.getSelectionModel().clearSelection();
         loadQuestions();
     }
 
+    /**
+     * Reset the filters
+     * @param event the ActionEvent
+     */
     @FXML
-    void resetFilters(ActionEvent event) {
+    private void resetFilters(ActionEvent event) {
         questionFilterTextField.clear();
         scoreFilterTextField.clear();
         typeFilterChoiceBox.setValue("");
         loadQuestions();
     }
 
+    /**
+     * Update a question in the database
+     * @param event the ActionEvent
+     */
     @FXML
-    void updateQuestion(ActionEvent event) {
+    private void updateQuestion(ActionEvent event) {
         Question selectedQuestion = questionTable.getSelectionModel().getSelectedItem();
 
         if (selectedQuestion == null) {
@@ -291,42 +436,72 @@ public class TeacherQuestionBankManagementController {
         selectedQuestion.setQuestionScore(score);
         selectedQuestion.setQuestionType(type);
 
-        questionDatabase.update(selectedQuestion);
-        loadQuestions();
-        clearFields();
+        try {
+            MsgSender.showConfirm("Question Update Confirmation", "Are you sure you want to update the question?", () -> {
+                questionDatabase.update(selectedQuestion);
+                MsgSender.showMsg("Question updated successfully.");
+                questionTable.getSelectionModel().clearSelection();
+                loadQuestions();
+                clearFields();
+            });
+        } catch (Exception e) {
+            MsgSender.showMsg("An error occurred while updating the question.");
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
     }
 
+    /**
+     * Check if there is no filter applied
+     * @return true if no filter is applied, false otherwise
+     */
     private boolean noFilter() {
         return (questionFilterTextField.getText().isEmpty() &&
                 scoreFilterTextField.getText().isEmpty() &&
                 (typeFilterChoiceBox.getValue() == null || typeFilterChoiceBox.getValue().isEmpty()));
     }
 
+    /**
+     * Load the questions from the database
+     */
     private void loadQuestions() {
         if (noFilter()) {
-            allQuestions = questionDatabase.getAll();
-            questionList = FXCollections.observableArrayList(allQuestions);
-        } else {
-            String questionFilter = questionFilterTextField.getText();
-            String scoreFilter = scoreFilterTextField.getText();
-            String typeFilter = typeFilterChoiceBox.getValue();
-
-            List<Question> allQuestions = questionDatabase.getAll();
-            List<Question> filteredQuestions = new ArrayList<>();
-
-            for (Question question : allQuestions) {
-                if ((questionFilter.isEmpty() || question.getQuestionDescription().contains(questionFilter)) &&
-                        (scoreFilter.isEmpty() || question.getQuestionScore().equals(scoreFilter)) &&
-                        (typeFilter.isEmpty() || question.getQuestionType().equals(typeFilter))) {
-                    filteredQuestions.add(question);
-                }
+            try {
+                allQuestions = questionDatabase.getAll();
+                questionList = FXCollections.observableArrayList(allQuestions);
+            } catch (Exception e) {
+                e.printStackTrace();
+                throw new RuntimeException(e);
             }
+        } else {
+            try {
+                String questionFilter = questionFilterTextField.getText();
+                String scoreFilter = scoreFilterTextField.getText();
+                String typeFilter = typeFilterChoiceBox.getValue();
 
-            questionList = FXCollections.observableArrayList(filteredQuestions);
+                List<Question> allQuestions = questionDatabase.getAll();
+                List<Question> filteredQuestions = new ArrayList<>();
+
+                for (Question question : allQuestions) {
+                    if ((questionFilter.isEmpty() || question.getQuestionDescription().contains(questionFilter)) &&
+                            (scoreFilter.isEmpty() || question.getQuestionScore().equals(scoreFilter)) &&
+                            (typeFilter.isEmpty() || question.getQuestionType().equals(typeFilter))) {
+                        filteredQuestions.add(question);
+                    }
+                }
+
+                questionList = FXCollections.observableArrayList(filteredQuestions);
+            } catch (Exception e) {
+                e.printStackTrace();
+                throw new RuntimeException(e);
+            }
         }
         questionTable.getItems().setAll(questionList);
     }
 
+    /**
+     * Clear all the input fields
+     */
     private void clearFields() {
         questionTextField.clear();
         optionATextField.clear();
