@@ -238,9 +238,98 @@ public class CourseManagementController {
     }
 
     @FXML
-    void updateCourse(ActionEvent event) {
+    private boolean updateCourse(ActionEvent event)
+    {
+        // Check if a course is selected
+        Course selectedCourse = courseTable.getSelectionModel().getSelectedItem();
+        if (selectedCourse == null)
+        {
+            MsgSender.showMsg("Please select a course to update");
+            return false;
+        }
+
+        // Check if the input is valid
+        List<String> changes = new ArrayList<>();
+
+        boolean valid = validateUpdateInput(selectedCourse, changes);
+        if (valid && !changes.isEmpty()) {
+            // successfully validated the changes, show a confirmation message
+            MsgSender.showUpdateConfirm("Update Course: " + selectedCourse.getCourseID(), changes, () -> updateCourseInDatabase(selectedCourse));
+            return true;
+        }
+        // no changes detected
+        if (valid) {
+            MsgSender.showMsg("No changes detected");
+            return false;
+        }
+
+        return false;
 
     }
+
+    private boolean updateCourseInDatabase(Course course)
+    {
+        try
+        {
+            courseDatabase.update(course);
+            MsgSender.showMsg("Course updated successfully");
+            return true;
+        }catch (Exception e)
+        {
+            MsgSender.showMsg("Error updating course");
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    private boolean validateUpdateInput(Course course, List<String> changes)
+    {
+        // check to ensure that all the fields are filled
+        String name = courseNameInput.getText();
+        String department = courseDeptInput.getText();
+        String id = courseIDInput.getText();
+
+        if (name.isEmpty() || department.isEmpty() || id.isEmpty())
+        {
+            MsgSender.showMsg("Please fill in all the fields");
+            return false;
+        }
+
+        // ensure that courseID is not changed
+        if (!id.equals(course.getCourseID()))
+        {
+            MsgSender.showMsg("Course ID cannot be changed");
+            return false;
+        }
+
+        // validate the department
+        department = department.toUpperCase();
+        if(!validateDepartment(department))
+        {
+            MsgSender.showMsg("Please enter a valid department");
+            return false;
+        }
+        if (!department.equals(course.getDepartment()))
+        {
+            changes.add("Department: " + course.getDepartment() + " -> " + department);
+        }
+
+        if(!name.equals(course.getCourseName()))
+        {
+            changes.add("Course Name: " + course.getCourseName() + " -> " + name);
+        }
+
+        // set the course object to the validated input values
+        course.setCourseName(name);
+        course.setDepartment(department);
+        course.setCourseID(id);
+
+        // if all previous conditions are met, we have successfully validated the input, return true
+        return true;
+    }
+
+
+
 
 //    private boolean validateDeletion(Course course)
 //    {
@@ -271,9 +360,10 @@ public class CourseManagementController {
             {
                 if (grade.getQuestionId() == quiz.getId())
                 {
+                    // TODO: implement grade deletion
                     try
                     {
-                        String idString = String.valueOf(grade.getId());
+                        String idString = String.valueOf(grade.getID());
                         gradeDatabase.delByKey(idString);
                     }catch (Exception e)
                     {
@@ -285,7 +375,7 @@ public class CourseManagementController {
         }
 
 
-        // try to delete quizzes first
+        // next, try to delete the quizzes
         for (Quiz quiz : quizzesToDelete)
         {
             try

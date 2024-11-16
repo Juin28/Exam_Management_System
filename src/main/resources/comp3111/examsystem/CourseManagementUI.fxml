@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="527.0" prefWidth="847.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="527.0" prefWidth="847.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="comp3111.examsystem.controller.CourseManagementController">
    <children>
       <SplitPane dividerPositions="0.23899878885748893" layoutY="7.0" orientation="VERTICAL" prefHeight="527.0" prefWidth="847.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <items>
@@ -41,9 +41,9 @@
                               <AnchorPane layoutX="43.0" prefHeight="316.0" prefWidth="728.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="43.0" AnchorPane.rightAnchor="-127.0" AnchorPane.topAnchor="0.0" />
                               <TableView fx:id="courseTable" layoutX="-497.0" layoutY="-54.0" prefHeight="316.0" prefWidth="644.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                 <columns>
-                                  <TableColumn fx:id="teachUsernameCol" prefWidth="208.80001527071" text="CourseID" />
-                                    <TableColumn fx:id="teachNameCol" prefWidth="231.2000274658203" text="Course Name" />
-                                    <TableColumn fx:id="teachAgeCol" prefWidth="204.0" text="Department" />
+                                  <TableColumn fx:id="courseIDCol" prefWidth="208.80001527071" text="CourseID" />
+                                    <TableColumn fx:id="courseNameCol" prefWidth="231.2000274658203" text="Course Name" />
+                                    <TableColumn fx:id="courseDeptCol" prefWidth="204.0" text="Department" />
                                 </columns>
                               </TableView>
                            </children>

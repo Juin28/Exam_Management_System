@@ -40,6 +40,8 @@ public class Course {
         return department;
     }
 
+    public long getId() {return id;}
+
     public void setCourseName(String courseName) {
         this.courseName = courseName;
     }
