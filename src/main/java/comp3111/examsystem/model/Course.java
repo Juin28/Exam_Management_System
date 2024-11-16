@@ -8,8 +8,6 @@ public class Course {
     public String courseName;
     public String courseID;
     public String department;
-//    public List<Long> enrolledStudents;  // storing Student ids instead of Student objects
-//    public List<Long> assignedTeachers;  // storing Teacher ids instead of Teacher objects
 
     // Default constructor
     public Course() {
@@ -24,8 +22,6 @@ public class Course {
         this.courseID = courseID;
         this.department = department;
         this.id = id;
-//        this.enrolledStudents = new ArrayList<Long>();
-//        this.assignedTeachers = new ArrayList<Long>();
     }
 
     public String getCourseName() {
@@ -51,21 +47,4 @@ public class Course {
     public void setDepartment(String department) {
         this.department = department;
     }
-
-//    public List<Long> getEnrolledStudents() {
-//        return enrolledStudents;
-//    }
-//
-//    public List<Long> getAssignedTeachers() {
-//        return assignedTeachers;
-//    }
-//
-//    public void enrollStudent(Student student) {
-//        enrolledStudents.add(student.getId());
-//    }
-//
-//    public void assignTeacher(Teacher teacher) {
-//        assignedTeachers.add(teacher.getId());
-//    }
-
 }
