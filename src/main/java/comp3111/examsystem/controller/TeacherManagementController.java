@@ -256,7 +256,7 @@ public class TeacherManagementController {
         // add name into "changes" array if the name is different
         if (!name.equals(teacher.getName()))
         {
-            changes.add("Name: "+ name);
+            changes.add("Name: " + teacher.getName() + " -> " + name);
         }
 
         // validate the age
@@ -268,7 +268,7 @@ public class TeacherManagementController {
         // age is different, add into "changes" array
         if (!age.equals(teacher.getAge()))
         {
-            changes.add("Age: "+ age);
+            changes.add("Age: " + teacher.getAge() + " -> " + age);
         }
 
         department = department.toUpperCase();
@@ -282,25 +282,25 @@ public class TeacherManagementController {
         // department is not the same, add into "changes" array
         if (!department.equals(teacher.getDepartment()))
         {
-            changes.add("Department: "+ department);
+            changes.add("Department: " + teacher.getDepartment() + " -> " + department);
         }
 
         // password is not the same, add into "changes" array
         if (!password.equals(teacher.getPassword()))
         {
-            changes.add("Password: "+ password);
+            changes.add("Password: " + teacher.getPassword() + " -> " + password);
         }
 
         // gender is not the same, add into "changes" array
         if (!gender.equals(teacher.getGender()))
         {
-            changes.add("Gender: "+ gender);
+            changes.add("Gender: " + teacher.getGender() + " -> " + gender);
         }
 
         // position is not the same, add into "changes" array
         if (!position.equals(teacher.getPosition()))
         {
-            changes.add("Position: "+ position);
+            changes.add("Position: " + teacher.getPosition() + " -> " + position);
         }
 
         // successfully validated input, set the corresponding values and return true
@@ -334,7 +334,7 @@ public class TeacherManagementController {
             MsgSender.showMsg("Please fill in all fields");
             return false;
         }
-        
+
         // validate the username
         if(!validateUsername(username)){return false;}
 
