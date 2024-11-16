@@ -51,6 +51,7 @@ public class StudentLoginController implements Initializable {
             }
             // if passwords match
             else{
+                MsgSender.showMsg("Login Successful");
                 loggedInStudent = studentList.getFirst();
                 stage.setTitle("Hi " + usernameTxt.getText() +", Welcome to HKUST Examination System");
                 try {

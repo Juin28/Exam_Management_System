@@ -109,7 +109,17 @@ public class StudentMainController implements Initializable {
     }
 
     @FXML
-    public void openGradeStatistic() {
+    public void openGradeStatistic(ActionEvent e) {
+        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("StudentGradeStatisticUI.fxml"));
+        Stage stage = new Stage();
+        stage.setTitle("Student Grade Statistics");
+        try {
+            stage.setScene(new Scene(fxmlLoader.load()));
+        } catch (IOException e1) {
+            e1.printStackTrace();
+        }
+        stage.show();
+        ((Stage) ((Button) e.getSource()).getScene().getWindow()).close();
     }
 
     @FXML
