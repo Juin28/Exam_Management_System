@@ -118,6 +118,11 @@ public class TeacherManagementController {
     @FXML
     public boolean updateTeacher(ActionEvent actionEvent) {
         Teacher teacher = teachTable.getSelectionModel().getSelectedItem();
+        if (teacher == null)
+        {
+            MsgSender.showMsg("Please select a teacher to update");
+            return false;
+        }
         List<String> changes = new ArrayList<>();
 
         boolean valid = validateUpdateInput(teacher, changes);
@@ -153,6 +158,11 @@ public class TeacherManagementController {
     public void deleteTeacher(ActionEvent actionEvent) {
         // delete teacher according to selection model
         Teacher teacher = teachTable.getSelectionModel().getSelectedItem();
+        if (teacher == null)
+        {
+            MsgSender.showMsg("Please select a teacher to delete");
+            return;
+        }
         String username = teacher.getUsername();
         MsgSender.showConfirm("Delete Teacher", "Are you sure you want to delete teacher with username: " + username + " ?", () -> deleteTeacherFromDatabase(teacher));
     }
