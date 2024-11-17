@@ -24,6 +24,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
+/**
+ * Controller class for handling student interactions in the main student interface.
+ */
 public class StudentMainController implements Initializable {
     @FXML
     ComboBox<String> examCombox;
@@ -35,6 +38,12 @@ public class StudentMainController implements Initializable {
     private List<Grade> studentGrades;
     public static Quiz chosenQuiz;
 
+    /**
+     * Initializes the controller.
+     *
+     * @param location   The location used to resolve relative paths for the root object.
+     * @param resources  The resources used to localize the root object.
+     */
     public void initialize(URL location, ResourceBundle resources) {
         // initializing the quizDatabase
         quizDatabase = new Database<>(Quiz.class);
@@ -79,6 +88,11 @@ public class StudentMainController implements Initializable {
         examCombox.getItems().addAll(quizzes);
     }
 
+    /**
+     * Handles the action when the "Start Exam" button is clicked.
+     *
+     * @param e The ActionEvent corresponding to the "Start Exam" button click.
+     */
     @FXML
     public void openExamUI(ActionEvent e) {
         FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("QuizViewUI.fxml"));
@@ -108,6 +122,11 @@ public class StudentMainController implements Initializable {
         }
     }
 
+    /**
+     * Handles the action when the "View Grades" button is clicked.
+     *
+     * @param e The ActionEvent corresponding to the "View Grades" button click.
+     */
     @FXML
     public void openGradeStatistic(ActionEvent e) {
         FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("StudentGradeStatisticUI.fxml"));
@@ -122,6 +141,10 @@ public class StudentMainController implements Initializable {
         ((Stage) ((Button) e.getSource()).getScene().getWindow()).close();
     }
 
+
+    /**
+     * Handles the action of exiting the application.
+     */
     @FXML
     public void exit() {
         System.exit(0);

@@ -22,6 +22,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
+/**
+ * Controller class for displaying student grade statistics.
+ */
 public class StudentGradeStatisticController implements Initializable {
     public static class GradeTableRow {
         private final String courseName;
@@ -30,6 +33,9 @@ public class StudentGradeStatisticController implements Initializable {
         private final String fullScore;
         private final String timeSpent;
 
+        /**
+         * Inner class representing a row in the grade table.
+         */
         public GradeTableRow(String courseName, String examName, String score, String fullScore, String timeSpent) {
             this.courseName = courseName;
             this.examName = examName;
@@ -66,12 +72,7 @@ public class StudentGradeStatisticController implements Initializable {
 
     private Student currStudent;
     private List<String> coursesList;
-    private int numCourses;
     private String[] questionIds;
-    private String selectedCourse;
-    XYChart.Series series1;
-    XYChart.Series series2;
-
 
     @FXML
     private BarChart<String, Number> barChart;
@@ -111,6 +112,12 @@ public class StudentGradeStatisticController implements Initializable {
 
     private final ObservableList<GradeTableRow> gradeRows = FXCollections.observableArrayList();
 
+    /**
+     * Initializes the controller.
+     *
+     * @param url the URL to initialize
+     * @param resourceBundle the ResourceBundle to initialize
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         courseDatabase = new Database<>(Course.class);
@@ -120,7 +127,6 @@ public class StudentGradeStatisticController implements Initializable {
 
         currStudent = StudentLoginController.loggedInStudent;
         coursesList = new ArrayList<>();
-        numCourses = 0;
 
         barChart.setLegendVisible(false);
         yAxis.setLabel("Score");
@@ -130,6 +136,9 @@ public class StudentGradeStatisticController implements Initializable {
         showBarChart();
     }
 
+    /**
+     * Shows the bar chart with the student's grades.
+     */
     private void showBarChart() {
         barChart.getData().clear();
 
@@ -147,13 +156,15 @@ public class StudentGradeStatisticController implements Initializable {
         barChart.getData().add(series);
     }
 
+    /**
+     * Shows the courses in the courseCombox.
+     */
     private void showCourses() {
         for(int i = 0; i < gradeDatabase.getAll().size(); ++i){
             Grade grade = gradeDatabase.getAll().get(i);
             if(grade.getStudentId().equals(String.valueOf(currStudent.getId()))){
                 List<Quiz> quizzes = quizDatabase.queryByField("id",grade.getQuestionId());
                 if (quizzes.isEmpty()) {
-                    System.err.println("No quiz found for ID: " + grade.getQuestionId());
                     continue; // Skip this grade if no quiz is found
                 }
                 Quiz q = quizzes.getFirst();
@@ -173,6 +184,9 @@ public class StudentGradeStatisticController implements Initializable {
         courseCombox.getItems().addAll(toShow);
     }
 
+    /**
+     * Initializes the table with the student's grades.
+     */
     private void initTable() {
         // Retrieve all grades for the current student
         List<Grade> studentGrades = new ArrayList<>();
@@ -186,7 +200,6 @@ public class StudentGradeStatisticController implements Initializable {
             // Get the quiz associated with the grade
             List<Quiz> quizzes = quizDatabase.queryByField("id", grade.getQuestionId());
             if (quizzes.isEmpty()) {
-                System.err.println("Quiz not found for ID: " + grade.getQuestionId());
                 continue; // Skip this grade if the quiz doesn't exist
             }
             Quiz quiz = quizzes.get(0);
@@ -197,7 +210,6 @@ public class StudentGradeStatisticController implements Initializable {
             for (String questionId : questionIds) {
                 List<Question> questions = questionDatabase.queryByField("id", questionId);
                 if (questions.isEmpty()) {
-                    System.err.println("Question not found for ID: " + questionId);
                     continue; // Skip this question if it doesn't exist
                 }
                 total += Integer.parseInt(questions.getFirst().getQuestionScore());
@@ -206,7 +218,6 @@ public class StudentGradeStatisticController implements Initializable {
             // Get the course associated with the quiz
             List<Course> courses = courseDatabase.queryByField("courseID", quiz.getCourseID());
             if (courses.isEmpty()) {
-                System.err.println("Course not found for ID: " + quiz.getCourseID());
                 continue; // Skip this grade if the course doesn't exist
             }
             Course course = courses.getFirst();
@@ -232,6 +243,11 @@ public class StudentGradeStatisticController implements Initializable {
         timeSpendColumn.setCellValueFactory(new PropertyValueFactory<>("timeSpent"));
     }
 
+    /**
+     * Event handler for querying student grades.
+     *
+     * @param event the ActionEvent triggering the query
+     */
     @FXML
     void query(ActionEvent event) {
         barChart.getData().clear();
@@ -260,14 +276,11 @@ public class StudentGradeStatisticController implements Initializable {
         }
     }
 
-    @FXML
-    void refresh(ActionEvent event) {
-        // Refresh the table and chart with the current data
-        courseCombox.setValue(null);
-        gradeTable.setItems(gradeRows);
-        showBarChart();
-    }
-
+    /**
+     * Event handler for resetting filters.
+     *
+     * @param event the ActionEvent triggering the reset
+     */
     @FXML
     void reset(ActionEvent event) {
         // Reset filters and show all data
