@@ -1,0 +1,287 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > TeacherGradeStatisticController</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">comp3111.examsystem.controller</a>
+</div>
+
+<h1>Coverage Summary for Class: TeacherGradeStatisticController (comp3111.examsystem.controller)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">TeacherGradeStatisticController</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/38)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">TeacherGradeStatisticController$GradeExampleClass</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/7)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/7)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/13)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/45)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package comp3111.examsystem.controller;
+&nbsp;
+&nbsp;import javafx.collections.FXCollections;
+&nbsp;import javafx.collections.ObservableList;
+&nbsp;import javafx.fxml.FXML;
+&nbsp;import javafx.fxml.Initializable;
+&nbsp;import javafx.scene.chart.*;
+&nbsp;import javafx.scene.control.ChoiceBox;
+&nbsp;import javafx.scene.control.TableColumn;
+&nbsp;import javafx.scene.control.TableView;
+&nbsp;import javafx.scene.control.cell.PropertyValueFactory;
+&nbsp;
+&nbsp;import java.net.URL;
+&nbsp;import java.util.HashMap;
+&nbsp;import java.util.List;
+&nbsp;import java.util.Map;
+&nbsp;import java.util.ResourceBundle;
+&nbsp;
+<b class="nc">&nbsp;public class TeacherGradeStatisticController implements Initializable {</b>
+<b class="nc">&nbsp;    public static class GradeExampleClass {</b>
+&nbsp;        public String getStudentName() {
+<b class="nc">&nbsp;            return &quot;student&quot;;</b>
+&nbsp;        }
+&nbsp;        public String getCourseNum() {
+<b class="nc">&nbsp;            return &quot;comp3111&quot;;</b>
+&nbsp;        }
+&nbsp;        public String getExamName() {
+<b class="nc">&nbsp;            return &quot;final&quot;;</b>
+&nbsp;        }
+&nbsp;        public String getScore() {
+<b class="nc">&nbsp;            return &quot;100&quot;;</b>
+&nbsp;        }
+&nbsp;        public String getFullScore() {
+<b class="nc">&nbsp;            return &quot;100&quot;;</b>
+&nbsp;        }
+&nbsp;        public String getTimeSpend() {
+<b class="nc">&nbsp;            return &quot;60&quot;;</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    @FXML
+&nbsp;    private ChoiceBox&lt;String&gt; courseCombox;
+&nbsp;    @FXML
+&nbsp;    private ChoiceBox&lt;String&gt; examCombox;
+&nbsp;    @FXML
+&nbsp;    private ChoiceBox&lt;String&gt; studentCombox;
+&nbsp;    @FXML
+&nbsp;    private TableView&lt;GradeExampleClass&gt; gradeTable;
+&nbsp;    @FXML
+&nbsp;    private TableColumn&lt;GradeExampleClass, String&gt; studentColumn;
+&nbsp;    @FXML
+&nbsp;    private TableColumn&lt;GradeExampleClass, String&gt; courseColumn;
+&nbsp;    @FXML
+&nbsp;    private TableColumn&lt;GradeExampleClass, String&gt; examColumn;
+&nbsp;    @FXML
+&nbsp;    private TableColumn&lt;GradeExampleClass, String&gt; scoreColumn;
+&nbsp;    @FXML
+&nbsp;    private TableColumn&lt;GradeExampleClass, String&gt; fullScoreColumn;
+&nbsp;    @FXML
+&nbsp;    private TableColumn&lt;GradeExampleClass, String&gt; timeSpendColumn;
+&nbsp;    @FXML
+&nbsp;    BarChart&lt;String, Number&gt; barChart;
+&nbsp;    @FXML
+&nbsp;    CategoryAxis categoryAxisBar;
+&nbsp;    @FXML
+&nbsp;    NumberAxis numberAxisBar;
+&nbsp;    @FXML
+&nbsp;    LineChart&lt;String, Number&gt; lineChart;
+&nbsp;    @FXML
+&nbsp;    CategoryAxis categoryAxisLine;
+&nbsp;    @FXML
+&nbsp;    NumberAxis numberAxisLine;
+&nbsp;    @FXML
+&nbsp;    PieChart pieChart;
+&nbsp;
+<b class="nc">&nbsp;    private final ObservableList&lt;GradeExampleClass&gt; gradeList = FXCollections.observableArrayList();</b>
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public void initialize(URL url, ResourceBundle resourceBundle) {
+<b class="nc">&nbsp;        barChart.setLegendVisible(false);</b>
+<b class="nc">&nbsp;        categoryAxisBar.setLabel(&quot;Course&quot;);</b>
+<b class="nc">&nbsp;        numberAxisBar.setLabel(&quot;Avg. Score&quot;);</b>
+<b class="nc">&nbsp;        pieChart.setLegendVisible(false);</b>
+<b class="nc">&nbsp;        pieChart.setTitle(&quot;Student Scores&quot;);</b>
+<b class="nc">&nbsp;        lineChart.setLegendVisible(false);</b>
+<b class="nc">&nbsp;        categoryAxisLine.setLabel(&quot;Exam&quot;);</b>
+<b class="nc">&nbsp;        numberAxisLine.setLabel(&quot;Avg. Score&quot;);</b>
+&nbsp;
+<b class="nc">&nbsp;        gradeList.add(new GradeExampleClass());</b>
+<b class="nc">&nbsp;        gradeTable.setItems(gradeList);</b>
+<b class="nc">&nbsp;        studentColumn.setCellValueFactory(new PropertyValueFactory&lt;&gt;(&quot;studentName&quot;));</b>
+<b class="nc">&nbsp;        courseColumn.setCellValueFactory(new PropertyValueFactory&lt;&gt;(&quot;courseNum&quot;));</b>
+<b class="nc">&nbsp;        examColumn.setCellValueFactory(new PropertyValueFactory&lt;&gt;(&quot;examName&quot;));</b>
+<b class="nc">&nbsp;        scoreColumn.setCellValueFactory(new PropertyValueFactory&lt;&gt;(&quot;score&quot;));</b>
+<b class="nc">&nbsp;        fullScoreColumn.setCellValueFactory(new PropertyValueFactory&lt;&gt;(&quot;fullScore&quot;));</b>
+<b class="nc">&nbsp;        timeSpendColumn.setCellValueFactory(new PropertyValueFactory&lt;&gt;(&quot;timeSpend&quot;));</b>
+&nbsp;
+<b class="nc">&nbsp;        refresh();</b>
+<b class="nc">&nbsp;        loadChart();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @FXML
+&nbsp;    public void refresh() {
+<b class="nc">&nbsp;    }</b>
+&nbsp;
+&nbsp;    private void loadChart() {
+<b class="nc">&nbsp;        XYChart.Series&lt;String, Number&gt; seriesBar = new XYChart.Series&lt;&gt;();</b>
+<b class="nc">&nbsp;        seriesBar.getData().clear();</b>
+<b class="nc">&nbsp;        barChart.getData().clear();</b>
+<b class="nc">&nbsp;        for (int i = 0;  i &lt; 5; i++) {</b>
+<b class="nc">&nbsp;            seriesBar.getData().add(new XYChart.Data&lt;&gt;(&quot;COMP&quot; + i, 50));</b>
+&nbsp;        }
+<b class="nc">&nbsp;        barChart.getData().add(seriesBar);</b>
+&nbsp;
+<b class="nc">&nbsp;        pieChart.getData().clear();</b>
+<b class="nc">&nbsp;        for (int i = 0;  i &lt; 4; i++) {</b>
+<b class="nc">&nbsp;            pieChart.getData().add(new PieChart.Data(&quot;student&quot; + i, 80));</b>
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        XYChart.Series&lt;String, Number&gt; seriesLine = new XYChart.Series&lt;&gt;();</b>
+<b class="nc">&nbsp;        seriesLine.getData().clear();</b>
+<b class="nc">&nbsp;        lineChart.getData().clear();</b>
+<b class="nc">&nbsp;        for (int i = 0;  i &lt; 6; i++) {</b>
+<b class="nc">&nbsp;            seriesLine.getData().add(new XYChart.Data&lt;&gt;(&quot;COMP3111&quot; + &quot;-&quot; + &quot;quiz&quot; + i, 70));</b>
+&nbsp;        }
+<b class="nc">&nbsp;        lineChart.getData().add(seriesLine);</b>
+&nbsp;
+&nbsp;    }
+&nbsp;
+&nbsp;    @FXML
+&nbsp;    public void reset() {
+<b class="nc">&nbsp;    }</b>
+&nbsp;
+&nbsp;    @FXML
+&nbsp;    public void query() {
+<b class="nc">&nbsp;    }</b>
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-11-18 19:43</div>
+</div>
+</body>
+</html>

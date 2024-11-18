@@ -1,8 +1,10 @@
 package comp3111.examsystem.controller;
 
 import static junit.framework.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.*;
 
+import comp3111.examsystem.model.Course;
 import comp3111.examsystem.model.Question;
 import comp3111.examsystem.model.Quiz;
 import comp3111.examsystem.service.Database;
@@ -11,7 +13,11 @@ import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.stage.Stage;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -31,8 +37,19 @@ class TeacherExamManagementControllerTest {
     private Database<Quiz> mockQuizDatabase;
     @Mock
     private Database<Question> mockQuestionDatabase;
+    @Mock
+    private Database<Course> mockCourseDatabase;
+
+//    @Mock
+//    private Database<Quiz> mockQuizDatabase2;
+//    @Mock
+//    private Database<Question> mockQuestionDatabase2;
+//    @Mock
+//    private Database<Course> mockCourseDatabase2;
 
     private TeacherExamManagementController controller;
+
+    private TeacherExamManagementController controller2;
 
     @BeforeAll
     static void initToolkit() {
@@ -40,11 +57,16 @@ class TeacherExamManagementControllerTest {
     }
 
     @BeforeEach
-    void setUp() {
+    void setUp() throws Exception{
         MockitoAnnotations.openMocks(this);
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/comp3111/examsystem/TeacherExamManagementUI.fxml"));
+        Parent root = loader.load();
+
         controller = new TeacherExamManagementController();
+
         controller.quizDatabase = mockQuizDatabase;
         controller.questionDatabase = mockQuestionDatabase;
+        controller.courseDatabase = mockCourseDatabase;
         controller.examTable = new TableView<>();
         controller.examQuestionsTable = new TableView<>();
         controller.allQuestionsTable = new TableView<>();
@@ -65,6 +87,7 @@ class TeacherExamManagementControllerTest {
         controller.allCourses = new ArrayList<>();
         controller.courseList = FXCollections.observableArrayList();
         controller.examQuestionList = FXCollections.observableArrayList();
+
     }
 
     @Test

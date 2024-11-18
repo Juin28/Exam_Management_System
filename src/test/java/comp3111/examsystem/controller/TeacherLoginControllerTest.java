@@ -60,6 +60,9 @@ class TeacherLoginControllerTest {
         when(usernameTxt.getText()).thenReturn("Teacher1");
         when(passwordTxt.getText()).thenReturn("123");
 
+        Teacher sampleTeacher = new Teacher("Teacher1", "Teacher1", "Male", "20", "Department", "123", "Position", 123);
+        when(mockDatabase.getAll()).thenReturn(List.of(sampleTeacher));
+
         try (MockedStatic<MsgSender> mockedMsgSender = mockStatic(MsgSender.class)) {
             controller.login(new ActionEvent());
             mockedMsgSender.verify(() -> MsgSender.showMsg("Login successful"));
@@ -71,9 +74,33 @@ class TeacherLoginControllerTest {
         when(usernameTxt.getText()).thenReturn("Teacher1");
         when(passwordTxt.getText()).thenReturn("wrongpassword");
 
+        Teacher sampleTeacher = new Teacher("Teacher1", "Teacher1", "Male", "20", "Department", "123", "Position", 123);
+        when(mockDatabase.getAll()).thenReturn(List.of(sampleTeacher));
+
         try (MockedStatic<MsgSender> mockedMsgSender = mockStatic(MsgSender.class)) {
             controller.login(new ActionEvent());
             mockedMsgSender.verify(() -> MsgSender.showMsg("Login failed, please try again"));
+        }
+    }
+
+    @Test
+    void checkTeacherCredentialsValidCredentials() {
+        Teacher sampleTeacher = new Teacher("Teacher1", "Teacher1", "Male", "20", "Department", "123", "Position", 123);
+        when(mockDatabase.getAll()).thenReturn(List.of(sampleTeacher));
+
+        boolean result = controller.checkTeacherCredentials("Teacher1", "123");
+        assertTrue(result);
+    }
+
+    @Test
+    void checkTeacherCredentialsInvalidCredentials() {
+        Teacher sampleTeacher = new Teacher("Teacher1", "Teacher1", "Male", "20", "Department", "123", "Position", 123);
+        when(mockDatabase.getAll()).thenReturn(List.of(sampleTeacher));
+
+        try (MockedStatic<MsgSender> mockedMsgSender = mockStatic(MsgSender.class)) {
+            boolean result = controller.checkTeacherCredentials("Teacher1", "wrongpassword");
+            assertFalse(result);
+            mockedMsgSender.verify(() -> MsgSender.showMsg("Invalid username or password"));
         }
     }
 

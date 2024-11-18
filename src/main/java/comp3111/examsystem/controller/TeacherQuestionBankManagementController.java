@@ -130,6 +130,9 @@ public class TeacherQuestionBankManagementController {
             // Handle resize of filters components
             filterManagementFields.setPrefWidth(newVal.doubleValue());
 
+            // Handle resize of question management components
+            tableAndQuestionInputFields.setPrefWidth(newVal.doubleValue());
+
             // Handle resize of question table
             double tableWidth = newVal.doubleValue() * 0.70;
             questionTable.setPrefWidth(tableWidth);

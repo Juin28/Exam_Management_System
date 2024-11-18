@@ -1,0 +1,631 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > TeacherQuestionBankManagementController</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">comp3111.examsystem.controller</a>
+</div>
+
+<h1>Coverage Summary for Class: TeacherQuestionBankManagementController (comp3111.examsystem.controller)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">TeacherQuestionBankManagementController</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    72.7%
+  </span>
+  <span class="absValue">
+    (16/22)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    69%
+  </span>
+  <span class="absValue">
+    (156/226)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    73.8%
+  </span>
+  <span class="absValue">
+    (158/214)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package comp3111.examsystem.controller;
+&nbsp;
+&nbsp;import java.net.URL;
+&nbsp;import java.util.ArrayList;
+&nbsp;import java.util.List;
+&nbsp;import java.util.ResourceBundle;
+&nbsp;
+&nbsp;import comp3111.examsystem.model.Question;
+&nbsp;import comp3111.examsystem.model.Teacher;
+&nbsp;import comp3111.examsystem.service.Database;
+&nbsp;import comp3111.examsystem.service.MsgSender;
+&nbsp;import javafx.beans.property.SimpleStringProperty;
+&nbsp;import javafx.collections.FXCollections;
+&nbsp;import javafx.collections.ObservableList;
+&nbsp;import javafx.event.ActionEvent;
+&nbsp;import javafx.fxml.FXML;
+&nbsp;import javafx.geometry.Insets;
+&nbsp;import javafx.scene.control.*;
+&nbsp;import javafx.scene.control.skin.TableColumnHeader;
+&nbsp;import javafx.scene.layout.FlowPane;
+&nbsp;import javafx.scene.layout.HBox;
+&nbsp;import javafx.scene.layout.VBox;
+&nbsp;
+&nbsp;/**
+&nbsp; * Controller for the Teacher&#39;s Question Bank Management page
+&nbsp; */
+<b class="fc">&nbsp;public class TeacherQuestionBankManagementController {</b>
+&nbsp;    public Database&lt;Question&gt; questionDatabase;
+&nbsp;    public List&lt;Question&gt; allQuestions;
+&nbsp;    public ObservableList&lt;Question&gt; questionList;
+&nbsp;
+&nbsp;    @FXML
+&nbsp;    public ResourceBundle resources;
+&nbsp;    @FXML
+&nbsp;    public URL location;
+&nbsp;    @FXML
+&nbsp;    public Button addButton;
+&nbsp;    @FXML
+&nbsp;    public TableColumn&lt;Question, String&gt; answerColumn;
+&nbsp;    @FXML
+&nbsp;    public TextField answerTextField;
+&nbsp;    @FXML
+&nbsp;    public Button deleteButton;
+&nbsp;    @FXML
+&nbsp;    public Button filterButton;
+&nbsp;    @FXML
+&nbsp;    public TableColumn&lt;Question, String&gt; optionAColumn;
+&nbsp;    @FXML
+&nbsp;    public TextField optionATextField;
+&nbsp;    @FXML
+&nbsp;    public TableColumn&lt;Question, String&gt; optionBColumn;
+&nbsp;    @FXML
+&nbsp;    public TextField optionBTextField;
+&nbsp;    @FXML
+&nbsp;    public TableColumn&lt;Question, String&gt; optionCColumn;
+&nbsp;    @FXML
+&nbsp;    public TextField optionCTextField;
+&nbsp;    @FXML
+&nbsp;    public TableColumn&lt;Question, String&gt; optionDColumn;
+&nbsp;    @FXML
+&nbsp;    public TextField optionDTextField;
+&nbsp;    @FXML
+&nbsp;    public TableColumn&lt;Question, String&gt; questionColumn;
+&nbsp;    @FXML
+&nbsp;    public TextField questionFilterTextField;
+&nbsp;    @FXML
+&nbsp;    public TableView&lt;Question&gt; questionTable;
+&nbsp;    @FXML
+&nbsp;    public TextField questionTextField;
+&nbsp;    @FXML
+&nbsp;    public Button refreshButton;
+&nbsp;    @FXML
+&nbsp;    public Button resetButton;
+&nbsp;    @FXML
+&nbsp;    public TableColumn&lt;Question, String&gt; scoreColumn;
+&nbsp;    @FXML
+&nbsp;    public TextField scoreFilterTextField;
+&nbsp;    @FXML
+&nbsp;    public TextField scoreTextField;
+&nbsp;    @FXML
+&nbsp;    public TableColumn&lt;Question, String&gt; typeColumn;
+&nbsp;    @FXML
+&nbsp;    public ChoiceBox&lt;String&gt; typeChoiceBox;
+&nbsp;    @FXML
+&nbsp;    public ChoiceBox&lt;String&gt; typeFilterChoiceBox;
+&nbsp;    @FXML
+&nbsp;    public Button updateButton;
+&nbsp;    @FXML
+&nbsp;    public FlowPane rootPane;
+&nbsp;    @FXML
+&nbsp;    public VBox questionInputFields;
+&nbsp;    @FXML
+&nbsp;    public HBox filterManagementFields;
+&nbsp;    @FXML
+&nbsp;    public HBox questionManagementButtons;
+&nbsp;    @FXML
+&nbsp;    public HBox tableAndQuestionInputFields;
+&nbsp;    @FXML
+&nbsp;    public VBox questionInput;
+&nbsp;    @FXML
+&nbsp;    public VBox optionAInput;
+&nbsp;    @FXML
+&nbsp;    public VBox optionBInput;
+&nbsp;    @FXML
+&nbsp;    public VBox optionCInput;
+&nbsp;    @FXML
+&nbsp;    public VBox optionDInput;
+&nbsp;    @FXML
+&nbsp;    public VBox answerInput;
+&nbsp;    @FXML
+&nbsp;    public VBox typeInput;
+&nbsp;    @FXML
+&nbsp;    public VBox scoreInput;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Initialize the controller
+&nbsp;     */
+&nbsp;    @FXML
+&nbsp;    public void initialize() {
+<b class="fc">&nbsp;        this.questionDatabase = new Database&lt;&gt;(Question.class);</b>
+<b class="fc">&nbsp;        allQuestions = questionDatabase.getAll();</b>
+<b class="fc">&nbsp;        loadQuestions();</b>
+&nbsp;
+<b class="fc">&nbsp;        typeChoiceBox.getItems().addAll(&quot;Single&quot;, &quot;Multiple&quot;);</b>
+<b class="fc">&nbsp;        typeFilterChoiceBox.getItems().addAll(&quot;Single&quot;, &quot;Multiple&quot;, &quot;&quot;);</b>
+<b class="fc">&nbsp;        typeFilterChoiceBox.setValue(&quot;&quot;);</b>
+&nbsp;
+&nbsp;        // Handle resize of width of different components when the window is resized
+<b class="fc">&nbsp;        rootPane.widthProperty().addListener((obs, oldVal, newVal) -&gt; {</b>
+&nbsp;            // Handle resize of filters components
+<b class="nc">&nbsp;            filterManagementFields.setPrefWidth(newVal.doubleValue());</b>
+&nbsp;
+&nbsp;            // Handle resize of question management components
+<b class="nc">&nbsp;            tableAndQuestionInputFields.setPrefWidth(newVal.doubleValue());</b>
+&nbsp;
+&nbsp;            // Handle resize of question table
+<b class="nc">&nbsp;            double tableWidth = newVal.doubleValue() * 0.70;</b>
+<b class="nc">&nbsp;            questionTable.setPrefWidth(tableWidth);</b>
+<b class="nc">&nbsp;            questionColumn.setPrefWidth(tableWidth * 0.24);</b>
+<b class="nc">&nbsp;            optionAColumn.setPrefWidth(tableWidth * 0.12);</b>
+<b class="nc">&nbsp;            optionBColumn.setPrefWidth(tableWidth * 0.12);</b>
+<b class="nc">&nbsp;            optionCColumn.setPrefWidth(tableWidth * 0.12);</b>
+<b class="nc">&nbsp;            optionDColumn.setPrefWidth(tableWidth * 0.12);</b>
+<b class="nc">&nbsp;            answerColumn.setPrefWidth(tableWidth * 0.09);</b>
+<b class="nc">&nbsp;            typeColumn.setPrefWidth(tableWidth * 0.1);</b>
+<b class="nc">&nbsp;            scoreColumn.setPrefWidth(tableWidth * 0.085);</b>
+&nbsp;
+&nbsp;            // Handle resize of question input fields
+<b class="nc">&nbsp;            double questionInputWidth = newVal.doubleValue() * 0.28;</b>
+<b class="nc">&nbsp;            questionInputFields.setPrefWidth(questionInputWidth);</b>
+<b class="nc">&nbsp;            typeChoiceBox.setPrefWidth(questionInputWidth);</b>
+&nbsp;
+&nbsp;            // Handle resize of question management buttons
+<b class="nc">&nbsp;            questionManagementButtons.setPrefWidth(newVal.doubleValue());</b>
+&nbsp;        });
+&nbsp;
+&nbsp;        // Handle resize of height different components when the window is resized
+<b class="fc">&nbsp;        rootPane.heightProperty().addListener((obs, oldVal, newVal) -&gt; {</b>
+&nbsp;            // Handle resize of filters components
+<b class="nc">&nbsp;            filterManagementFields.setPrefHeight(newVal.doubleValue() * 0.10);</b>
+&nbsp;
+&nbsp;            // Handle resize of question table and input fields
+<b class="nc">&nbsp;            double tableHeight = newVal.doubleValue() * 0.60;</b>
+<b class="nc">&nbsp;            tableAndQuestionInputFields.setPrefHeight(tableHeight);</b>
+<b class="nc">&nbsp;            questionInput.setPadding(new Insets(0, 0, tableHeight * 0.03, 0));</b>
+<b class="nc">&nbsp;            optionAInput.setPadding(new Insets(0, 0, tableHeight * 0.03, 0));</b>
+<b class="nc">&nbsp;            optionBInput.setPadding(new Insets(0, 0, tableHeight * 0.03, 0));</b>
+<b class="nc">&nbsp;            optionCInput.setPadding(new Insets(0, 0, tableHeight * 0.03, 0));</b>
+<b class="nc">&nbsp;            optionDInput.setPadding(new Insets(0, 0, tableHeight * 0.03, 0));</b>
+<b class="nc">&nbsp;            answerInput.setPadding(new Insets(0, 0, tableHeight * 0.03, 0));</b>
+<b class="nc">&nbsp;            typeInput.setPadding(new Insets(0, 0, tableHeight * 0.03, 0));</b>
+&nbsp;
+&nbsp;            // Handle resize of question management buttons
+<b class="nc">&nbsp;            questionManagementButtons.setPrefHeight(newVal.doubleValue() * 0.15);</b>
+&nbsp;        });
+&nbsp;
+&nbsp;        // Set up columns to extract data from each Question object
+<b class="fc">&nbsp;        questionColumn.setCellValueFactory(cellData -&gt; new SimpleStringProperty(cellData.getValue().getQuestionDescription()));</b>
+<b class="fc">&nbsp;        optionAColumn.setCellValueFactory(cellData -&gt; new SimpleStringProperty(cellData.getValue().getOptionA()));</b>
+<b class="fc">&nbsp;        optionBColumn.setCellValueFactory(cellData -&gt; new SimpleStringProperty(cellData.getValue().getOptionB()));</b>
+<b class="fc">&nbsp;        optionCColumn.setCellValueFactory(cellData -&gt; new SimpleStringProperty(cellData.getValue().getOptionC()));</b>
+<b class="fc">&nbsp;        optionDColumn.setCellValueFactory(cellData -&gt; new SimpleStringProperty(cellData.getValue().getOptionD()));</b>
+<b class="fc">&nbsp;        answerColumn.setCellValueFactory(cellData -&gt; new SimpleStringProperty(cellData.getValue().getAnswer()));</b>
+<b class="fc">&nbsp;        typeColumn.setCellValueFactory(cellData -&gt; new SimpleStringProperty(cellData.getValue().getQuestionType()));</b>
+<b class="fc">&nbsp;        scoreColumn.setCellValueFactory(cellData -&gt; new SimpleStringProperty(cellData.getValue().getQuestionScore()));</b>
+&nbsp;
+&nbsp;        // Set up the listener for the table selection
+<b class="fc">&nbsp;        questionTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -&gt; {</b>
+<b class="nc">&nbsp;            if (newSelection != null) {</b>
+<b class="nc">&nbsp;                questionTextField.setText(newSelection.getQuestionDescription());</b>
+<b class="nc">&nbsp;                optionATextField.setText(newSelection.getOptionA());</b>
+<b class="nc">&nbsp;                optionBTextField.setText(newSelection.getOptionB());</b>
+<b class="nc">&nbsp;                optionCTextField.setText(newSelection.getOptionC());</b>
+<b class="nc">&nbsp;                optionDTextField.setText(newSelection.getOptionD());</b>
+<b class="nc">&nbsp;                answerTextField.setText(newSelection.getAnswer());</b>
+<b class="nc">&nbsp;                scoreTextField.setText(newSelection.getQuestionScore());</b>
+<b class="nc">&nbsp;                typeChoiceBox.setValue(newSelection.getQuestionType());</b>
+&nbsp;            }
+&nbsp;        });
+&nbsp;
+&nbsp;        // Clear the selection when clicking on the table itself with no question selected
+<b class="fc">&nbsp;        questionTable.setRowFactory(tv -&gt; {</b>
+<b class="nc">&nbsp;            TableRow&lt;Question&gt; row = new TableRow&lt;&gt;();</b>
+<b class="nc">&nbsp;            row.setOnMouseClicked(event -&gt; {</b>
+<b class="nc">&nbsp;                if (row.isEmpty()) {</b>
+<b class="nc">&nbsp;                    questionTable.getSelectionModel().clearSelection();</b>
+<b class="nc">&nbsp;                    clearFields();</b>
+&nbsp;                }
+&nbsp;            });
+<b class="nc">&nbsp;            return row;</b>
+&nbsp;        });
+&nbsp;
+&nbsp;        // Clear the selection when clicking outside the table
+<b class="fc">&nbsp;        rootPane.setOnMouseClicked(event -&gt; {</b>
+<b class="nc">&nbsp;            if (event.getTarget() != questionTable) {</b>
+<b class="nc">&nbsp;                questionTable.getSelectionModel().clearSelection();</b>
+<b class="nc">&nbsp;                clearFields();</b>
+&nbsp;            }
+&nbsp;        });
+<b class="fc">&nbsp;    }</b>
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Add a question to the database
+&nbsp;     * @param event the ActionEvent
+&nbsp;     */
+&nbsp;    @FXML
+&nbsp;    public void addQuestion(ActionEvent event) {
+<b class="pc">&nbsp;        String questionText = questionTextField.getText();</b>
+<b class="fc">&nbsp;        String optionA = optionATextField.getText();</b>
+<b class="fc">&nbsp;        String optionB = optionBTextField.getText();</b>
+<b class="fc">&nbsp;        String optionC = optionCTextField.getText();</b>
+<b class="fc">&nbsp;        String optionD = optionDTextField.getText();</b>
+<b class="fc">&nbsp;        String answer = answerTextField.getText().replaceAll(&quot;[^A-Za-z]&quot;, &quot;&quot;); // Removes non-letter characters</b>
+<b class="fc">&nbsp;        String score = scoreTextField.getText();</b>
+<b class="fc">&nbsp;        String type = (String) typeChoiceBox.getValue();</b>
+&nbsp;
+<b class="fc">&nbsp;        if (!validInputs(questionText, optionA, optionB, optionC, optionD, answer, score, type) ) {</b>
+&nbsp;            return;
+&nbsp;        }
+&nbsp;
+&nbsp;        try {
+<b class="fc">&nbsp;            int questionId = allQuestions.size() + 1;</b>
+<b class="fc">&nbsp;            Question newQuestion = new Question(questionText, optionA, optionB, optionC, optionD, answer, score, type, questionId);</b>
+&nbsp;
+&nbsp;            // Store the question information in the database
+<b class="fc">&nbsp;            questionDatabase.add(newQuestion);</b>
+&nbsp;
+<b class="fc">&nbsp;        } catch (Exception e) {</b>
+<b class="fc">&nbsp;            MsgSender.showMsg(&quot;An error occurred while adding the question.&quot;);</b>
+<b class="fc">&nbsp;            e.printStackTrace();</b>
+&nbsp;        }
+<b class="fc">&nbsp;        MsgSender.showMsg(&quot;Question added successfully.&quot;);</b>
+<b class="fc">&nbsp;        loadQuestions();</b>
+<b class="fc">&nbsp;        clearFields();</b>
+<b class="fc">&nbsp;    }</b>
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Check if the inputs are valid
+&nbsp;     * @param questionText the question text
+&nbsp;     * @param optionA the option A
+&nbsp;     * @param optionB the option B
+&nbsp;     * @param optionC the option C
+&nbsp;     * @param optionD the option D
+&nbsp;     * @param answer the answer
+&nbsp;     * @param score the score
+&nbsp;     * @param type the type of question
+&nbsp;     * @return true if all inputs are valid, false otherwise
+&nbsp;     */
+&nbsp;    public boolean validInputs(String questionText, String optionA, String optionB, String optionC, String optionD, String answer, String score, String type) {
+&nbsp;        // check if all fields are filled
+<b class="pc">&nbsp;        if (questionText.isEmpty() || optionA.isEmpty() || optionB.isEmpty() ||</b>
+<b class="fc">&nbsp;                optionC.isEmpty() || optionD.isEmpty() || answer.isEmpty() ||</b>
+<b class="fc">&nbsp;                score.isEmpty() || type.isEmpty() ) {</b>
+<b class="fc">&nbsp;            MsgSender.showMsg(&quot;All fields must be filled.&quot;);</b>
+<b class="fc">&nbsp;            return false;</b>
+&nbsp;        }
+&nbsp;
+&nbsp;        // check if the score is an integer
+<b class="fc">&nbsp;        int scoreInt = 0;</b>
+&nbsp;        try {
+<b class="fc">&nbsp;            scoreInt = Integer.parseInt(score);</b>
+<b class="fc">&nbsp;        } catch (NumberFormatException e) {</b>
+<b class="fc">&nbsp;            MsgSender.showMsg(&quot;Score must be an integer.&quot;);</b>
+<b class="fc">&nbsp;            return false; // If parsing fails, it&#39;s not an integer</b>
+&nbsp;        }
+&nbsp;
+&nbsp;        // check if the score is a positive integer
+<b class="fc">&nbsp;        if (scoreInt &lt; 0) {</b>
+<b class="fc">&nbsp;            MsgSender.showMsg(&quot;Score must be a positive integer.&quot;);</b>
+<b class="fc">&nbsp;            return false;</b>
+&nbsp;        }
+&nbsp;
+&nbsp;        // check if the number of answer matches the question type
+<b class="fc">&nbsp;        if (type.equals(&quot;Single&quot;) &amp;&amp; answer.length() &gt; 1) {</b>
+<b class="fc">&nbsp;            MsgSender.showMsg(&quot;Single choice questions can only have one correct answer.&quot;);</b>
+<b class="fc">&nbsp;            return false;</b>
+<b class="fc">&nbsp;        } else if (type.equals(&quot;Multiple&quot;) &amp;&amp; answer.length() == 1) {</b>
+<b class="fc">&nbsp;            MsgSender.showMsg(&quot;Multiple choice questions must have more than one correct answer.&quot;);</b>
+<b class="fc">&nbsp;            return false;</b>
+&nbsp;        }
+&nbsp;
+&nbsp;        // check the answer only have options A, B, C, or D
+<b class="fc">&nbsp;        for(char c : answer.toCharArray()) {</b>
+<b class="pc">&nbsp;            if(c != &#39;A&#39; &amp;&amp; c != &#39;B&#39; &amp;&amp; c != &#39;C&#39; &amp;&amp; c != &#39;D&#39;) {</b>
+<b class="fc">&nbsp;                MsgSender.showMsg(&quot;Answer must be either A, B, C, or D. &quot; + c + &quot; is not a valid answer.&quot;);</b>
+<b class="fc">&nbsp;                return false;</b>
+&nbsp;            }
+&nbsp;        }
+&nbsp;
+&nbsp;        // check if the question already exists
+<b class="fc">&nbsp;        for (Question question : allQuestions) {</b>
+<b class="pc">&nbsp;            if (question.getQuestionDescription().equals(questionText) &amp;&amp; question.getOptionA().equals(optionA) &amp;&amp;</b>
+<b class="pc">&nbsp;                    question.getOptionB().equals(optionB) &amp;&amp; question.getOptionC().equals(optionC) &amp;&amp;</b>
+<b class="fc">&nbsp;                    question.getOptionD().equals(optionD) &amp;&amp; question.getAnswer().equals(answer) &amp;&amp;</b>
+<b class="fc">&nbsp;                    question.getQuestionScore().equals(score) &amp;&amp; question.getQuestionType().equals(type)) {</b>
+<b class="fc">&nbsp;                MsgSender.showMsg(&quot;Question already exists.&quot;);</b>
+<b class="fc">&nbsp;                return false;</b>
+&nbsp;            }
+&nbsp;        }
+&nbsp;
+<b class="fc">&nbsp;        return true;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Delete a question from the database
+&nbsp;     * @param event the ActionEvent
+&nbsp;     */
+&nbsp;    @FXML
+&nbsp;    public void deleteQuestion(ActionEvent event) {
+<b class="pc">&nbsp;        Question selectedQuestion = questionTable.getSelectionModel().getSelectedItem();</b>
+&nbsp;
+<b class="fc">&nbsp;        if (selectedQuestion == null) {</b>
+<b class="fc">&nbsp;            MsgSender.showMsg(&quot;Please select a question to delete.&quot;);</b>
+&nbsp;            return;
+&nbsp;        }
+&nbsp;
+&nbsp;        try {
+<b class="fc">&nbsp;            String idString = String.valueOf(selectedQuestion.getId());</b>
+<b class="fc">&nbsp;            MsgSender.showConfirm(&quot;Question Delete Confirmation&quot;, &quot;Are you sure you want to delete the question?&quot;, () -&gt; {</b>
+<b class="fc">&nbsp;                questionDatabase.delByKey(idString);</b>
+<b class="fc">&nbsp;                MsgSender.showMsg(&quot;Question deleted successfully.&quot;);</b>
+<b class="fc">&nbsp;                questionTable.getSelectionModel().clearSelection();</b>
+<b class="fc">&nbsp;                clearFields();</b>
+<b class="fc">&nbsp;                loadQuestions();</b>
+&nbsp;            });
+<b class="fc">&nbsp;        } catch (Exception e) {</b>
+<b class="fc">&nbsp;            MsgSender.showMsg(&quot;An error occurred while deleting the question.&quot;);</b>
+<b class="fc">&nbsp;            e.printStackTrace();</b>
+&nbsp;        }
+<b class="pc">&nbsp;    }</b>
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Filter the questions based on the filter criteria
+&nbsp;     * @param event the ActionEvent
+&nbsp;     */
+&nbsp;    @FXML
+&nbsp;    public void filterQuestions(ActionEvent event) {
+<b class="pc">&nbsp;        loadQuestions();</b>
+<b class="pc">&nbsp;    }</b>
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Refresh the question table
+&nbsp;     * @param event the ActionEvent
+&nbsp;     */
+&nbsp;    @FXML
+&nbsp;    public void refreshQuestion(ActionEvent event) {
+<b class="pc">&nbsp;        if (!questionTextField.getText().isEmpty() || !optionATextField.getText().isEmpty() ||</b>
+<b class="nc">&nbsp;                !optionBTextField.getText().isEmpty() || !optionCTextField.getText().isEmpty() ||</b>
+<b class="pc">&nbsp;                !optionDTextField.getText().isEmpty() || !answerTextField.getText().isEmpty() ||</b>
+<b class="pc">&nbsp;                !scoreTextField.getText().isEmpty() || typeChoiceBox.getValue() != null) {</b>
+<b class="fc">&nbsp;            MsgSender.showConfirm(&quot;Refresh Confirmation&quot;, &quot;Refreshing will clear all fields and any unsaved changes will be lost. Are you sure you want to refresh?&quot;, () -&gt; {</b>
+<b class="fc">&nbsp;                refreshQuestionConfirmed(event);</b>
+&nbsp;            });
+&nbsp;            return;
+&nbsp;        } else {
+<b class="fc">&nbsp;            refreshQuestionConfirmed(event);</b>
+&nbsp;        }
+<b class="fc">&nbsp;    }</b>
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Refresh the question table
+&nbsp;     * @param event the ActionEvent
+&nbsp;     */
+&nbsp;    public void refreshQuestionConfirmed(ActionEvent event) {
+<b class="pc">&nbsp;        resetFilters(event);</b>
+<b class="fc">&nbsp;        clearFields();</b>
+<b class="fc">&nbsp;        questionTable.getSelectionModel().clearSelection();</b>
+<b class="fc">&nbsp;        loadQuestions();</b>
+<b class="fc">&nbsp;    }</b>
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Reset the filters
+&nbsp;     * @param event the ActionEvent
+&nbsp;     */
+&nbsp;    @FXML
+&nbsp;    public void resetFilters(ActionEvent event) {
+<b class="pc">&nbsp;        questionFilterTextField.clear();</b>
+<b class="fc">&nbsp;        scoreFilterTextField.clear();</b>
+<b class="fc">&nbsp;        typeFilterChoiceBox.setValue(&quot;&quot;);</b>
+<b class="fc">&nbsp;        loadQuestions();</b>
+<b class="fc">&nbsp;    }</b>
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Update a question in the database
+&nbsp;     * @param event the ActionEvent
+&nbsp;     */
+&nbsp;    @FXML
+&nbsp;    public void updateQuestion(ActionEvent event) {
+<b class="pc">&nbsp;        Question selectedQuestion = questionTable.getSelectionModel().getSelectedItem();</b>
+&nbsp;
+<b class="fc">&nbsp;        if (selectedQuestion == null) {</b>
+<b class="fc">&nbsp;            MsgSender.showMsg(&quot;Please select a question to update.&quot;);</b>
+&nbsp;            return;
+&nbsp;        }
+&nbsp;
+<b class="fc">&nbsp;        String questionText = questionTextField.getText();</b>
+<b class="fc">&nbsp;        String optionA = optionATextField.getText();</b>
+<b class="fc">&nbsp;        String optionB = optionBTextField.getText();</b>
+<b class="fc">&nbsp;        String optionC = optionCTextField.getText();</b>
+<b class="fc">&nbsp;        String optionD = optionDTextField.getText();</b>
+<b class="fc">&nbsp;        String answer = answerTextField.getText().replaceAll(&quot;[^A-Za-z]&quot;, &quot;&quot;); // Removes non-letter characters</b>
+<b class="fc">&nbsp;        String score = scoreTextField.getText();</b>
+<b class="fc">&nbsp;        String type = (String) typeChoiceBox.getValue();</b>
+&nbsp;
+<b class="fc">&nbsp;        if (!validInputs(questionText, optionA, optionB, optionC, optionD, answer, score, type) ) {</b>
+&nbsp;            return;
+&nbsp;        }
+&nbsp;
+<b class="fc">&nbsp;        selectedQuestion.setQuestionDescription(questionText);</b>
+<b class="fc">&nbsp;        selectedQuestion.setOptionA(optionA);</b>
+<b class="fc">&nbsp;        selectedQuestion.setOptionB(optionB);</b>
+<b class="fc">&nbsp;        selectedQuestion.setOptionC(optionC);</b>
+<b class="fc">&nbsp;        selectedQuestion.setOptionD(optionD);</b>
+<b class="fc">&nbsp;        selectedQuestion.setAnswer(answer);</b>
+<b class="fc">&nbsp;        selectedQuestion.setQuestionScore(score);</b>
+<b class="fc">&nbsp;        selectedQuestion.setQuestionType(type);</b>
+&nbsp;
+&nbsp;        try {
+<b class="fc">&nbsp;            MsgSender.showConfirm(&quot;Question Update Confirmation&quot;, &quot;Are you sure you want to update the question?&quot;, () -&gt; {</b>
+<b class="fc">&nbsp;                questionDatabase.update(selectedQuestion);</b>
+<b class="fc">&nbsp;                MsgSender.showMsg(&quot;Question updated successfully.&quot;);</b>
+<b class="fc">&nbsp;                questionTable.getSelectionModel().clearSelection();</b>
+<b class="fc">&nbsp;                loadQuestions();</b>
+<b class="fc">&nbsp;                clearFields();</b>
+&nbsp;            });
+<b class="fc">&nbsp;        } catch (Exception e) {</b>
+<b class="fc">&nbsp;            MsgSender.showMsg(&quot;An error occurred while updating the question.&quot;);</b>
+<b class="fc">&nbsp;            e.printStackTrace();</b>
+&nbsp;        }
+<b class="pc">&nbsp;    }</b>
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Check if there is no filter applied
+&nbsp;     * @return true if no filter is applied, false otherwise
+&nbsp;     */
+&nbsp;    public boolean noFilter() {
+<b class="pc">&nbsp;        return (questionFilterTextField.getText().isEmpty() &amp;&amp;</b>
+<b class="fc">&nbsp;                scoreFilterTextField.getText().isEmpty() &amp;&amp;</b>
+<b class="fc">&nbsp;                (typeFilterChoiceBox.getValue() == null || typeFilterChoiceBox.getValue().isEmpty()));</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Load the questions from the database
+&nbsp;     */
+&nbsp;    public void loadQuestions() {
+<b class="pc">&nbsp;        if (noFilter()) {</b>
+&nbsp;            try {
+<b class="fc">&nbsp;                allQuestions = questionDatabase.getAll();</b>
+<b class="fc">&nbsp;                questionList = FXCollections.observableArrayList(allQuestions);</b>
+<b class="nc">&nbsp;            } catch (Exception e) {</b>
+<b class="nc">&nbsp;                MsgSender.showMsg(&quot;An error occurred while loading the questions.&quot;);</b>
+<b class="nc">&nbsp;                e.printStackTrace();</b>
+&nbsp;            }
+&nbsp;        } else {
+&nbsp;            try {
+<b class="fc">&nbsp;                String questionFilter = questionFilterTextField.getText();</b>
+<b class="fc">&nbsp;                String scoreFilter = scoreFilterTextField.getText();</b>
+<b class="fc">&nbsp;                String typeFilter = typeFilterChoiceBox.getValue();</b>
+&nbsp;
+<b class="fc">&nbsp;                List&lt;Question&gt; allQuestions = questionDatabase.getAll();</b>
+<b class="fc">&nbsp;                List&lt;Question&gt; filteredQuestions = new ArrayList&lt;&gt;();</b>
+&nbsp;
+<b class="pc">&nbsp;                for (Question question : allQuestions) {</b>
+<b class="nc">&nbsp;                    if ((questionFilter.isEmpty() || question.getQuestionDescription().contains(questionFilter)) &amp;&amp;</b>
+<b class="nc">&nbsp;                            (scoreFilter.isEmpty() || question.getQuestionScore().equals(scoreFilter)) &amp;&amp;</b>
+<b class="nc">&nbsp;                            (typeFilter.isEmpty() || question.getQuestionType().equals(typeFilter))) {</b>
+<b class="nc">&nbsp;                        filteredQuestions.add(question);</b>
+&nbsp;                    }
+&nbsp;                }
+&nbsp;
+<b class="fc">&nbsp;                questionList = FXCollections.observableArrayList(filteredQuestions);</b>
+<b class="nc">&nbsp;            } catch (Exception e) {</b>
+<b class="nc">&nbsp;                MsgSender.showMsg(&quot;An error occurred while loading the questions.&quot;);</b>
+<b class="nc">&nbsp;                e.printStackTrace();</b>
+&nbsp;            }
+&nbsp;        }
+<b class="fc">&nbsp;        questionTable.getItems().setAll(questionList);</b>
+<b class="fc">&nbsp;    }</b>
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Clear all the input fields
+&nbsp;     */
+&nbsp;    public void clearFields() {
+<b class="pc">&nbsp;        questionTextField.clear();</b>
+<b class="fc">&nbsp;        optionATextField.clear();</b>
+<b class="fc">&nbsp;        optionBTextField.clear();</b>
+<b class="fc">&nbsp;        optionCTextField.clear();</b>
+<b class="fc">&nbsp;        optionDTextField.clear();</b>
+<b class="fc">&nbsp;        answerTextField.clear();</b>
+<b class="fc">&nbsp;        scoreTextField.clear();</b>
+<b class="fc">&nbsp;        typeChoiceBox.setValue(&quot;&quot;);</b>
+<b class="fc">&nbsp;    }</b>
+&nbsp;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-11-18 19:43</div>
+</div>
+</body>
+</html>

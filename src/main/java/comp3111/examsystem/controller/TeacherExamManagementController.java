@@ -298,15 +298,15 @@ public class TeacherExamManagementController {
             // Store the quiz information in the database
             quizDatabase.add(newQuiz);
 
+            MsgSender.showMsg("Exam added successfully.");
+            loadQuizzes();
+            examQuestionList.clear();
+            loadExamQuestions();
+            clearFields();
         } catch (Exception e) {
             MsgSender.showMsg("An error occurred while adding the exam.");
             e.printStackTrace();
         }
-        MsgSender.showMsg("Exam added successfully.");
-        loadQuizzes();
-        examQuestionList.clear();
-        loadExamQuestions();
-        clearFields();
     }
 
     /**
@@ -713,7 +713,7 @@ public class TeacherExamManagementController {
                     List<Quiz> filteredQuizzes = new ArrayList<>();
 
                     for (Quiz quiz : allQuizzes) {
-                        if ((examNameFilter.isEmpty() || quiz.getQuizName().equals(examNameFilter)) &&
+                        if ((examNameFilter.isEmpty() || quiz.getQuizName().contains(examNameFilter)) &&
                                 (courseIDFilter.isEmpty() || quiz.getCourseID().equals(courseIDFilter)) &&
                                 (publishFilter.isEmpty() || quiz.getPublishStatus().equals(publishFilter))) {
                             filteredQuizzes.add(quiz);

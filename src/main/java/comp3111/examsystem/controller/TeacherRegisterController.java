@@ -107,7 +107,7 @@ public class TeacherRegisterController {
      * @param password the password of the teacher
      * @return true if the credentials are stored successfully, false otherwise
      */
-    private boolean storeTeacherCredentials(String username, String name, String gender, String age, String position, String department, String password) {
+    public boolean storeTeacherCredentials(String username, String name, String gender, String age, String position, String department, String password) {
         try {
             int teacherId = allTeachers.size() + 1;
             Teacher newTeacher = new Teacher(username, name, gender, age, department, password, position, teacherId);

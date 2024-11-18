@@ -9,6 +9,8 @@ import comp3111.examsystem.service.MsgSender;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
@@ -19,8 +21,8 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.MockedStatic;
 
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 
 class TeacherQuestionBankManagementControllerTest {
 
@@ -35,8 +37,11 @@ class TeacherQuestionBankManagementControllerTest {
     }
 
     @BeforeEach
-    void setUp() {
+    void setUp() throws IOException {
         MockitoAnnotations.openMocks(this);
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/comp3111/examsystem/TeacherQuestionBankManagementUI.fxml"));
+        Parent root = loader.load();
+
         controller = new TeacherQuestionBankManagementController();
         controller.questionTextField = new TextField();
         controller.optionATextField = new TextField();

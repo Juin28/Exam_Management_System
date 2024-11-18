@@ -8,6 +8,8 @@ import comp3111.examsystem.service.MsgSender;
 import comp3111.examsystem.model.Teacher;
 import comp3111.examsystem.service.Database;
 import javafx.application.Platform;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
@@ -18,6 +20,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.MockedStatic;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,8 +57,11 @@ class TeacherRegisterControllerTest {
     }
 
     @BeforeEach
-    void setUp() {
+    void setUp() throws IOException {
         MockitoAnnotations.openMocks(this);
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/comp3111/examsystem/TeacherRegisterUI.fxml"));
+        Parent root = loader.load();
+
         controller = new TeacherRegisterController();
         controller.usernameTxt = usernameTxt;
         controller.nameTxt = nameTxt;
@@ -182,6 +188,18 @@ class TeacherRegisterControllerTest {
             boolean result = controller.validInputs("teacher1", "Teacher One", "Male", "30", "Professor", "CSE", "password", "password");
             assertTrue(result);
             mockedMsgSender.verify(() -> MsgSender.showMsg(anyString()), never());
+        }
+    }
+
+    @Test
+    void testStoreTeacherCredentialsError() {
+        Teacher sampleTeacher = new Teacher("teacher1", "Teacher One", "Male", "30", "CSE", "password", "Professor", 1);
+
+        doThrow(new RuntimeException()).when(mockDatabase).add(any(Teacher.class));
+
+        try (MockedStatic<MsgSender> mockedMsgSender = mockStatic(MsgSender.class)) {
+            boolean result = controller.storeTeacherCredentials("teacher1", "Teacher One", "Male", "30", "Professor", "CSE", "password");
+            assertFalse(result);
         }
     }
 }
