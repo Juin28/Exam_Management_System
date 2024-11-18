@@ -9,6 +9,7 @@ import comp3111.examsystem.Main;
 import comp3111.examsystem.model.Teacher;
 import comp3111.examsystem.service.Database;
 import comp3111.examsystem.service.MsgSender;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -24,13 +25,13 @@ import javafx.stage.Stage;
  * Controller for the Teacher's Login page
  */
 public class TeacherLoginController implements Initializable {
-    private Database<Teacher> teacherDatabase;
-    private List<Teacher> allTeachers;
+    public Database<Teacher> teacherDatabase;
+    public List<Teacher> allTeachers;
 
     @FXML
-    private TextField usernameTxt;
+    public TextField usernameTxt;
     @FXML
-    private PasswordField passwordTxt;
+    public PasswordField passwordTxt;
 
     /**
      * @param location
@@ -48,8 +49,12 @@ public class TeacherLoginController implements Initializable {
      */
     @FXML
     public void login(ActionEvent e) {
+        // Get the username and password from the text fields
+        String username = usernameTxt.getText();
+        String password = passwordTxt.getText();
+
         // Check credentials
-        boolean loginStatus = handleTeacherLogin();
+        boolean loginStatus = handleTeacherLogin(username, password);
         String message = loginStatus ? "Login successful" : "Login failed, please try again";
 
         // Use MsgSender to display the popup message
@@ -63,17 +68,15 @@ public class TeacherLoginController implements Initializable {
 
     /**
      * Handle the login process
+     * @param username the username of the teacher
+     * @param password the password of the teacher
      * @return true if login is successful, false otherwise
      */
-    private boolean handleTeacherLogin() {
-        // Get the username and password from the text fields
-        String username = usernameTxt.getText();
-        String password = passwordTxt.getText();
-
+    public boolean handleTeacherLogin(String username, String password) {
         if (validInput(username, password)) {
             return checkTeacherCredentials(username, password);
         } else {
-            MsgSender.showMsg("Please enter both username and password.");
+            MsgSender.showMsg("Please fill in both fields");
             return false;
         }
     }
@@ -84,7 +87,7 @@ public class TeacherLoginController implements Initializable {
      * @param password the password of the teacher
      * @return true if both fields are not empty, false otherwise
      */
-    private boolean validInput(String username, String password) {
+    public boolean validInput(String username, String password) {
         return !username.isEmpty() && !password.isEmpty();
     }
 
@@ -94,12 +97,16 @@ public class TeacherLoginController implements Initializable {
      * @param password the password of the teacher
      * @return true if the credentials are correct, false otherwise
      */
-    private boolean checkTeacherCredentials(String username, String password) {
+    public boolean checkTeacherCredentials(String username, String password) {
+        this.teacherDatabase = new Database<>(Teacher.class);
+        allTeachers = teacherDatabase.getAll();
+
         for (Teacher teacher : allTeachers) {
             if (teacher.getUsername().equals(username) && teacher.getPassword().equals(password)) {
                 return true;
             }
         }
+        MsgSender.showMsg("Invalid username or password");
         return false;
     }
 
@@ -108,20 +115,19 @@ public class TeacherLoginController implements Initializable {
      * @param e the ActionEvent
      */
     private void loadTeacherMainUI(ActionEvent e) {
-        // Load the Teacher's main UI
-        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("TeacherMainUI.fxml"));
-        Stage stage = new Stage();
-        stage.setTitle("Hi " + usernameTxt.getText() + ", Welcome to HKUST Examination System");
-        try {
-            stage.setScene(new Scene(fxmlLoader.load()));
-            stage.show();
+        Platform.runLater(() -> {
+            FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("TeacherMainUI.fxml"));
+            Stage stage = new Stage();
+            stage.setTitle("Hi " + usernameTxt.getText() + ", Welcome to HKUST Examination System");
+            try {
+                stage.setScene(new Scene(fxmlLoader.load()));
+                stage.show();
 
-            // Close the current login window
-            ((Stage) ((Button) e.getSource()).getScene().getWindow()).close();
-
-        } catch (IOException e1) {
-            e1.printStackTrace();
-        }
+                ((Stage) ((Button) e.getSource()).getScene().getWindow()).close();
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+        });
     }
 
     /**
