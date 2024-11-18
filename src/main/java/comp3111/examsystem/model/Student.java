@@ -25,9 +25,4 @@ public class Student extends User {
     public long getId() {
         return id;
     }
-
-    // Setter For Id
-    public void setId(long id) {
-        this.id = id;
-    }
 }

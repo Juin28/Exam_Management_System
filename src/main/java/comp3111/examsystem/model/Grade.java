@@ -48,8 +48,11 @@ public class Grade {
         return id;
     }
 
-//    public void setStudentScore(int studentId, int questionId, int studentScore) {
-//        this.studentId = studentId;
-//        this.questionId = questionId;
-//        this.studentScore = studentScore;
+    public String getStudentId() {
+        return studentId;
+    }
+
+    public void setStudentId(String studentId) {
+        this.studentId = studentId;
+    }
 }

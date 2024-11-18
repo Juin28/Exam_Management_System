@@ -25,11 +25,26 @@ public class StudentLoginController implements Initializable {
     @FXML
     private PasswordField passwordTxt;
     private Database<Student> studentDatabase;
+    /**
+     * Static variable to keep track of the currently logged-in student.
+     */
+    public static Student loggedInStudent;
 
+    /**
+     * Initializes the controller.
+     *
+     * @param location   The location used to resolve relative paths for the root object.
+     * @param resources  The resources used to localize the root object.
+     */
     public void initialize(URL location, ResourceBundle resources) {
         studentDatabase = new Database<>(Student.class);
     }
 
+    /**
+     * Handles the login action when the login button is clicked.
+     *
+     * @param e The ActionEvent corresponding to the login action.
+     */
     @FXML
     public void login(ActionEvent e) {
         FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("StudentMainUI.fxml"));
@@ -37,7 +52,7 @@ public class StudentLoginController implements Initializable {
         // list to store student with the given username
         List<Student> studentList = studentDatabase.queryByField("username", usernameTxt.getText());
         // if the student does not exist
-        if(studentList.isEmpty()){
+        if(studentList == null || studentList.isEmpty()){
             MsgSender.showMsg("This user does not exist. Please register for an account.");
         }
         // if the student exists
@@ -49,6 +64,8 @@ public class StudentLoginController implements Initializable {
             }
             // if passwords match
             else{
+                MsgSender.showMsg("Login Successful");
+                loggedInStudent = studentList.getFirst();
                 stage.setTitle("Hi " + usernameTxt.getText() +", Welcome to HKUST Examination System");
                 try {
                     stage.setScene(new Scene(fxmlLoader.load()));
@@ -62,6 +79,11 @@ public class StudentLoginController implements Initializable {
         }
     }
 
+    /**
+     * Handles the registration action when the register button is clicked.
+     *
+     * @param e The ActionEvent corresponding to the registration action.
+     */
     @FXML
     public void register(ActionEvent e) {
         FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("StudentRegisterUI.fxml"));

@@ -20,120 +20,121 @@ import javafx.scene.control.*;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.application.Platform;
 
 /**
  * Controller for the Teacher's Exam Management page
  */
 public class TeacherExamManagementController {
-    private Database<Question> questionDatabase;
-    private List<Question> allQuestions;
-    private ObservableList<Question> questionList;
-    private Database<Quiz> quizDatabase;
-    private List<Quiz> allQuizzes;
-    private ObservableList<Quiz> quizList;
-    private Database<Course> courseDatabase;
-    private List<Course> allCourses;
-    private ObservableList<Course> courseList;
-    private ObservableList<Question> examQuestionList;
+    public Database<Question> questionDatabase;
+    public List<Question> allQuestions;
+    public ObservableList<Question> questionList;
+    public Database<Quiz> quizDatabase;
+    public List<Quiz> allQuizzes;
+    public ObservableList<Quiz> quizList;
+    public Database<Course> courseDatabase;
+    public List<Course> allCourses;
+    public ObservableList<Course> courseList;
+    public ObservableList<Question> examQuestionList;
 
     @FXML
-    private ResourceBundle resources;
+    public ResourceBundle resources;
     @FXML
-    private URL location;
+    public URL location;
     @FXML
-    private Button addButton;
+    public Button addButton;
     @FXML
-    private Button addQuestionButton;
+    public Button addQuestionButton;
     @FXML
-    private ChoiceBox<String> courseIDFilterChoiceBox;
+    public ChoiceBox<String> courseIDFilterChoiceBox;
     @FXML
-    private ChoiceBox<String> courseIDInput;
+    public ChoiceBox<String> courseIDInput;
     @FXML
-    private Button deleteButton;
+    public Button deleteButton;
     @FXML
-    private TableColumn<Quiz, String> examCourseIDColumn;
+    public TableColumn<Quiz, String> examCourseIDColumn;
     @FXML
-    private Button examFilterResetButton;
+    public Button examFilterResetButton;
     @FXML
-    private HBox examManagementButtons;
+    public HBox examManagementButtons;
     @FXML
-    private HBox examManagementPanel;
+    public HBox examManagementPanel;
     @FXML
-    private TableColumn<Quiz, String> examNameColumn;
+    public TableColumn<Quiz, String> examNameColumn;
     @FXML
-    private TextField examNameFilterTextField;
+    public TextField examNameFilterTextField;
     @FXML
-    private TextField examNameInput;
+    public TextField examNameInput;
     @FXML
-    private TableColumn<Quiz, String> examPublishStatusColumn;
+    public TableColumn<Quiz, String> examPublishStatusColumn;
     @FXML
-    private TableColumn<Question, String> examQuestionColumn;
+    public TableColumn<Question, String> examQuestionColumn;
     @FXML
-    private TableColumn<Question, String> examQuestionScoreColumn;
+    public TableColumn<Question, String> examQuestionScoreColumn;
     @FXML
-    private TableColumn<Question, String> examQuestionTypeColumn;
+    public TableColumn<Question, String> examQuestionTypeColumn;
     @FXML
-    private TableColumn<Quiz, String> examTimeColumn;
+    public TableColumn<Quiz, String> examTimeColumn;
     @FXML
-    private TextField examTimeInput;
+    public TextField examTimeInput;
     @FXML
-    private HBox filterPanel;
+    public HBox filterPanel;
     @FXML
-    private VBox optionCInput;
+    public VBox optionCInput;
     @FXML
-    private VBox optionDInput;
+    public VBox optionDInput;
     @FXML
-    private ChoiceBox<String> publishInput;
+    public ChoiceBox<String> publishInput;
     @FXML
-    private ChoiceBox<String> publishStatusFilterChoiceBox;
+    public ChoiceBox<String> publishStatusFilterChoiceBox;
     @FXML
-    private TableColumn<Question, String> questionColumn;
+    public TableColumn<Question, String> questionColumn;
     @FXML
-    private Button questionFilterButton;
+    public Button questionFilterButton;
     @FXML
-    private Button questionFilterResetButton;
+    public Button questionFilterResetButton;
     @FXML
-    private TextField questionFilterTextField;
+    public TextField questionFilterTextField;
     @FXML
-    private VBox questionInputFields;
+    public VBox questionInputFields;
     @FXML
-    private TableColumn<Question, String> questionScoreColumn;
+    public TableColumn<Question, String> questionScoreColumn;
     @FXML
-    private TableView<Quiz> examTable;
+    public TableView<Quiz> examTable;
     @FXML
-    private TableView<Question> examQuestionsTable;
+    public TableView<Question> examQuestionsTable;
     @FXML
-    private TableView<Question> allQuestionsTable;
+    public TableView<Question> allQuestionsTable;
     @FXML
-    private TableColumn<Question, String> questionTypeColumn;
+    public TableColumn<Question, String> questionTypeColumn;
     @FXML
-    private Button refreshButton;
+    public Button refreshButton;
     @FXML
-    private Button removeQuestionButton;
+    public Button removeQuestionButton;
     @FXML
-    private Button examFilterButton;
+    public Button examFilterButton;
     @FXML
-    private FlowPane rootPane;
+    public FlowPane rootPane;
     @FXML
-    private TextField scoreFilterTextField;
+    public TextField scoreFilterTextField;
     @FXML
-    private ChoiceBox<String> typeFilterChoiceBox;
+    public ChoiceBox<String> typeFilterChoiceBox;
     @FXML
-    private Button updateButton;
+    public Button updateButton;
     @FXML
-    private HBox examFilterPanel;
+    public HBox examFilterPanel;
     @FXML
-    private HBox questionFilterPanel;
+    public HBox questionFilterPanel;
     @FXML
-    private VBox examManagementField;
+    public VBox examManagementField;
     @FXML
-    private HBox questionTablesField;
+    public HBox questionTablesField;
 
     /**
      * Initialize the controller
      */
     @FXML
-    private void initialize() {
+    public void initialize() {
         this.questionDatabase = new Database<>(Question.class);
         allQuestions = questionDatabase.getAll();
         loadAllQuestions();
@@ -153,7 +154,7 @@ public class TeacherExamManagementController {
         }
         courseIDFilterChoiceBox.getItems().add("");
         courseIDFilterChoiceBox.setValue("");
-        publishStatusFilterChoiceBox.getItems().addAll("yes", "no", "");
+        publishStatusFilterChoiceBox.getItems().addAll("Yes", "No", "");
         publishStatusFilterChoiceBox.setValue("");
 
         // Set up the question filter options
@@ -164,7 +165,7 @@ public class TeacherExamManagementController {
         for (Course course : allCourses) {
             courseIDInput.getItems().add(course.getCourseID());
         }
-        publishInput.getItems().addAll("yes", "no");
+        publishInput.getItems().addAll("Yes", "No");
 
         // Handle resize of width of different components when the window is resized
         rootPane.widthProperty().addListener((obs, oldVal, newVal) -> {
@@ -271,7 +272,7 @@ public class TeacherExamManagementController {
      * @param event the ActionEvent
      */
     @FXML
-    private void addExam(ActionEvent event) {
+    public void addExam(ActionEvent event) {
         String examName = examNameInput.getText();
         String examTime = examTimeInput.getText();
         String courseID = courseIDInput.getValue();
@@ -282,6 +283,14 @@ public class TeacherExamManagementController {
             return;
         }
 
+        // check if the quiz already exists
+        for (Quiz quiz : allQuizzes) {
+            if (quiz.getQuizName().equals(examName) && quiz.getCourseID().equals(courseID)) {
+                MsgSender.showMsg("The exam already exists.");
+                return;
+            }
+        }
+
         try {
             int quizId = allQuizzes.size() + 1;
             Quiz newQuiz = new Quiz(examName, examTime, courseID, publishStatus, quizId, questionIDs);
@@ -289,16 +298,15 @@ public class TeacherExamManagementController {
             // Store the quiz information in the database
             quizDatabase.add(newQuiz);
 
+            MsgSender.showMsg("Exam added successfully.");
+            loadQuizzes();
+            examQuestionList.clear();
+            loadExamQuestions();
+            clearFields();
         } catch (Exception e) {
             MsgSender.showMsg("An error occurred while adding the exam.");
             e.printStackTrace();
-            throw new RuntimeException(e);
         }
-        MsgSender.showMsg("Exam added successfully.");
-        loadQuizzes();
-        examQuestionList.clear();
-        loadExamQuestions();
-        clearFields();
     }
 
     /**
@@ -306,7 +314,7 @@ public class TeacherExamManagementController {
      * @param examQuestionList list of questions in the exam
      * @return a string of question IDs concatenated by "|"
      */
-    private String getQuestionIDs(ObservableList<Question> examQuestionList) {
+    public String getQuestionIDs(ObservableList<Question> examQuestionList) {
         return examQuestionList.stream()
                 .map(question -> String.valueOf(question.getId()))
                 .collect(Collectors.joining("|"));
@@ -321,7 +329,7 @@ public class TeacherExamManagementController {
      * @param questionIDs the question IDs of the exam
      * @return true if all inputs are valid, false otherwise
      */
-    private boolean validInputs(String examName, String examTime, String courseID, String publishStatus, String questionIDs) {
+    public boolean validInputs(String examName, String examTime, String courseID, String publishStatus, String questionIDs) {
         // check if all fields are filled
         if (examName.isEmpty() || examTime.isEmpty() || courseID.isEmpty() || publishStatus.isEmpty()) {
             MsgSender.showMsg("All fields must be filled.");
@@ -379,7 +387,6 @@ public class TeacherExamManagementController {
         } catch (Exception e) {
             MsgSender.showMsg("An error occurred while deleting the exam.");
             e.printStackTrace();
-            throw new RuntimeException(e);
         }
     }
 
@@ -399,7 +406,7 @@ public class TeacherExamManagementController {
         String oldPublishStatus = selectedQuiz.getPublishStatus();
 
         // check if the exam is published
-        if (oldPublishStatus.equals("yes")) {
+        if (oldPublishStatus.equals("Yes") || oldPublishStatus.equals("yes")) {
             MsgSender.showMsg("Cannot update a published exam.");
             return;
         }
@@ -434,7 +441,6 @@ public class TeacherExamManagementController {
         } catch (Exception e) {
             MsgSender.showMsg("An error occurred while updating the exam.");
             e.printStackTrace();
-            throw new RuntimeException(e);
         }
     }
 
@@ -443,16 +449,17 @@ public class TeacherExamManagementController {
      * @param questionIDs the string of question IDs concatenated by "|"
      * @return the list of questions
      */
-    private List<Question> getExamQuestionList(String questionIDs) {
+    public List<Question> getExamQuestionList(String questionIDs) {
         List<String> questionIDsList = List.of(questionIDs.split("\\|"));
+        List<Question> questions = new ArrayList<>();
 
         try {
-            return questionDatabase.queryByKeys(questionIDsList);
+            questions = questionDatabase.queryByKeys(questionIDsList);
         } catch (Exception e) {
             MsgSender.showMsg("An error occurred while loading the exam questions.");
             e.printStackTrace();
-            throw new RuntimeException(e);
         }
+        return questions;
     }
 
     /**
@@ -481,7 +488,6 @@ public class TeacherExamManagementController {
         } catch (Exception e) {
             MsgSender.showMsg("An error occurred while adding the question to the exam.");
             e.printStackTrace();
-            throw new RuntimeException(e);
         }
         MsgSender.showMsg("Question added to the exam successfully.");
         loadExamQuestions();
@@ -506,7 +512,6 @@ public class TeacherExamManagementController {
         } catch (Exception e) {
             MsgSender.showMsg("An error occurred while removing the question from the exam.");
             e.printStackTrace();
-            throw new RuntimeException(e);
         }
         MsgSender.showMsg("Question removed from the exam successfully.");
         loadExamQuestions();
@@ -520,8 +525,9 @@ public class TeacherExamManagementController {
     @FXML
     public void refreshExamManagementPage(ActionEvent event) {
         if (examTable.getSelectionModel().getSelectedItem() != null || !examTimeInput.getText().isEmpty() ||
-                !examNameInput.getText().isEmpty() || !courseIDInput.getValue().isEmpty() ||
-                !publishInput.getValue().isEmpty()) {
+                !examNameInput.getText().isEmpty() ||
+                (courseIDInput.getValue() != null && !courseIDInput.getValue().isEmpty()) ||
+                (publishInput.getValue() != null && !publishInput.getValue().isEmpty())) {
             // ask for confirmation before refreshing
             MsgSender.showConfirm("Refresh Confirmation", "Refreshing will clear all fields and any unsaved changes will be lost. Are you sure you want to refresh?", () -> {
                 refreshExamManagementPageConfirmed(event);
@@ -535,7 +541,7 @@ public class TeacherExamManagementController {
      * Handle the refresh button action
      * @param event the ActionEvent
      */
-    private void refreshExamManagementPageConfirmed(ActionEvent event) {
+    public void refreshExamManagementPageConfirmed(ActionEvent event) {
         // reset all filters
         resetExamFilters(event);
         resetQuestionFilters(event);
@@ -597,7 +603,7 @@ public class TeacherExamManagementController {
      * Check if there is no filter applied for questions
      * @return true if there is no filter applied, false otherwise
      */
-    private boolean noQuestionFilter() {
+    public boolean noQuestionFilter() {
         return (questionFilterTextField.getText().isEmpty() &&
                 (typeFilterChoiceBox.getValue() == null || typeFilterChoiceBox.getValue().isEmpty()) &&
                 scoreFilterTextField.getText().isEmpty());
@@ -607,7 +613,7 @@ public class TeacherExamManagementController {
      * Check if there is no filter applied for exams
      * @return true if there is no filter applied, false otherwise
      */
-    private boolean noExamFilter() {
+    public boolean noExamFilter() {
         return (examNameFilterTextField.getText().isEmpty() &&
                 (courseIDFilterChoiceBox.getValue() == null || courseIDFilterChoiceBox.getValue().isEmpty()) &&
                 (publishStatusFilterChoiceBox.getValue() == null || publishStatusFilterChoiceBox.getValue().isEmpty()));
@@ -616,7 +622,7 @@ public class TeacherExamManagementController {
     /**
      * Load all questions from the database
      */
-    private void loadAllQuestions() {
+    public void loadAllQuestions() {
         if (noQuestionFilter()) {
             try {
                 allQuestions = questionDatabase.getAll();
@@ -624,7 +630,6 @@ public class TeacherExamManagementController {
             } catch (Exception e) {
                 MsgSender.showMsg("An error occurred while loading the questions.");
                 e.printStackTrace();
-                throw new RuntimeException(e);
             }
         } else {
             try {
@@ -647,7 +652,6 @@ public class TeacherExamManagementController {
             } catch (Exception e) {
                 MsgSender.showMsg("An error occurred while filtering the questions.");
                 e.printStackTrace();
-                throw new RuntimeException(e);
             }
         }
 
@@ -657,7 +661,7 @@ public class TeacherExamManagementController {
     /**
      * Load exam questions from the exam question list
      */
-    private void loadExamQuestions() {
+    public void loadExamQuestions() {
         examQuestionsTable.getItems().setAll(examQuestionList);
     }
 
@@ -665,7 +669,7 @@ public class TeacherExamManagementController {
      * Load exam questions from the database
      * @param id the id of the exam
      */
-    private void loadExamQuestions(long id) {
+    public void loadExamQuestions(long id) {
         try {
             Quiz quiz = quizDatabase.queryByKey(Long.toString(id));
             String questionIDsString = quiz.getQuestionIDs();
@@ -683,55 +687,54 @@ public class TeacherExamManagementController {
         } catch (Exception e) {
             MsgSender.showMsg("An error occurred while loading the exam questions.");
             e.printStackTrace();
-            throw new RuntimeException(e);
         }
     }
 
     /**
      * Load exams from the database
      */
-    private void loadQuizzes() {
-        if (noExamFilter()) {
-            try {
-                allQuizzes = quizDatabase.getAll();
-                quizList = FXCollections.observableArrayList(allQuizzes);
-            } catch (Exception e) {
-                MsgSender.showMsg("An error occurred while loading the exams.");
-                e.printStackTrace();
-                throw new RuntimeException(e);
-            }
-        } else {
-            try {
-                String examNameFilter = examNameFilterTextField.getText();
-                String courseIDFilter = courseIDFilterChoiceBox.getValue();
-                String publishFilter = publishStatusFilterChoiceBox.getValue();
-
-                allQuizzes = quizDatabase.getAll();
-                List<Quiz> filteredQuizzes = new ArrayList<>();
-
-                for (Quiz quiz : allQuizzes) {
-                    if ((examNameFilter.isEmpty() || quiz.getQuizName().equals(examNameFilter)) &&
-                            (courseIDFilter.isEmpty() || quiz.getCourseID().equals(courseIDFilter)) &&
-                            (publishFilter.isEmpty() || quiz.getPublishStatus().equals(publishFilter))) {
-                        filteredQuizzes.add(quiz);
-                    }
+    public void loadQuizzes() {
+        Platform.runLater(() -> {
+            if (noExamFilter()) {
+                try {
+                    allQuizzes = quizDatabase.getAll();
+                    quizList = FXCollections.observableArrayList(allQuizzes);
+                } catch (Exception e) {
+                    MsgSender.showMsg("An error occurred while loading the exams.");
+                    e.printStackTrace();
                 }
+            } else {
+                try {
+                    String examNameFilter = examNameFilterTextField.getText();
+                    String courseIDFilter = courseIDFilterChoiceBox.getValue();
+                    String publishFilter = publishStatusFilterChoiceBox.getValue();
 
-                quizList = FXCollections.observableArrayList(filteredQuizzes);
-            } catch (Exception e) {
-                MsgSender.showMsg("An error occurred while filtering the exams.");
-                e.printStackTrace();
-                throw new RuntimeException(e);
+                    allQuizzes = quizDatabase.getAll();
+                    List<Quiz> filteredQuizzes = new ArrayList<>();
+
+                    for (Quiz quiz : allQuizzes) {
+                        if ((examNameFilter.isEmpty() || quiz.getQuizName().contains(examNameFilter)) &&
+                                (courseIDFilter.isEmpty() || quiz.getCourseID().equals(courseIDFilter)) &&
+                                (publishFilter.isEmpty() || quiz.getPublishStatus().equals(publishFilter))) {
+                            filteredQuizzes.add(quiz);
+                        }
+                    }
+
+                    quizList = FXCollections.observableArrayList(filteredQuizzes);
+                } catch (Exception e) {
+                    MsgSender.showMsg("An error occurred while filtering the exams.");
+                    e.printStackTrace();
+                }
             }
-        }
 
-        examTable.getItems().setAll(quizList);
+            examTable.getItems().setAll(quizList);
+        });
     }
 
     /**
      * Clear all fields
      */
-    private void clearFields() {
+    public void clearFields() {
         examNameInput.clear();
         examTimeInput.clear();
         courseIDInput.setValue("");

@@ -17,30 +17,6 @@ public class User {
         this.password = password;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setGender(String gender) {
-        this.gender = gender;
-    }
-
-    public void setAge(String age) {
-        this.age = age;
-    }
-
-    public void setDepartment(String department) {
-        this.department = department;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
     public String getUsername() {
         return username;
     }
@@ -63,5 +39,29 @@ public class User {
 
     public String getPassword() {
         return password;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setAge(String age) {
+        this.age = age;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setDepartment(String department) {
+        this.department = department;
     }
 }
