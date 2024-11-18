@@ -18,6 +18,9 @@ import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.*;
 
+/**
+ * Controller class for handling student interactions in the quiz view.
+ */
 public class QuizViewController implements Initializable {
     private Student curStudent;
     private Database<Question> questionDatabase;
@@ -92,6 +95,12 @@ public class QuizViewController implements Initializable {
     @FXML
     private Button submit;
 
+    /**
+     * Initializes the controller.
+     *
+     * @param url The location used to resolve relative paths for the root object.
+     * @param resourceBundle The resources used to localize the root object.
+     */
     public void initialize(URL url, ResourceBundle resourceBundle) {
         questionDatabase = new Database<>(Question.class);
         gradeDatabase = new Database<>(Grade.class);
@@ -113,6 +122,9 @@ public class QuizViewController implements Initializable {
         Platform.runLater(this::setupCloseRequestHandler);
     }
 
+    /**
+     * Sets up the close request handler for the quiz window.
+     */
     public void setupCloseRequestHandler() {
         Stage primaryStage = (Stage) currQuiz.getScene().getWindow();
         primaryStage.setOnCloseRequest(event -> {
@@ -132,6 +144,9 @@ public class QuizViewController implements Initializable {
         });
     }
 
+    /**
+     * Handles the submit button action.
+     */
     @FXML
     private void handleSubmit() {
         checkAnswers();  // Check answers when submitting
@@ -144,6 +159,9 @@ public class QuizViewController implements Initializable {
         timer.cancel();
     }
 
+    /**
+     * Handles the next button action.
+     */
     @FXML
     private void handleNext() {
         if (currentQuestionIndex < allQuestionDesc.size() - 1) {
@@ -154,6 +172,9 @@ public class QuizViewController implements Initializable {
         }
     }
 
+    /**
+     * Updates the question details in the UI based on the current question index.
+     */
     private void updateQuestionUI() {
         // Get the next question description
         questionDesc = allQuestionDesc.get(currentQuestionIndex);
@@ -170,7 +191,9 @@ public class QuizViewController implements Initializable {
         loadSelectedAnswers();
     }
 
-    // Helper function to show question details
+    /**
+     * Shows the details of the selected question.
+     */
     private void showQuestionDet() {
         setChoiceListeners();
         questionDesc = allQuestionDesc.getFirst();
@@ -189,13 +212,16 @@ public class QuizViewController implements Initializable {
                 setAnsDescriptions(currQuestion);
                 // Load selected answer for this question, if available
                 loadSelectedAnswers();
-//                setChoiceListeners();
             }
         });
         Platform.runLater(this::setupCloseRequestHandler);
     }
 
-    // Helper function to answer description
+    /**
+     * Sets the answer descriptions for the current question.
+     *
+     * @param question The question object containing answer descriptions.
+     */
     private void setAnsDescriptions(Question question){
         ansA.setText(question.getOptionA());
         ansB.setText(question.getOptionB());
@@ -203,7 +229,11 @@ public class QuizViewController implements Initializable {
         ansD.setText(question.getOptionD());
     }
 
-    // Helper function to show allQuestionDesc in the sidebar
+    /**
+     * Shows all questions in the sidebar for the current quiz.
+     *
+     * @param quiz The quiz object containing questions to display.
+     */
     private void showQuestions(Quiz quiz){
         questionIds = StudentMainController.splitByPipe(quiz.getQuestionIDs());
         totalNumQ = questionIds.length;
@@ -214,9 +244,12 @@ public class QuizViewController implements Initializable {
         questionList.getItems().addAll(allQuestionDesc);
     }
 
-    // Helper function to set the timer
+    /**
+     * Sets the timer for the quiz.
+     *
+     * @param time The time duration for the quiz timer.
+     */
     private void setTimer(String time){
-//        Timer timer = new Timer();
         TimerTask task = new TimerTask() {
             int counter = Integer.parseInt(time)*60;
             @Override
@@ -230,6 +263,7 @@ public class QuizViewController implements Initializable {
                 }
                 else{
                     Platform.runLater(() -> {
+                        MsgSender.showMsg("Time's up!");
                         handleSubmit();
                     });
                     timer.cancel();
@@ -239,7 +273,9 @@ public class QuizViewController implements Initializable {
         timer.scheduleAtFixedRate(task, 0, 1000);
     }
 
-    // Adds listeners to each RadioButton to track selection changes
+    /**
+     * Adds listeners to each RadioButton to track selection changes.
+     */
     private void setChoiceListeners() {
         choiceA.setOnAction(event -> updateSelectedAnswers("A", choiceA.isSelected()));
         choiceB.setOnAction(event -> updateSelectedAnswers("B", choiceB.isSelected()));
@@ -247,7 +283,12 @@ public class QuizViewController implements Initializable {
         choiceD.setOnAction(event -> updateSelectedAnswers("D", choiceD.isSelected()));
     }
 
-    // Updates the selected answers map based on user selection
+    /**
+     * Updates the selected answers map based on user selection.
+     *
+     * @param option The selected answer option.
+     * @param isSelected A boolean indicating whether the option is selected.
+     */
     private void updateSelectedAnswers(String option, boolean isSelected) {
         Long questionId = currQuestion.getId();
         selectedAnswers.putIfAbsent(questionId, new ArrayList<>());
@@ -260,7 +301,9 @@ public class QuizViewController implements Initializable {
         }
     }
 
-    // Loads previously selected answers for the current question
+    /**
+     * Loads previously selected answers for the current question.
+     */
     private void loadSelectedAnswers() {
         Long questionId = currQuestion.getId();
         List<String> selected = selectedAnswers.getOrDefault(questionId, new ArrayList<>());
@@ -270,6 +313,9 @@ public class QuizViewController implements Initializable {
         choiceD.setSelected(selected.contains("D"));
     }
 
+    /**
+     * Checks the answers for the quiz and calculates the score.
+     */
     private void checkAnswers(){
         score = 0;
         numOfCorrect = 0;
