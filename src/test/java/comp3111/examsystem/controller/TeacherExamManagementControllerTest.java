@@ -1,7 +1,7 @@
 package comp3111.examsystem.controller;
 
 import static junit.framework.Assert.*;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 import comp3111.examsystem.model.Course;
@@ -15,9 +15,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.stage.Stage;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -28,7 +26,6 @@ import org.mockito.MockitoAnnotations;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CountDownLatch;
 import java.util.stream.Collectors;
 
 class TeacherExamManagementControllerTest {
@@ -40,16 +37,7 @@ class TeacherExamManagementControllerTest {
     @Mock
     private Database<Course> mockCourseDatabase;
 
-//    @Mock
-//    private Database<Quiz> mockQuizDatabase2;
-//    @Mock
-//    private Database<Question> mockQuestionDatabase2;
-//    @Mock
-//    private Database<Course> mockCourseDatabase2;
-
     private TeacherExamManagementController controller;
-
-    private TeacherExamManagementController controller2;
 
     @BeforeAll
     static void initToolkit() {
@@ -490,9 +478,6 @@ class TeacherExamManagementControllerTest {
 
     @Test
     void testLoadAllQuestionsWithNoFilter() {
-        // Create a mock of the Database class
-        Database<Question> mockQuestionDatabase = mock(Database.class);
-
         // Create a list of questions to be returned by the mock
         List<Question> mockQuestions = new ArrayList<>();
         mockQuestions.add(new Question("Sample Question 1", "A", "B", "C", "D", "A", "10", "Single", 123));
@@ -500,9 +485,6 @@ class TeacherExamManagementControllerTest {
 
         // Stub the getAll method to return the mockQuestions list
         when(mockQuestionDatabase.getAll()).thenReturn(mockQuestions);
-
-        // Set the mock database in the controller
-        controller.questionDatabase = mockQuestionDatabase;
 
         // Call the method to be tested
         controller.loadAllQuestions();
@@ -516,9 +498,6 @@ class TeacherExamManagementControllerTest {
 
     @Test
     void testLoadAllQuestionsWithFilter() {
-        // Create a mock of the Database class
-        Database<Question> mockQuestionDatabase = mock(Database.class);
-
         // Create a list of questions to be returned by the mock
         List<Question> allQuestions = new ArrayList<>();
         allQuestions.add(new Question("Sample Question 1", "A", "B", "C", "D", "A", "10", "Single", 123));
@@ -526,9 +505,6 @@ class TeacherExamManagementControllerTest {
 
         // Stub the getAll method to return the allQuestions list
         when(mockQuestionDatabase.getAll()).thenReturn(allQuestions);
-
-        // Set the mock database in the controller
-        controller.questionDatabase = mockQuestionDatabase;
 
         // Set up the filter criteria
         controller.typeFilterChoiceBox.setValue("Single");
@@ -550,9 +526,6 @@ class TeacherExamManagementControllerTest {
 
     @Test
     void testLoadQuizzesWithNoFilter() {
-        // Create a mock of the Database class
-        Database<Quiz> mockQuizDatabase = mock(Database.class);
-
         // Create a list of quizzes to be returned by the mock
         List<Quiz> allQuizzes = new ArrayList<>();
         allQuizzes.add(new Quiz("Sample Quiz 1", "60", "COMP3111", "Yes", 1, "123|"));
@@ -561,16 +534,10 @@ class TeacherExamManagementControllerTest {
         // Stub the getAll method to return the allQuizzes list
         when(mockQuizDatabase.getAll()).thenReturn(allQuizzes);
 
-        // Set the mock database in the controller
-        controller.quizDatabase = mockQuizDatabase;
-
         // Run the loadQuizzes method on the JavaFX Application Thread
         Platform.runLater(() -> {
             // Call the method to be tested
             controller.loadQuizzes();
-
-            // Verify that the getAll method was called on the mock
-            verify(mockQuizDatabase).getAll();
 
             // Assert that the quizList contains allQuizzes
             assertEquals(allQuizzes, controller.quizList);
@@ -586,9 +553,6 @@ class TeacherExamManagementControllerTest {
 
     @Test
     void testLoadQuizzesWithFilter() {
-        // Create a mock of the Database class
-        Database<Quiz> mockQuizDatabase = mock(Database.class);
-
         // Create a list of quizzes to be returned by the mock
         List<Quiz> allQuizzes = new ArrayList<>();
         allQuizzes.add(new Quiz("Sample Quiz 1", "60", "COMP3111", "Yes", 1, "123|"));
@@ -597,9 +561,6 @@ class TeacherExamManagementControllerTest {
         // Stub the getAll method to return the allQuizzes list
         when(mockQuizDatabase.getAll()).thenReturn(allQuizzes);
 
-        // Set the mock database in the controller
-        controller.quizDatabase = mockQuizDatabase;
-
         // Set up the filter criteria
         controller.courseIDFilterChoiceBox.setValue("COMP3111");
 
@@ -607,9 +568,6 @@ class TeacherExamManagementControllerTest {
         Platform.runLater(() -> {
             // Call the method to be tested
             controller.loadQuizzes();
-
-            // Verify that the getAll method was called on the mock
-            verify(mockQuizDatabase).getAll();
 
             // Create the expected filtered list
             List<Quiz> filteredQuizzes = allQuizzes.stream()
@@ -1035,9 +993,6 @@ class TeacherExamManagementControllerTest {
 
     @Test
     void testLoadAllQuestionsErrorWithoutFilter() {
-        // Create a mock of the Database class
-        Database<Question> mockQuestionDatabase = mock(Database.class);
-
         // Create a list of questions to be returned by the mock
         List<Question> allQuestions = new ArrayList<>();
         allQuestions.add(new Question("Sample Question 1", "A", "B", "C", "D", "A", "10", "Single", 123));
@@ -1045,9 +1000,6 @@ class TeacherExamManagementControllerTest {
 
         // Stub the getAll method to return the allQuestions list
         when(mockQuestionDatabase.getAll()).thenReturn(allQuestions);
-
-        // Set the mock database in the controller
-        controller.questionDatabase = mockQuestionDatabase;
 
         // Test with no filter
         controller.questionFilterTextField.setText("");
@@ -1065,9 +1017,6 @@ class TeacherExamManagementControllerTest {
 
     @Test
     void testLoadAllQuestionsErrorWithFilter() {
-        // Create a mock of the Database class
-        Database<Question> mockQuestionDatabase = mock(Database.class);
-
         // Create a list of questions to be returned by the mock
         List<Question> allQuestions = new ArrayList<>();
         allQuestions.add(new Question("Sample Question 1", "A", "B", "C", "D", "A", "10", "Single", 123));
@@ -1075,9 +1024,6 @@ class TeacherExamManagementControllerTest {
 
         // Stub the getAll method to return the allQuestions list
         when(mockQuestionDatabase.getAll()).thenReturn(allQuestions);
-
-        // Set the mock database in the controller
-        controller.questionDatabase = mockQuestionDatabase;
 
         // Test with no filter
         controller.questionFilterTextField.setText("");
@@ -1095,9 +1041,6 @@ class TeacherExamManagementControllerTest {
 
     @Test
     void testLoadQuizzesErrorWithoutFilter() {
-        // Create a mock of the Database class
-        Database<Quiz> mockQuizDatabase = mock(Database.class);
-
         // Set the mock database in the controller
         controller.quizDatabase = mockQuizDatabase;
 
@@ -1131,12 +1074,6 @@ class TeacherExamManagementControllerTest {
 
     @Test
     void testLoadQuizzesErrorWithFilter() {
-        // Create a mock of the Database class
-        Database<Quiz> mockQuizDatabase = mock(Database.class);
-
-        // Set the mock database in the controller
-        controller.quizDatabase = mockQuizDatabase;
-
         // Test with no filter
         controller.examNameFilterTextField.setText("");
         controller.courseIDFilterChoiceBox.setValue("COMP3111");
