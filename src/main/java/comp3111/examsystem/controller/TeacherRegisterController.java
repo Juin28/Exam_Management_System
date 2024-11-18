@@ -10,35 +10,37 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Controller for the Teacher's Registration page
  */
 public class TeacherRegisterController {
-    private Database<Teacher> teacherDatabase;
-    private List<Teacher> allTeachers;
+    public Database<Teacher> teacherDatabase;
+    public List<Teacher> allTeachers = new ArrayList<>();
 
     @FXML
-    private TextField usernameTxt;
+    public TextField usernameTxt;
     @FXML
-    private TextField nameTxt;
+    public TextField nameTxt;
     @FXML
-    private ChoiceBox<String> genderChoice;
+    public ChoiceBox<String> genderChoice;
     @FXML
-    private TextField ageTxt;
+    public TextField ageTxt;
     @FXML
-    private ChoiceBox<String> positionChoice;
+    public ChoiceBox<String> positionChoice;
     @FXML
-    private TextField departmentTxt;
+    public TextField departmentTxt;
     @FXML
-    private PasswordField passwordTxt;
+    public PasswordField passwordTxt;
     @FXML
-    private PasswordField passwordConfirmTxt;
+    public PasswordField passwordConfirmTxt;
     @FXML
-    private Button registerButton;
+    public Button registerButton;
     @FXML
-    private Button closeButton;
+    public Button closeButton;
 
     /**
      * Initialize the controller
@@ -63,22 +65,59 @@ public class TeacherRegisterController {
         String password = passwordTxt.getText();
         String confirmPassword = passwordConfirmTxt.getText();
 
-        if (!validInputs(username, name, gender, age, position, department, password, confirmPassword)) {
-            return;
-        }
+        boolean registrationStatus = handleTeacherRegistration(username, name, gender, age, position, department, password, confirmPassword);
+        String message = registrationStatus ? "Registration successful! You can now log in." : "An error occurred while registering the teacher.";
 
+        if (registrationStatus) {
+            MsgSender.showMsg(message);
+            closeWindow();
+        } else {
+            MsgSender.showMsg(message);
+        }
+    }
+
+    /**
+     * Handle the registration process
+     * @param username the username of the teacher
+     * @param name the name of the teacher
+     * @param gender the gender of the teacher
+     * @param age the age of the teacher
+     * @param position the position of the teacher
+     * @param department the department of the teacher
+     * @param password the password of the teacher
+     * @param confirmPassword the confirm password of the teacher
+     * @return true if registration is successful, false otherwise
+     */
+    public boolean handleTeacherRegistration(String username, String name, String gender, String age, String position, String department, String password, String confirmPassword) {
+        if (validInputs(username, name, gender, age, position, department, password, confirmPassword)) {
+            return storeTeacherCredentials(username, name, gender, age, position, department, password);
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Store the teacher credentials in the database
+     * @param username the username of the teacher
+     * @param name the name of the teacher
+     * @param gender the gender of the teacher
+     * @param age the age of the teacher
+     * @param position the position of the teacher
+     * @param department the department of the teacher
+     * @param password the password of the teacher
+     * @return true if the credentials are stored successfully, false otherwise
+     */
+    public boolean storeTeacherCredentials(String username, String name, String gender, String age, String position, String department, String password) {
         try {
             int teacherId = allTeachers.size() + 1;
             Teacher newTeacher = new Teacher(username, name, gender, age, department, password, position, teacherId);
 
             // Store the teacher credentials in the database
             teacherDatabase.add(newTeacher);
-
-            MsgSender.showMsg("Registration successful! You can now log in.");
-            closeWindow();
+            return true;
         } catch (Exception e) {
             e.printStackTrace();
-            MsgSender.showMsg("An error occurred while registering the teacher.");
+            return false;
         }
     }
 
@@ -90,7 +129,6 @@ public class TeacherRegisterController {
         Stage stage = (Stage) usernameTxt.getScene().getWindow();
         stage.close();
     }
-
 
     /**
      * Validate the inputs
@@ -104,34 +142,39 @@ public class TeacherRegisterController {
      * @param confirmPassword the confirm password of the teacher
      * @return true if the inputs are valid, false otherwise
      */
-    private boolean validInputs(String username, String name, String gender, String ageStr, String position, String department, String password, String confirmPassword) {
+    public boolean validInputs(String username, String name, String gender, String ageStr, String position, String department, String password, String confirmPassword) {
+        // Check if any of the fields are empty
         if (username.isEmpty() || name.isEmpty() || gender == null ||
                 ageStr.isEmpty() || position == null || department.isEmpty() ||
                 password.isEmpty() || confirmPassword.isEmpty()) {
-            MsgSender.showMsg("All fields are required.");
+            MsgSender.showMsg("Please fill in all the fields.");
             return false;
         }
 
+        // Check if the age is a valid number
         int age = 0;
         try {
             age = Integer.parseInt(ageStr);
+            // Check if the age is a positive number
             if (age <= 0) {
-                MsgSender.showMsg("Age must be a positive number.");
+                MsgSender.showMsg("The age must be a positive number. Please try again.");
                 return false;
             }
         } catch (NumberFormatException e) {
-            MsgSender.showMsg("Age must be an integer.");
+            MsgSender.showMsg("The age must be a valid number. Please try again.");
             return false;
         }
 
+        // Check if the password and confirm password match
         if (!password.equals(confirmPassword)) {
-            MsgSender.showMsg("Password does not match with Confirm Password.");
+            MsgSender.showMsg("The passwords do not match. Please try again.");
             return false;
         }
 
+        // Check if the username already exists
         List<Teacher> existingTeachers = teacherDatabase.queryByField("username", username);
         if (!existingTeachers.isEmpty()) {
-            MsgSender.showMsg("Username already exists.");
+            MsgSender.showMsg("The username already exists. Please choose a different username.");
             return false;
         }
 
