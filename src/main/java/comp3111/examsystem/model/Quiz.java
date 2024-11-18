@@ -1,15 +1,12 @@
 package comp3111.examsystem.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class Quiz {
-    private long id;
-    private String quizName;
-    private String quizTime;
-    private String courseID;
-    private String publishStatus;
-    private String questionIDs;     // storing Question ids by concatenating them with "|"
+    public long id;
+    public String quizName;
+    public String quizTime;
+    public String courseID;
+    public String publishStatus;
+    public String questionIDs;     // storing Question ids by concatenating them with "|"
 
     // Default constructor
     public Quiz() {

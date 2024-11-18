@@ -1,8 +1,5 @@
 package comp3111.examsystem.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class Course {
     public long id;
     public String courseName;
