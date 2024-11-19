@@ -25,99 +25,98 @@ import javafx.scene.layout.VBox;
  * Controller for the Teacher's Question Bank Management page
  */
 public class TeacherQuestionBankManagementController {
-    private Database<Question> questionDatabase;
-    private List<Question> allQuestions;
-    private ObservableList<Question> questionList;
+    public Database<Question> questionDatabase;
+    public List<Question> allQuestions;
+    public ObservableList<Question> questionList;
 
     @FXML
-    private ResourceBundle resources;
+    public ResourceBundle resources;
     @FXML
-    private URL location;
+    public URL location;
     @FXML
-    private Button addButton;
+    public Button addButton;
     @FXML
-    private TableColumn<Question, String> answerColumn;
+    public TableColumn<Question, String> answerColumn;
     @FXML
-    private TextField answerTextField;
+    public TextField answerTextField;
     @FXML
-    private Button deleteButton;
+    public Button deleteButton;
     @FXML
-    private Button filterButton;
+    public Button filterButton;
     @FXML
-    private TableColumn<Question, String> optionAColumn;
+    public TableColumn<Question, String> optionAColumn;
     @FXML
-    private TextField optionATextField;
+    public TextField optionATextField;
     @FXML
-    private TableColumn<Question, String> optionBColumn;
+    public TableColumn<Question, String> optionBColumn;
     @FXML
-    private TextField optionBTextField;
+    public TextField optionBTextField;
     @FXML
-    private TableColumn<Question, String> optionCColumn;
+    public TableColumn<Question, String> optionCColumn;
     @FXML
-    private TextField optionCTextField;
+    public TextField optionCTextField;
     @FXML
-    private TableColumn<Question, String> optionDColumn;
+    public TableColumn<Question, String> optionDColumn;
     @FXML
-    private TextField optionDTextField;
+    public TextField optionDTextField;
     @FXML
-    private TableColumn<Question, String> questionColumn;
+    public TableColumn<Question, String> questionColumn;
     @FXML
-    private TextField questionFilterTextField;
+    public TextField questionFilterTextField;
     @FXML
-    private TableView<Question> questionTable;
+    public TableView<Question> questionTable;
     @FXML
-    private TextField questionTextField;
+    public TextField questionTextField;
     @FXML
-    private Button refreshButton;
+    public Button refreshButton;
     @FXML
-    private Button resetButton;
+    public Button resetButton;
     @FXML
-    private TableColumn<Question, String> scoreColumn;
+    public TableColumn<Question, String> scoreColumn;
     @FXML
-    private TextField scoreFilterTextField;
+    public TextField scoreFilterTextField;
     @FXML
-    private TextField scoreTextField;
+    public TextField scoreTextField;
     @FXML
-    private TableColumn<Question, String> typeColumn;
+    public TableColumn<Question, String> typeColumn;
     @FXML
-    private ChoiceBox<String> typeChoiceBox;
+    public ChoiceBox<String> typeChoiceBox;
     @FXML
-    private ChoiceBox<String> typeFilterChoiceBox;
+    public ChoiceBox<String> typeFilterChoiceBox;
     @FXML
-    private Button updateButton;
+    public Button updateButton;
     @FXML
-    private FlowPane rootPane;
+    public FlowPane rootPane;
     @FXML
-    private VBox questionInputFields;
+    public VBox questionInputFields;
     @FXML
-    private HBox filterManagementFields;
+    public HBox filterManagementFields;
     @FXML
-    private HBox questionManagementButtons;
+    public HBox questionManagementButtons;
     @FXML
-    private HBox tableAndQuestionInputFields;
-
+    public HBox tableAndQuestionInputFields;
     @FXML
-    private VBox questionInput;
+    public VBox questionInput;
     @FXML
-    private VBox optionAInput;
+    public VBox optionAInput;
     @FXML
-    private VBox optionBInput;
+    public VBox optionBInput;
     @FXML
-    private VBox optionCInput;
+    public VBox optionCInput;
     @FXML
-    private VBox optionDInput;
+    public VBox optionDInput;
     @FXML
-    private VBox answerInput;
+    public VBox answerInput;
     @FXML
-    private VBox typeInput;
+    public VBox typeInput;
     @FXML
-    private VBox scoreInput;
+    public VBox scoreInput;
 
     /**
      * Initialize the controller
      */
     @FXML
-    private void initialize() {
+    public void initialize() {
         this.questionDatabase = new Database<>(Question.class);
         allQuestions = questionDatabase.getAll();
         loadQuestions();
@@ -130,6 +129,9 @@ public class TeacherQuestionBankManagementController {
         rootPane.widthProperty().addListener((obs, oldVal, newVal) -> {
             // Handle resize of filters components
             filterManagementFields.setPrefWidth(newVal.doubleValue());
+
+            // Handle resize of question management components
+            tableAndQuestionInputFields.setPrefWidth(newVal.doubleValue());
 
             // Handle resize of question table
             double tableWidth = newVal.doubleValue() * 0.70;
@@ -222,7 +224,7 @@ public class TeacherQuestionBankManagementController {
      * @param event the ActionEvent
      */
     @FXML
-    private void addQuestion(ActionEvent event) {
+    public void addQuestion(ActionEvent event) {
         String questionText = questionTextField.getText();
         String optionA = optionATextField.getText();
         String optionB = optionBTextField.getText();
@@ -246,7 +248,6 @@ public class TeacherQuestionBankManagementController {
         } catch (Exception e) {
             MsgSender.showMsg("An error occurred while adding the question.");
             e.printStackTrace();
-            throw new RuntimeException(e);
         }
         MsgSender.showMsg("Question added successfully.");
         loadQuestions();
@@ -266,11 +267,11 @@ public class TeacherQuestionBankManagementController {
      * @param type the type of question
      * @return true if all inputs are valid, false otherwise
      */
-    private boolean validInputs(String questionText, String optionA, String optionB, String optionC, String optionD, String answer, String score, String type) {
+    public boolean validInputs(String questionText, String optionA, String optionB, String optionC, String optionD, String answer, String score, String type) {
         // check if all fields are filled
         if (questionText.isEmpty() || optionA.isEmpty() || optionB.isEmpty() ||
                 optionC.isEmpty() || optionD.isEmpty() || answer.isEmpty() ||
-                type == null) {
+                score.isEmpty() || type.isEmpty() ) {
             MsgSender.showMsg("All fields must be filled.");
             return false;
         }
@@ -326,7 +327,7 @@ public class TeacherQuestionBankManagementController {
      * @param event the ActionEvent
      */
     @FXML
-    private void deleteQuestion(ActionEvent event) {
+    public void deleteQuestion(ActionEvent event) {
         Question selectedQuestion = questionTable.getSelectionModel().getSelectedItem();
 
         if (selectedQuestion == null) {
@@ -346,7 +347,6 @@ public class TeacherQuestionBankManagementController {
         } catch (Exception e) {
             MsgSender.showMsg("An error occurred while deleting the question.");
             e.printStackTrace();
-            throw new RuntimeException(e);
         }
     }
 
@@ -355,7 +355,7 @@ public class TeacherQuestionBankManagementController {
      * @param event the ActionEvent
      */
     @FXML
-    private void filterQuestions(ActionEvent event) {
+    public void filterQuestions(ActionEvent event) {
         loadQuestions();
     }
 
@@ -364,7 +364,7 @@ public class TeacherQuestionBankManagementController {
      * @param event the ActionEvent
      */
     @FXML
-    private void refreshQuestion(ActionEvent event) {
+    public void refreshQuestion(ActionEvent event) {
         if (!questionTextField.getText().isEmpty() || !optionATextField.getText().isEmpty() ||
                 !optionBTextField.getText().isEmpty() || !optionCTextField.getText().isEmpty() ||
                 !optionDTextField.getText().isEmpty() || !answerTextField.getText().isEmpty() ||
@@ -382,7 +382,7 @@ public class TeacherQuestionBankManagementController {
      * Refresh the question table
      * @param event the ActionEvent
      */
-    private void refreshQuestionConfirmed(ActionEvent event) {
+    public void refreshQuestionConfirmed(ActionEvent event) {
         resetFilters(event);
         clearFields();
         questionTable.getSelectionModel().clearSelection();
@@ -394,7 +394,7 @@ public class TeacherQuestionBankManagementController {
      * @param event the ActionEvent
      */
     @FXML
-    private void resetFilters(ActionEvent event) {
+    public void resetFilters(ActionEvent event) {
         questionFilterTextField.clear();
         scoreFilterTextField.clear();
         typeFilterChoiceBox.setValue("");
@@ -406,7 +406,7 @@ public class TeacherQuestionBankManagementController {
      * @param event the ActionEvent
      */
     @FXML
-    private void updateQuestion(ActionEvent event) {
+    public void updateQuestion(ActionEvent event) {
         Question selectedQuestion = questionTable.getSelectionModel().getSelectedItem();
 
         if (selectedQuestion == null) {
@@ -447,7 +447,6 @@ public class TeacherQuestionBankManagementController {
         } catch (Exception e) {
             MsgSender.showMsg("An error occurred while updating the question.");
             e.printStackTrace();
-            throw new RuntimeException(e);
         }
     }
 
@@ -455,7 +454,7 @@ public class TeacherQuestionBankManagementController {
      * Check if there is no filter applied
      * @return true if no filter is applied, false otherwise
      */
-    private boolean noFilter() {
+    public boolean noFilter() {
         return (questionFilterTextField.getText().isEmpty() &&
                 scoreFilterTextField.getText().isEmpty() &&
                 (typeFilterChoiceBox.getValue() == null || typeFilterChoiceBox.getValue().isEmpty()));
@@ -464,14 +463,14 @@ public class TeacherQuestionBankManagementController {
     /**
      * Load the questions from the database
      */
-    private void loadQuestions() {
+    public void loadQuestions() {
         if (noFilter()) {
             try {
                 allQuestions = questionDatabase.getAll();
                 questionList = FXCollections.observableArrayList(allQuestions);
             } catch (Exception e) {
+                MsgSender.showMsg("An error occurred while loading the questions.");
                 e.printStackTrace();
-                throw new RuntimeException(e);
             }
         } else {
             try {
@@ -492,8 +491,8 @@ public class TeacherQuestionBankManagementController {
 
                 questionList = FXCollections.observableArrayList(filteredQuestions);
             } catch (Exception e) {
+                MsgSender.showMsg("An error occurred while loading the questions.");
                 e.printStackTrace();
-                throw new RuntimeException(e);
             }
         }
         questionTable.getItems().setAll(questionList);
@@ -502,7 +501,7 @@ public class TeacherQuestionBankManagementController {
     /**
      * Clear all the input fields
      */
-    private void clearFields() {
+    public void clearFields() {
         questionTextField.clear();
         optionATextField.clear();
         optionBTextField.clear();
