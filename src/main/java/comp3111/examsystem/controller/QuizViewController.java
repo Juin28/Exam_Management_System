@@ -44,7 +44,7 @@ public class QuizViewController implements Initializable {
     // hashmap to store selected answers with id as key and list of answers as values
     private Map<Long, List<String>> selectedAnswers;
 
-
+    private long startTime;
     private int numOfCorrect = 0;
     private int totalScore;
     private int score = 0;
@@ -109,6 +109,7 @@ public class QuizViewController implements Initializable {
 
         currentQuiz = StudentMainController.chosenQuiz;
         curStudent = StudentLoginController.loggedInStudent;
+        startTime = System.currentTimeMillis();
         timer = new Timer();
         df = new DecimalFormat();
         df.setMaximumFractionDigits(2);
@@ -250,8 +251,10 @@ public class QuizViewController implements Initializable {
      * @param time The time duration for the quiz timer.
      */
     private void setTimer(String time){
+
         TimerTask task = new TimerTask() {
             int counter = Integer.parseInt(time)*60;
+
             @Override
             public void run() {
                 if(counter > 0){
@@ -319,6 +322,7 @@ public class QuizViewController implements Initializable {
     private void checkAnswers(){
         score = 0;
         numOfCorrect = 0;
+        long endTime = System.currentTimeMillis();
         for(int i = 0; i < questionIds.length; ++i){
             Question ques = questionDatabase.queryByField("id", questionIds[i]).getFirst();
             totalScore += Integer.parseInt(ques.getQuestionScore());
@@ -336,7 +340,15 @@ public class QuizViewController implements Initializable {
             }
 
         }
-        Grade tmp = new Grade(String.valueOf(curStudent.getId()), String.valueOf(currentQuiz.getId()), String.valueOf(score));
+        Long usedTime = ((endTime-startTime)/1000)/60;
+        if(usedTime >= Long.parseLong(currentQuiz.getQuizTime())){
+            usedTime = Long.parseLong(currentQuiz.getQuizTime());
+        }
+        Grade tmp = new Grade(
+                String.valueOf(curStudent.getId()),
+                String.valueOf(currentQuiz.getId()),
+                String.valueOf(score),
+                String.valueOf(usedTime));
         gradeDatabase.add(tmp);
     }
 

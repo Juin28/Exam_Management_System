@@ -51,6 +51,7 @@ public class StudentMainController implements Initializable {
         quizzes = new ArrayList<>();
         studentGrades = new ArrayList<>();
         student = StudentLoginController.loggedInStudent;
+        System.out.println(gradeDatabase.getAll().size());
         for(int i = 0; i < gradeDatabase.getAll().size(); ++i){
             if(gradeDatabase.getAll().get(i).getStudentId().equals(Long.toString(student.getId()))){
                 studentGrades.add(gradeDatabase.getAll().get(i));
@@ -61,7 +62,7 @@ public class StudentMainController implements Initializable {
             Quiz quiz = quizDatabase.getAll().get(i);
             String quizId = Long.toString(quiz.getId());
             String quizPublished = quiz.getPublishStatus();
-            if (quizPublished.equals("yes")){
+            if (quizPublished.equalsIgnoreCase("yes")){
                 quizPublished = "true";
             }
             else{
@@ -107,7 +108,7 @@ public class StudentMainController implements Initializable {
             List<Quiz> listOfQuizzes = quizDatabase.queryByField("courseID", parts[0]);
             // Setting the chosenQuiz
             for(int i = 0; i < listOfQuizzes.size(); ++i){
-                if(listOfQuizzes.get(i).getQuizName().equals(parts[1])){
+                if(listOfQuizzes.get(i).getQuizName().replace(" ", "").equals(parts[1])){
                     chosenQuiz = listOfQuizzes.get(i);
                 }
             }
