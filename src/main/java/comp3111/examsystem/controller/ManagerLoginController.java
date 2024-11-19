@@ -21,24 +21,36 @@ import java.util.ResourceBundle;
 
 public class ManagerLoginController implements Initializable {
     @FXML
-    private TextField usernameTxt;
+    public TextField usernameTxt;
     @FXML
-    private PasswordField passwordTxt;
+    public PasswordField passwordTxt;
 
-    private Database<Manager> managerDatabase;
+    private Database<Manager> managerDatabase = null;
     private List<Manager> allManagers;
 
+    public FXMLLoader fxmlLoader;
+    public Stage stage;
+
+    @FXML
     public void initialize(URL location, ResourceBundle resources) {
-        this.managerDatabase = new Database<>(Manager.class);
-        if (managerDatabase.queryByField("username", "admin").isEmpty()) {
+        // if the manager database is empty, create an admin manager
+        if (this.managerDatabase == null)
+        {
+            this.managerDatabase = new Database<>(Manager.class);
+        }
+        List<Manager> managers = managerDatabase.queryByField("username","admin");
+        for (Manager manager: managers) {
+            System.out.println(manager.getUsername());
+        }
+        if (this.managerDatabase.queryByField("username", "admin").isEmpty()) {
             // admin does not exist, create an admin and insert into the database
             Manager manager = new Manager();
-            managerDatabase.add(manager);
+            this.managerDatabase.add(manager);
         }
     }
 
     @FXML
-    public void login(ActionEvent e) {
+    public boolean login(ActionEvent e) {
         // get the username and password
         String username = usernameTxt.getText();
         String password = passwordTxt.getText();
@@ -52,13 +64,23 @@ public class ManagerLoginController implements Initializable {
         // if the login status is successful, show the managerUI
         if (loginStatus) {
             showManagerUI(e.getSource());
+            return true;
         }
+        return false;
     }
 
     public void showManagerUI(Object eventSource)
     {
-        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("ManagerMainUI.fxml"));
-        Stage stage = new Stage();
+//        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("ManagerMainUI.fxml"));
+//        Stage stage = new Stage();
+        if (fxmlLoader == null)
+        {
+            fxmlLoader = new FXMLLoader(Main.class.getResource("ManagerMainUI.fxml"));
+        }
+        if (stage == null)
+        {
+            stage = new Stage();
+        }
         stage.setTitle("Hi " + usernameTxt.getText() + ", Welcome to HKUST Examination System");
         try {
             stage.setScene(new Scene(fxmlLoader.load()));
@@ -84,3 +106,4 @@ public class ManagerLoginController implements Initializable {
     }
 
 }
+

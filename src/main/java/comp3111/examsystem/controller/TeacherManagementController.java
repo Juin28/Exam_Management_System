@@ -80,13 +80,13 @@ public class TeacherManagementController {
     }
 
     @FXML
-    private void loadTeacherTable()
+    public List<Teacher> loadTeacherTable()
     {
+        List<Teacher> filteredTeachers = new ArrayList<>();
         if (noFilter())
         {
             allTeachers = teacherDatabase.getAll();
             teacherList = FXCollections.observableArrayList(allTeachers);
-
         }
         else {
             String usernameFilter = teachUsernameFilter.getText();
@@ -94,7 +94,6 @@ public class TeacherManagementController {
             String departmentFilter = teachDeptFilter.getText().toUpperCase();
 
             List<Teacher> allTeachers = teacherDatabase.getAll();
-            List<Teacher> filteredTeachers = new ArrayList<>();
 
             for (Teacher teacher : allTeachers) {
                 if ((usernameFilter.isEmpty() || usernameFilter.equals(teacher.getUsername())) &&
@@ -107,9 +106,10 @@ public class TeacherManagementController {
             teacherList = FXCollections.observableArrayList(filteredTeachers);
         }
         teachTable.getItems().setAll(teacherList);
+        return filteredTeachers;
     }
 
-    private boolean noFilter() {
+    public boolean noFilter() {
         return (teachDeptFilter.getText().isEmpty() &&
                 teachNameFilter.getText().isEmpty() &&
                 teachUsernameFilter.getText().isEmpty());
@@ -155,19 +155,20 @@ public class TeacherManagementController {
     }
 
     @FXML
-    public void deleteTeacher(ActionEvent actionEvent) {
+    public boolean deleteTeacher(ActionEvent actionEvent) {
         // delete teacher according to selection model
         Teacher teacher = teachTable.getSelectionModel().getSelectedItem();
         if (teacher == null)
         {
             MsgSender.showMsg("Please select a teacher to delete");
-            return;
+            return false;
         }
         String username = teacher.getUsername();
         MsgSender.showConfirm("Delete Teacher", "Are you sure you want to delete teacher with username: " + username + " ?", () -> deleteTeacherFromDatabase(teacher));
+        return true;
     }
 
-    private void deleteTeacherFromDatabase(Teacher teacher)
+    public void deleteTeacherFromDatabase(Teacher teacher)
     {
         try
         {
@@ -182,7 +183,7 @@ public class TeacherManagementController {
     }
 
     @FXML
-    private void clearFields() {
+    public void clearFields() {
         teachUsernameInput.clear();
         teachNameInput.clear();
         teachAgeInput.clear();
@@ -467,86 +468,86 @@ public class TeacherManagementController {
         }
     }
 
-    private Database<Teacher> teacherDatabase;
-    private List<Teacher> allTeachers;
-    private ObservableList<Teacher> teacherList;
+    public Database<Teacher> teacherDatabase;
+    public List<Teacher> allTeachers;
+    public ObservableList<Teacher> teacherList;
 
     @FXML
-    private Button teachAdd;
+    public Button teachAdd;
 
     @FXML
-    private TableColumn<Teacher, String> teachAgeCol;
+    public TableColumn<Teacher, String> teachAgeCol;
 
     @FXML
-    private TextField teachAgeInput;
+    public TextField teachAgeInput;
 
     @FXML
-    private Button teachDelete;
+    public Button teachDelete;
 
     @FXML
-    private TableColumn<Teacher, String> teachDeptCol;
+    public TableColumn<Teacher, String> teachDeptCol;
 
     @FXML
-    private TableView<Teacher> teachTable;
+    public TableView<Teacher> teachTable;
 
     @FXML
-    private TextField teachDeptFilter;
+    public TextField teachDeptFilter;
 
     @FXML
-    private TextField teachDeptInput;
+    public TextField teachDeptInput;
 
     @FXML
-    private Button teachFilter;
+    public Button teachFilter;
 
     @FXML
-    private TableColumn<Teacher, String> teachGenderCol;
+    public TableColumn<Teacher, String> teachGenderCol;
 
     @FXML
-    private ComboBox<String> teachGenderInput;
+    public ComboBox<String> teachGenderInput;
 
     @FXML
-    private TableColumn<Teacher, String> teachNameCol;
+    public TableColumn<Teacher, String> teachNameCol;
 
     @FXML
-    private TextField teachNameFilter;
+    public TextField teachNameFilter;
 
     @FXML
-    private TextField teachNameInput;
+    public TextField teachNameInput;
 
     @FXML
-    private TableColumn<Teacher, String> teachPasswordCol;
+    public TableColumn<Teacher, String> teachPasswordCol;
 
     @FXML
-    private TextField teachPasswordInput;
+    public TextField teachPasswordInput;
 
     @FXML
-    private ComboBox<String> teachPosInput;
+    public ComboBox<String> teachPosInput;
 
     @FXML
-    private Button teachRefresh;
+    public Button teachRefresh;
 
     @FXML
-    private Button teachResetFilter;
+    public Button teachResetFilter;
 
     @FXML
-    private Button teachUpdate;
+    public Button teachUpdate;
 
     @FXML
-    private TableColumn<Teacher, String> teachUsernameCol;
+    public TableColumn<Teacher, String> teachUsernameCol;
 
     @FXML
-    private TextField teachUsernameFilter;
+    public TextField teachUsernameFilter;
 
     @FXML
-    private TextField teachUsernameInput;
+    public TextField teachUsernameInput;
 
     @FXML
-    private TableColumn<Teacher, String> teachPositionCol;
+    public TableColumn<Teacher, String> teachPositionCol;
 
     @FXML
-    private AnchorPane rootPane;
+    public AnchorPane rootPane;
 
     @FXML
-    private AnchorPane AnchorWithInputs;
+    public AnchorPane AnchorWithInputs;
 
 }

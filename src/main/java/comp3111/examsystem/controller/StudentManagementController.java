@@ -20,86 +20,89 @@ import java.util.List;
 
 public class StudentManagementController {
 
-    private Database<Student> studentDatabase;
-    private List<Student> allStudents;
-    private ObservableList<Student> studentList;
+    public Database<Student> studentDatabase;
+    public List<Student> allStudents;
+    public ObservableList<Student> studentList;
+    public Database<Grade> gradeDatabase;
+    public List<Grade> allGrades;
 
     @FXML
-    private AnchorPane AnchorWithInputs;
+    public AnchorPane AnchorWithInputs;
 
     @FXML
-    private Button studentAdd;
+    public Button studentAdd;
 
     @FXML
-    private TableColumn<Student, String> studentAgeCol;
+    public TableColumn<Student, String> studentAgeCol;
 
     @FXML
-    private TextField studentAgeInput;
+    public TextField studentAgeInput;
 
     @FXML
-    private AnchorPane rootPane;
+    public AnchorPane rootPane;
 
     @FXML
-    private Button studentDelete;
+    public Button studentDelete;
 
     @FXML
-    private TableColumn<Student, String> studentDeptCol;
+    public TableColumn<Student, String> studentDeptCol;
 
     @FXML
-    private TextField studentDeptFilter;
+    public TextField studentDeptFilter;
 
     @FXML
-    private TextField studentDeptInput;
+    public TextField studentDeptInput;
 
     @FXML
-    private Button studentFilter;
+    public Button studentFilter;
 
     @FXML
-    private TableColumn<Student, String> studentGenderCol;
+    public TableColumn<Student, String> studentGenderCol;
 
     @FXML
-    private ComboBox<String> studentGenderInput;
+    public ComboBox<String> studentGenderInput;
 
     @FXML
-    private TableColumn<Student, String> studentNameCol;
+    public TableColumn<Student, String> studentNameCol;
 
     @FXML
-    private TextField studentNameInput;
+    public TextField studentNameInput;
 
     @FXML
-    private TableColumn<Student, String> studentPasswordCol;
+    public TableColumn<Student, String> studentPasswordCol;
 
     @FXML
-    private TextField studentPasswordInput;
+    public TextField studentPasswordInput;
 
     @FXML
-    private Button studentRefresh;
+    public Button studentRefresh;
 
     @FXML
-    private Button studentResetFilter;
+    public Button studentResetFilter;
 
     @FXML
-    private TableView<Student> studentTable;
+    public TableView<Student> studentTable;
 
     @FXML
-    private Button studentUpdate;
+    public Button studentUpdate;
 
     @FXML
-    private TableColumn<Student, String> studentUsernameCol;
+    public TableColumn<Student, String> studentUsernameCol;
 
     @FXML
-    private TextField studentUsernameFilter;
+    public TextField studentUsernameFilter;
 
     @FXML
-    private TextField studentUsernameInput;
+    public TextField studentUsernameInput;
 
     @FXML
-    private TextField studentNameFilter;
+    public TextField studentNameFilter;
 
     @FXML
     public void initialize()
     {
         this.studentDatabase = new Database<>(Student.class);
+        this.gradeDatabase = new Database<>(Grade.class);
         allStudents = studentDatabase.getAll();
 
         // initialize the choiceBoxes
@@ -241,15 +244,14 @@ public class StudentManagementController {
         }
     }
 
-    private void deleteStudentAndGradesFromDatabase(Student student)
+    public void deleteStudentAndGradesFromDatabase(Student student)
     {
         // Delete the grades of the student from the database
-        Database<Grade> gradeDatabase = new Database<>(Grade.class);
-        List<Grade> allGrades = gradeDatabase.getAll();
+        allGrades = gradeDatabase.getAll();
         List<Grade> gradesToDelete = new ArrayList<>();
         for (Grade grade : allGrades)
         {
-            if (grade.getStudentId() == student.getId())
+            if (Long.parseLong(grade.getStudentId()) == student.getId())
             {
                 gradesToDelete.add(grade);
             }
@@ -372,7 +374,7 @@ public class StudentManagementController {
 
         return true;
     }
-    private boolean validateAddInput() {
+    public boolean validateAddInput() {
         // check to ensure that all the fields are filled
         String username = studentUsernameInput.getText();
         String name = studentNameInput.getText();
@@ -511,7 +513,7 @@ public class StudentManagementController {
         }
     }
 
-    private void clearFields()
+    public void clearFields()
     {
         studentNameInput.clear();
         studentUsernameInput.clear();
@@ -521,7 +523,7 @@ public class StudentManagementController {
         studentPasswordInput.clear();
     }
 
-    private boolean noFilter() {
+    public boolean noFilter() {
         return (studentDeptFilter.getText().isEmpty() &&
                 studentNameFilter.getText().isEmpty() &&
                 studentUsernameFilter.getText().isEmpty());
@@ -529,8 +531,9 @@ public class StudentManagementController {
 
 
     @FXML
-    private void loadStudentTable()
+    public List<Student> loadStudentTable()
     {
+        List<Student> filteredStudents = new ArrayList<>();
         if (noFilter())
         {
             allStudents= studentDatabase.getAll();
@@ -543,7 +546,6 @@ public class StudentManagementController {
             String departmentFilter = studentDeptFilter.getText().toUpperCase();
 
             List<Student> allStudents = studentDatabase.getAll();
-            List<Student> filteredStudents = new ArrayList<>();
 
             for (Student student : allStudents) {
                 if ((usernameFilter.isEmpty() || usernameFilter.equals(student.getUsername())) &&
@@ -556,6 +558,7 @@ public class StudentManagementController {
             studentList = FXCollections.observableArrayList(filteredStudents);
         }
         studentTable.getItems().setAll(studentList);
+        return filteredStudents;
     }
 
 

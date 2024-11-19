@@ -2,8 +2,8 @@ package comp3111.examsystem.model;
 
 public class Manager {
     private final long id;
-    private final String username;
-    private final String password;
+    private String username;
+    private String password;
 
     public Manager(){
         this.username = "admin";
@@ -15,6 +15,14 @@ public class Manager {
         this.username = username;
         this.password = password;
         this.id = id;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getUsername() {
