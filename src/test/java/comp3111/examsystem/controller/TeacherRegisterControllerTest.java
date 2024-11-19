@@ -202,4 +202,17 @@ class TeacherRegisterControllerTest {
             assertFalse(result);
         }
     }
+
+    @Test
+    void testCloseWindow() {
+        controller.closeWindow();
+        verify(mockStage, times(1)).close();
+    }
+
+    @Test
+    void testInitialize() {
+        controller.initialize();
+        assertNotNull(controller.teacherDatabase);
+        assertNotNull(controller.allTeachers);
+    }
 }
