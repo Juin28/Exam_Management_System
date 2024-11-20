@@ -16,40 +16,36 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 public class StudentRegisterController implements Initializable {
-    private Database<Student> studentDatabase;
-    private Integer studentNum;
+    public Database<Student> studentDatabase;
+    public Integer studentNum;
 
     @FXML
-    private TextField ageTxt;
+    public TextField ageTxt;
 
     @FXML
-    private Button closeButton;
+    public Button closeButton;
 
     @FXML
-    private TextField departmentTxt;
+    public TextField departmentTxt;
 
     @FXML
-    private ChoiceBox<String> genderChoice;
+    public ChoiceBox<String> genderChoice;
 
     @FXML
-    private TextField nameTxt;
+    public TextField nameTxt;
 
     @FXML
-    private PasswordField passwordConfirmTxt;
+    public PasswordField passwordConfirmTxt;
 
     @FXML
-    private PasswordField passwordTxt;
+    public PasswordField passwordTxt;
 
     @FXML
-    private Button registerButton;
-
-    @FXML
-    private TextField usernameTxt;
+    public TextField usernameTxt;
 
     @FXML
     public void initialize(URL url, ResourceBundle resourceBundle) {
         this.studentDatabase = new Database<>(Student.class);
-        studentNum = studentDatabase.getAll().size();
     }
 
     @FXML
@@ -76,7 +72,7 @@ public class StudentRegisterController implements Initializable {
     }
 
     private boolean validateFields(String age, String department, String gender, String name, String username, String password, String passConfirm){
-        if(age.isEmpty() || department.isEmpty() || gender.isEmpty() || name.isEmpty() || username.isEmpty()){
+        if(age.isEmpty() || department.isEmpty() || gender.isEmpty() || name.isEmpty() || username.isEmpty() || password.isEmpty() || passConfirm.isEmpty()){
             MsgSender.showMsg("All fields should be filled.");
             return false;
         }
@@ -84,17 +80,18 @@ public class StudentRegisterController implements Initializable {
             MsgSender.showMsg("Age must be a number.");
             return false;
         }
-        else if(!password.equals(passConfirm)){
-            MsgSender.showMsg("Passwords do not match");
+        else if (Integer.parseInt(age) < 10 || Integer.parseInt(age) > 100) {
+            MsgSender.showMsg("Must be a valid age.");
             return false;
         }
-        else if(studentNum != 0){
-            if(!studentDatabase.queryByField("username", username).isEmpty()){
-                MsgSender.showMsg("This student already exists.");
-                return false;
-            }
+        else if(!password.equals(passConfirm)){
+            MsgSender.showMsg("Passwords do not match.");
+            return false;
         }
-
+        else if(!studentDatabase.queryByField("username", username).isEmpty()){
+            MsgSender.showMsg("This student already exists.");
+            return false;
+        }
         return true;
     }
 

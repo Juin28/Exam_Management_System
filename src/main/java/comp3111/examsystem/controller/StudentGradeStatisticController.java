@@ -228,7 +228,7 @@ public class StudentGradeStatisticController implements Initializable {
                         quiz.getQuizName(),
                         grade.getStudentScore(),
                         String.valueOf(total),
-                        quiz.getQuizTime()
+                        grade.getTimeSpent()
                 ));
             }
         }
@@ -288,5 +288,4 @@ public class StudentGradeStatisticController implements Initializable {
         gradeTable.setItems(gradeRows);
         showBarChart();
     }
-
 }

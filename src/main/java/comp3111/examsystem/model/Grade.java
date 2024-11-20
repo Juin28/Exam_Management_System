@@ -5,18 +5,34 @@ public class Grade {
     public String studentId;
     public String questionId;
     public String studentScore;
+    // testing
+    public String timeSpent;
 
     public Grade(){
         this.studentId = "studentId";
         this.questionId = "questionId";
         this.studentScore = "studentScore";
+        // testing
+        this.timeSpent = "timeSpent";
         this.id = 0;
     }
 
-    public Grade(String studentId, String questionId, String studentScore){
+    // testing
+    public String getTimeSpent() {
+        return timeSpent;
+    }
+
+    // testing
+    public void setTimeSpent(String timeSpent) {
+        this.timeSpent = timeSpent;
+    }
+
+    public Grade(String studentId, String questionId, String studentScore, String timeSpent){
         this.studentId = studentId;
         this.questionId = questionId;
         this.studentScore = studentScore;
+        // testing
+        this.timeSpent = timeSpent;
         this.id = 0;
     }
 
