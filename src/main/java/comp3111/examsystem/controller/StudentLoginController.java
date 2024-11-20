@@ -4,6 +4,7 @@ import comp3111.examsystem.Main;
 import comp3111.examsystem.model.Student;
 import comp3111.examsystem.service.Database;
 import comp3111.examsystem.service.MsgSender;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -21,10 +22,11 @@ import java.util.ResourceBundle;
 
 public class StudentLoginController implements Initializable {
     @FXML
-    private TextField usernameTxt;
+    public TextField usernameTxt;
     @FXML
-    private PasswordField passwordTxt;
-    private Database<Student> studentDatabase;
+    public PasswordField passwordTxt;
+    public Database<Student> studentDatabase;
+    public List<Student> studentList;
     /**
      * Static variable to keep track of the currently logged-in student.
      */
@@ -47,10 +49,8 @@ public class StudentLoginController implements Initializable {
      */
     @FXML
     public void login(ActionEvent e) {
-        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("StudentMainUI.fxml"));
-        Stage stage = new Stage();
         // list to store student with the given username
-        List<Student> studentList = studentDatabase.queryByField("username", usernameTxt.getText());
+        studentList = studentDatabase.queryByField("username", usernameTxt.getText());
         // if the student does not exist
         if(studentList == null || studentList.isEmpty()){
             MsgSender.showMsg("This user does not exist. Please register for an account.");
@@ -59,22 +59,26 @@ public class StudentLoginController implements Initializable {
         else{
             // check if the entered password matches the password in the database
             // if passwords do not match
-            if(!studentList.getFirst().getPassword().equals(passwordTxt.getText())){
+            if(!studentList.get(0).getPassword().equals(passwordTxt.getText())){
                 MsgSender.showMsg("Incorrect password. Please re-enter password.");
             }
             // if passwords match
             else{
+                System.out.println("hi");
                 MsgSender.showMsg("Login Successful");
                 loggedInStudent = studentList.getFirst();
-                stage.setTitle("Hi " + usernameTxt.getText() +", Welcome to HKUST Examination System");
                 try {
+                    FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("StudentMainUI.fxml"));
+                    Stage stage = new Stage();
+                    stage.setTitle("Hi " + usernameTxt.getText() +", Welcome to HKUST Examination System");
                     stage.setScene(new Scene(fxmlLoader.load()));
                     stage.show();
-                    ((Stage) ((Button) e.getSource()).getScene().getWindow()).close();
-
+                    if (e.getSource() instanceof Button) {
+                        ((Stage) ((Button) e.getSource()).getScene().getWindow()).close();
+                    }
                 } catch (IOException e1) {
                     e1.printStackTrace();
-                }
+                };
             }
         }
     }
@@ -86,15 +90,17 @@ public class StudentLoginController implements Initializable {
      */
     @FXML
     public void register(ActionEvent e) {
-        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("StudentRegisterUI.fxml"));
-        Stage stage = new Stage();
-        stage.setTitle("Student Register");
-        try {
-            stage.setScene(new Scene(fxmlLoader.load()));
-        } catch (IOException e1) {
-            e1.printStackTrace();
-        }
-        stage.show();
-        ((Stage) ((Button) e.getSource()).getScene().getWindow()).close();
+        Platform.runLater(() ->{
+            FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("StudentRegisterUI.fxml"));
+            Stage stage = new Stage();
+            stage.setTitle("Student Register");
+            try {
+                stage.setScene(new Scene(fxmlLoader.load()));
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+            stage.show();
+            ((Stage) ((Button) e.getSource()).getScene().getWindow()).close();
+        });
     }
 }

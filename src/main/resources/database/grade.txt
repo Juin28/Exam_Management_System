@@ -1,0 +1,4 @@
+id:1732031972671,studentId:1731479984127,questionId:1731752645727,studentScore:0,timeSpent:1,
+id:1732032247559,studentId:1731479984127,questionId:1731752687030,studentScore:0,timeSpent:1,
+id:1732032587793,studentId:1732009931993,questionId:1731752645727,studentScore:40,timeSpent:0,
+id:1732032637789,studentId:1732009931993,questionId:1731752687030,studentScore:50,timeSpent:0,
