@@ -1,3 +1,3 @@
-id:1731752251729,quizName:Midterm Exam,quizTime:60,courseID:COMP1111,publishStatus:No,questionIDs:1731747368046,
-id:1731752645727,quizName:Quiz 1,quizTime:50,courseID:COMP1111,publishStatus:No,questionIDs:1731747368046,
-id:1731752687030,quizName:Quiz 2,quizTime:50,courseID:COMP1111,publishStatus:No,questionIDs:1731747368046|1731748385459,
+id:1731752251729,quizName:Midterm Exam,quizTime:1,courseID:COMP1111,publishStatus:No,questionIDs:1731747368046,
+id:1731752645727,quizName:Quiz 1,quizTime:1,courseID:COMP1111,publishStatus:Yes,questionIDs:1731747368046,
+id:1731752687030,quizName:Quiz 2,quizTime:1,courseID:COMP1111,publishStatus:Yes,questionIDs:1731747368046|1731748385459,
