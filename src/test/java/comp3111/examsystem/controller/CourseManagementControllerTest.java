@@ -332,7 +332,7 @@ class CourseManagementControllerTest {
         Course courseToDelete = new Course("Intro to CS", "COMP1001", "CSE", 0);
         Quiz quizToDelete = new Quiz("Quiz 1", "60", "COMP1001", "no", 0, "1|2");
         // set up a grade associated with the quiz
-        Grade gradeToDelete = new Grade("student1", String.valueOf(quizToDelete.getId()), "50");
+        Grade gradeToDelete = new Grade("student1", String.valueOf(quizToDelete.getId()), "50", "10");
 
         controller.allGrades = List.of(gradeToDelete);
 
@@ -363,7 +363,7 @@ class CourseManagementControllerTest {
         Course courseToDelete = new Course("Intro to CS", "COMP1001", "CSE", 0);
         Quiz quizToDelete = new Quiz("Quiz 1", "60", "COMP1001", "no", 0, "1|2");
         // set up a grade associated with the quiz
-        Grade gradeToDelete = new Grade("student1", String.valueOf(quizToDelete.getId()), "50");
+        Grade gradeToDelete = new Grade("student1", String.valueOf(quizToDelete.getId()), "50", "10");
 
         controller.allGrades = List.of(gradeToDelete);
 
@@ -383,7 +383,7 @@ class CourseManagementControllerTest {
         Course courseToDelete = new Course("Intro to CS", "COMP1001", "CSE", 0);
         Quiz quizToDelete = new Quiz("Quiz 1", "60", "COMP1001", "no", 0, "1|2");
         // set up a grade associated with the quiz
-        Grade gradeToDelete = new Grade("student1", String.valueOf(quizToDelete.getId()), "50");
+        Grade gradeToDelete = new Grade("student1", String.valueOf(quizToDelete.getId()), "50", "10");
 
         controller.allGrades = List.of(gradeToDelete);
 

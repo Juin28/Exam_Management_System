@@ -363,7 +363,7 @@ class StudentManagementControllerTest {
     void testDeleteStudentAndGradesFromDatabase_valid()
     {
         // set up mock grade database with 1 grade
-        Grade newGrade = new Grade("0", "question1", "100");
+        Grade newGrade = new Grade("0", "question1", "100", "10");
         when((mockGradeDatabase).getAll()).thenReturn(List.of(newGrade));
 
         // set up the student to delete
@@ -385,7 +385,7 @@ class StudentManagementControllerTest {
     void testDeleteStudentAndGradesFromDatabase_exceptionDelByKeyGrade()
     {
         // set up mock grade database with 1 grade
-        Grade newGrade = new Grade("0", "question1", "100");
+        Grade newGrade = new Grade("0", "question1", "100", "10");
         when((mockGradeDatabase).getAll()).thenReturn(List.of(newGrade));
 
         // set up the student to delete
