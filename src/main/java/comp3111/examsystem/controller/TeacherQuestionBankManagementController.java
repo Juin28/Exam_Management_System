@@ -209,14 +209,6 @@ public class TeacherQuestionBankManagementController {
             });
             return row;
         });
-
-        // Clear the selection when clicking outside the table
-        rootPane.setOnMouseClicked(event -> {
-            if (event.getTarget() != questionTable) {
-                questionTable.getSelectionModel().clearSelection();
-                clearFields();
-            }
-        });
     }
 
     /**
