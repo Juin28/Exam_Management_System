@@ -20,16 +20,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CourseManagementController {
-    private Database<Course> courseDatabase;
-    private Database<Quiz> quizDatabase;
-    private Database<Grade> gradeDatabase;
-    private List<Course> allCourses;
-    private List<Quiz> allQuizzes;
-    private List<Grade> allGrades;
-    private ObservableList<Course> courseList;
+    public Database<Course> courseDatabase;
+    public Database<Quiz> quizDatabase;
+    public Database<Grade> gradeDatabase;
+    public List<Course> allCourses;
+    public List<Quiz> allQuizzes;
+    public List<Grade> allGrades;
+    public ObservableList<Course> courseList;
 
     @FXML
-    private AnchorPane AnchorWithInputs;
+    public AnchorPane AnchorWithInputs;
 
     @FXML
     private Button courseAdd;
@@ -38,34 +38,34 @@ public class CourseManagementController {
     private Button courseDelete;
 
     @FXML
-    private TableColumn<Course, String> courseDeptCol;
+    public TableColumn<Course, String> courseDeptCol;
 
     @FXML
-    private TextField courseDeptFilter;
+    public TextField courseDeptFilter;
 
     @FXML
-    private TextField courseDeptInput;
+    public TextField courseDeptInput;
 
     @FXML
     private Button courseFilter;
 
     @FXML
-    private TableColumn<Course, String> courseIDCol;
+    public TableColumn<Course, String> courseIDCol;
 
     @FXML
-    private TextField courseIDFilter;
+    public TextField courseIDFilter;
 
     @FXML
-    private TextField courseIDInput;
+    public TextField courseIDInput;
 
     @FXML
-    private TableColumn<Course, String> courseNameCol;
+    public TableColumn<Course, String> courseNameCol;
 
     @FXML
-    private TextField courseNameFilter;
+    public TextField courseNameFilter;
 
     @FXML
-    private TextField courseNameInput;
+    public TextField courseNameInput;
 
     @FXML
     private Button courseRefresh;
@@ -74,13 +74,13 @@ public class CourseManagementController {
     private Button courseResetFilter;
 
     @FXML
-    private TableView<Course> courseTable;
+    public TableView<Course> courseTable;
 
     @FXML
     private Button courseUpdate;
 
     @FXML
-    private AnchorPane rootPane;
+    public AnchorPane rootPane;
 
     @FXML
     public void initialize()
@@ -88,6 +88,10 @@ public class CourseManagementController {
         // initialize the database
         this.courseDatabase = new Database<>(Course.class);
         allCourses = courseDatabase.getAll();
+        this.gradeDatabase = new Database<>(Grade.class);
+        allGrades = gradeDatabase.getAll();
+        this.quizDatabase = new Database<>(Quiz.class);
+        allQuizzes = quizDatabase.getAll();
 
         // load the course table
         loadCourseTable();
@@ -161,8 +165,6 @@ public class CourseManagementController {
         }
 
         // check if there are quizzes associated with the course
-        this.quizDatabase = new Database<>(Quiz.class);
-        allQuizzes = quizDatabase.getAll();
 
         List<Quiz> quizzesToDelete = new ArrayList<>();
         for (Quiz quiz : allQuizzes)
@@ -238,7 +240,7 @@ public class CourseManagementController {
     }
 
     @FXML
-    private boolean updateCourse(ActionEvent event)
+    public boolean updateCourse(ActionEvent event)
     {
         // Check if a course is selected
         Course selectedCourse = courseTable.getSelectionModel().getSelectedItem();
@@ -267,7 +269,7 @@ public class CourseManagementController {
 
     }
 
-    private boolean updateCourseInDatabase(Course course)
+    public boolean updateCourseInDatabase(Course course)
     {
         try
         {
@@ -282,7 +284,7 @@ public class CourseManagementController {
         }
     }
 
-    private boolean validateUpdateInput(Course course, List<String> changes)
+    public boolean validateUpdateInput(Course course, List<String> changes)
     {
         // check to ensure that all the fields are filled
         String name = courseNameInput.getText();
@@ -328,18 +330,16 @@ public class CourseManagementController {
         return true;
     }
 
-    private void deleteCourseAndQuizzes(Course course, List<Quiz> quizzesToDelete)
+    public void deleteCourseAndQuizzes(Course course, List<Quiz> quizzesToDelete)
     {
         // delete the grades associated with the quizzes first
-        this.gradeDatabase = new Database<>(Grade.class);
-        allGrades = gradeDatabase.getAll();
+
         for (Grade grade: allGrades)
         {
             for (Quiz quiz : quizzesToDelete)
             {
                 if (Long.parseLong(grade.getQuestionId()) == quiz.getId())
                 {
-                    // TODO: implement grade deletion
                     try
                     {
                         String idString = String.valueOf(grade.getID());
@@ -372,7 +372,8 @@ public class CourseManagementController {
 
     }
 
-    private void deleteCourseFromDatabase(Course course)
+    public void
+    deleteCourseFromDatabase(Course course)
     {
         try
         {
@@ -386,7 +387,7 @@ public class CourseManagementController {
         }
     }
 
-    private void addCourseToDatabase()
+    public void addCourseToDatabase()
     {
         String name = courseNameInput.getText();
         String department = courseDeptInput.getText().toUpperCase();
@@ -404,7 +405,7 @@ public class CourseManagementController {
         }
     }
 
-    private boolean validateID(String id)
+    public boolean validateID(String id)
     {
         // check that the name is 4 chars + 4 numbers, with the 4 chars as uppercase
         if (id.length() != 8)
@@ -440,7 +441,7 @@ public class CourseManagementController {
         return true;
 
     }
-    private boolean validateDepartment(String department)
+    public boolean validateDepartment(String department)
     {
         // check to ensure that the department is within HKUST's list of departments
         String[] validDepartments = {"IEDA","CSE", "ECE", "MAE", "BBA", "CBE", "CIVL", "PHYS", "MATH", "HUMA", "LANG", "ACCT", "OCES", "ISOM", "FINA", "MARK", "GBUS", "LIFS", "BIEN", "CHEM", "ENVR", "HUMA", "SOSC", "SHSS", "SUST", "ISD"};
@@ -455,8 +456,9 @@ public class CourseManagementController {
         return false;
     }
 
-    private void loadCourseTable()
+    public List<Course> loadCourseTable()
     {
+        List<Course> filteredCourses = new ArrayList<>();
         if (noFilter())
         {
             allCourses = courseDatabase.getAll();
@@ -469,7 +471,6 @@ public class CourseManagementController {
             String departmentFilter = courseDeptFilter.getText().toUpperCase();
 
             List<Course> allCourses = courseDatabase.getAll();
-            List<Course> filteredCourses = new ArrayList<>();
 
             for (Course course : allCourses) {
                 if ((nameFilter.isEmpty() || nameFilter.equals(course.getCourseName())) &&
@@ -483,9 +484,10 @@ public class CourseManagementController {
             courseList = FXCollections.observableArrayList(filteredCourses);
         }
         courseTable.getItems().setAll(courseList);
+        return filteredCourses;
     }
 
-    private boolean noFilter() {
+    public boolean noFilter() {
         return (courseDeptFilter.getText().isEmpty() &&
                 courseNameFilter.getText().isEmpty() &&
                 courseIDFilter.getText().isEmpty());
