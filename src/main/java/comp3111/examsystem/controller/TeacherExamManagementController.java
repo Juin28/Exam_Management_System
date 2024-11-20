@@ -149,8 +149,16 @@ public class TeacherExamManagementController {
         examQuestionList = FXCollections.observableArrayList();
 
         // Set up the exam filter options
+        List<String> courseIDs = new ArrayList<>();
         for (Quiz quiz : allQuizzes) {
-            courseIDFilterChoiceBox.getItems().add(quiz.getCourseID());
+            courseIDs.add(quiz.getCourseID());
+        }
+        List<String> addedCourseIDs = new ArrayList<>();
+        for (String courseID : courseIDs) {
+            if (!addedCourseIDs.contains(courseID)) {
+                courseIDFilterChoiceBox.getItems().add(courseID);
+                addedCourseIDs.add(courseID);
+            }
         }
         courseIDFilterChoiceBox.getItems().add("");
         courseIDFilterChoiceBox.setValue("");
