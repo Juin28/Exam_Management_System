@@ -64,7 +64,6 @@ public class StudentLoginController implements Initializable {
             }
             // if passwords match
             else{
-                System.out.println("hi");
                 MsgSender.showMsg("Login Successful");
                 loggedInStudent = studentList.getFirst();
                 try {
@@ -102,5 +101,9 @@ public class StudentLoginController implements Initializable {
             stage.show();
             ((Stage) ((Button) e.getSource()).getScene().getWindow()).close();
         });
+    }
+
+    public static Student getLoggedInStudent() {
+        return loggedInStudent;
     }
 }

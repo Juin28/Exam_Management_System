@@ -13,11 +13,14 @@ import java.util.ResourceBundle;
 
 public class TeacherMainController implements Initializable {
     @FXML
-    private VBox mainbox;
+    public VBox mainbox;
 
     public void initialize(URL location, ResourceBundle resources) {
     }
 
+    /**
+     * Open the question bank management UI
+     */
     @FXML
     public void openQuestionManageUI() {
         try {
@@ -31,6 +34,9 @@ public class TeacherMainController implements Initializable {
         }
     }
 
+    /**
+     * Open the exam management UI
+     */
     @FXML
     public void openExamManageUI() {
         try {
@@ -44,6 +50,9 @@ public class TeacherMainController implements Initializable {
         }
     }
 
+    /**
+     * Open the exam statistics UI
+     */
     @FXML
     public void openGradeStatistic() {
         try {
@@ -57,6 +66,9 @@ public class TeacherMainController implements Initializable {
         }
     }
 
+    /**
+     * Exit the application
+     */
     @FXML
     public void exit() {
         System.exit(0);

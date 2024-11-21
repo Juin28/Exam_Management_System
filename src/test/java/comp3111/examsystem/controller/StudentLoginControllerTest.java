@@ -55,7 +55,6 @@ class StudentLoginControllerTest {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/comp3111/examsystem/StudentLoginUI.fxml"));
         Parent root = loader.load();
 
-        controller = new StudentLoginController();
         controller.usernameTxt = usernameTxt;
         controller.passwordTxt = passwordTxt;
         controller.studentDatabase = mockDatabase;

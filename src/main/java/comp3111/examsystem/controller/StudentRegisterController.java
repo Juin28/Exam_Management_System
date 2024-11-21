@@ -56,6 +56,7 @@ public class StudentRegisterController implements Initializable {
 
     @FXML
     void register(ActionEvent event) {
+        // Retrieve input values from the form fields
         String age = ageTxt.getText();
         String department = departmentTxt.getText();
         String gender = genderChoice.getValue();
@@ -63,36 +64,50 @@ public class StudentRegisterController implements Initializable {
         String username = usernameTxt.getText();
         String password = passwordTxt.getText();
         String passConfirm = passwordConfirmTxt.getText();
+
+        // Validate the input fields
         if(validateFields(age, department, gender, name, username, password, passConfirm)){
+            // Create a new Student object with the input values
             Student tmp = new Student(username, name, gender, age, department, password, "0", 0);
+
+            // Add the new student to the database
             studentDatabase.add(tmp);
+
+            // Show a success message
             MsgSender.showMsg("Registration Successful! You can now log in.");
+
+            // Close the registration window
             closeWindow();
         }
     }
 
     private boolean validateFields(String age, String department, String gender, String name, String username, String password, String passConfirm){
+        // Check if any field is empty
         if(age.isEmpty() || department.isEmpty() || gender.isEmpty() || name.isEmpty() || username.isEmpty() || password.isEmpty() || passConfirm.isEmpty()){
             MsgSender.showMsg("All fields should be filled.");
             return false;
         }
+        // Check if age is a number
         else if (!age.matches("\\d+")) {
             MsgSender.showMsg("Age must be a number.");
             return false;
         }
+        // Check if age is within a valid range
         else if (Integer.parseInt(age) < 10 || Integer.parseInt(age) > 100) {
             MsgSender.showMsg("Must be a valid age.");
             return false;
         }
+        // Check if passwords match
         else if(!password.equals(passConfirm)){
             MsgSender.showMsg("Passwords do not match.");
             return false;
         }
+        // Check if the username already exists in the database
         else if(!studentDatabase.queryByField("username", username).isEmpty()){
             MsgSender.showMsg("This student already exists.");
             return false;
         }
+        // All validations passed
         return true;
     }
-
 }
