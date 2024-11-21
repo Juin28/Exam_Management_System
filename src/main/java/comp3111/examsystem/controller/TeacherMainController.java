@@ -13,7 +13,7 @@ import java.util.ResourceBundle;
 
 public class TeacherMainController implements Initializable {
     @FXML
-    private VBox mainbox;
+    public VBox mainbox;
 
     public void initialize(URL location, ResourceBundle resources) {
     }
