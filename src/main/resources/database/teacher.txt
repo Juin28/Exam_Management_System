@@ -6,3 +6,4 @@ position:Instructor,id:1731564762451,username:derulo,name:derulo,gender:Male,age
 position:Lecturer,id:1731567587720,username:der,name:janice,gender:Male,age:21,department:SUST,password:123,
 position:Senior Lecturer,id:1731567916902,username:john,name:john,gender:Male,age:30,department:CSE,password:123,
 position:Chair Professor,id:1731567753718,username:Teacher3,name:Teacher3,gender:Male,age:30,department:CSE,password:123,
+position:Associate Head,id:1732196639258,username:Teacher10,name:Teacher10,gender:Female,age:40,department:CSE,password:123,
