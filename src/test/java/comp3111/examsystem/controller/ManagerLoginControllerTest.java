@@ -83,23 +83,6 @@ public class ManagerLoginControllerTest extends ApplicationTest {
         Platform.exit(); // Cleans up the JavaFX platform after all tests are run.
     }
 
-//    @Test
-//    public void testLoginSuccessful() {
-//        // Mock database behavior
-//        Manager mockManager = new Manager();
-//        when(mockDatabase.getAll()).thenReturn(List.of(mockManager));
-//
-//        // Set the username and password fields
-//        controller.usernameTxt.setText("admin");
-//        controller.passwordTxt.setText("admin");
-//
-//        boolean expected = controller.login(e);
-//        assertTrue(expected);
-//
-//        // Verify the login was successful
-//        verify(mockMsgSender).showMsg("Login successful");
-//
-//    }
 
     @Test
     void testShowManagerUI() throws IOException, IOException, InterruptedException {
