@@ -70,7 +70,7 @@
             </HBox>
             <HBox prefHeight="121.0" prefWidth="400.0">
                <children>
-                  <Label fx:id="question" alignment="TOP_LEFT" prefHeight="115.0" prefWidth="401.0" text="Question">
+                  <Label fx:id="question" alignment="TOP_LEFT" prefHeight="115.0" prefWidth="401.0" text="Question" style="-fx-background-color: white;">
                      <HBox.margin>
                         <Insets left="10.0" />
                      </HBox.margin>
