@@ -152,6 +152,37 @@ public class QuizViewController implements Initializable {
     }
 
     /**
+     * Checks if the question is a single-choice question.
+     *
+     * @param question The question object to check.
+     * @return A boolean indicating whether the question is single-choice.
+     */
+    public boolean isSingleChoice(Question question) {
+        // Assuming the question type is stored in a field called 'questionType'
+        // and "single" indicates a single-choice question
+        return "single".equalsIgnoreCase(question.getQuestionType());
+    }
+
+    /**
+     * Handles the selection of an answer choice.
+     *
+     * @param option The selected answer option.
+     * @param isSelected A boolean indicating whether the option is selected.
+     */
+    public void handleChoiceSelection(String option, boolean isSelected) {
+        if (isSingleChoice(currQuestion)) {
+            // If the question is single-choice, deselect other options
+            if (isSelected) {
+                choiceA.setSelected("A".equals(option));
+                choiceB.setSelected("B".equals(option));
+                choiceC.setSelected("C".equals(option));
+                choiceD.setSelected("D".equals(option));
+            }
+        }
+        updateSelectedAnswers(option, isSelected);
+    }
+
+    /**
      * Handles the submit button action.
      */
     @FXML
@@ -313,10 +344,10 @@ public class QuizViewController implements Initializable {
      * Adds listeners to each RadioButton to track selection changes.
      */
     private void setChoiceListeners() {
-        choiceA.setOnAction(event -> updateSelectedAnswers("A", choiceA.isSelected()));
-        choiceB.setOnAction(event -> updateSelectedAnswers("B", choiceB.isSelected()));
-        choiceC.setOnAction(event -> updateSelectedAnswers("C", choiceC.isSelected()));
-        choiceD.setOnAction(event -> updateSelectedAnswers("D", choiceD.isSelected()));
+        choiceA.setOnAction(event -> handleChoiceSelection("A", choiceA.isSelected()));
+        choiceB.setOnAction(event -> handleChoiceSelection("B", choiceB.isSelected()));
+        choiceC.setOnAction(event -> handleChoiceSelection("C", choiceC.isSelected()));
+        choiceD.setOnAction(event -> handleChoiceSelection("D", choiceD.isSelected()));
     }
 
     /**
@@ -330,12 +361,17 @@ public class QuizViewController implements Initializable {
         selectedAnswers.putIfAbsent(questionId, new ArrayList<>());
         List<String> answers = selectedAnswers.get(questionId);
 
+        if (isSingleChoice(currQuestion)) {
+            answers.clear();  // Clear previous selections for single-choice questions
+        }
+
         if (isSelected) {
             if (!answers.contains(option)) answers.add(option);  // Add if not already selected
         } else {
             answers.remove(option);  // Remove if deselected
         }
     }
+
 
     /**
      * Loads previously selected answers for the current question.
