@@ -173,7 +173,9 @@ public class TeacherExamManagementController {
         for (Course course : allCourses) {
             courseIDInput.getItems().add(course.getCourseID());
         }
+        courseIDInput.setValue("");
         publishInput.getItems().addAll("Yes", "No");
+        publishInput.setValue("");
 
         // Handle resize of width of different components when the window is resized
         rootPane.widthProperty().addListener((obs, oldVal, newVal) -> {

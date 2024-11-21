@@ -346,6 +346,7 @@ public class TeacherManagementController {
         }
         return false;
     }
+
     /**
      * This function validates the username input
      *

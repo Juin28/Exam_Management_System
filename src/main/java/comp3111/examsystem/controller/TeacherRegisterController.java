@@ -110,6 +110,7 @@ public class TeacherRegisterController {
     public boolean storeTeacherCredentials(String username, String name, String gender, String age, String position, String department, String password) {
         try {
             int teacherId = allTeachers.size() + 1;
+            department = department.toUpperCase();
             Teacher newTeacher = new Teacher(username, name, gender, age, department, password, position, teacherId);
 
             // Store the teacher credentials in the database
@@ -171,6 +172,13 @@ public class TeacherRegisterController {
             return false;
         }
 
+        // Check if the department is valid
+        department = department.toUpperCase();
+        if (!validateDepartment(department)) {
+            MsgSender.showMsg("The department is invalid. Please input a valid department.");
+            return false;
+        }
+
         // Check if the username already exists
         List<Teacher> existingTeachers = teacherDatabase.queryByField("username", username);
         if (!existingTeachers.isEmpty()) {
@@ -179,5 +187,25 @@ public class TeacherRegisterController {
         }
 
         return true;
+    }
+
+    /**
+     * This function validates the department input
+     *
+     * @param   department  The department input as a String
+     * @return  boolean     True if the department is valid, false otherwise
+     */
+    public boolean validateDepartment(String department)
+    {
+        // check to ensure that the department is within HKUST's list of departments
+        String[] validDepartments = {"IEDA","CSE", "ECE", "MAE", "BBA", "CBE", "CIVL", "PHYS", "MATH", "HUMA", "LANG", "ACCT", "OCES", "ISOM", "FINA", "MARK", "GBUS", "LIFS", "BIEN", "CHEM", "ENVR", "HUMA", "SOSC", "SHSS", "SUST", "ISD"};
+
+        for (String validDepartment : validDepartments) {
+            if (department.equals(validDepartment)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
