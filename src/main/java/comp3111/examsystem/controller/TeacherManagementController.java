@@ -1,6 +1,5 @@
 package comp3111.examsystem.controller;
 
-import comp3111.examsystem.model.Question;
 import comp3111.examsystem.model.Teacher;
 import comp3111.examsystem.service.Database;
 import comp3111.examsystem.service.MsgSender;
@@ -9,12 +8,9 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TextField;
-import javafx.scene.control.TableView;
-import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.control.*;
+import javafx.scene.input.MouseEvent;
 
 
 import java.util.ArrayList;
@@ -30,7 +26,8 @@ public class TeacherManagementController {
 
         // initialize the choiceBoxes
         teachGenderInput.getItems().addAll("Male", "Female");
-        teachPosInput.getItems().addAll("Instructor", "Dean", "Professor", "Assistant Professor", "Teaching Assistant");
+        teachPosInput.getItems().addAll("Head", "Associate Head", "Chair Professor", "Professor", "Associate Professor","Assistant Professor",
+        "Senior Lecturer", "Lecturer");
 
         // load the Teacher Table
         loadTeacherTable();
@@ -42,19 +39,54 @@ public class TeacherManagementController {
         teachGenderCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getGender()));
         teachDeptCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDepartment()));
         teachPasswordCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getPassword()));
+        teachPositionCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getPosition()));
+
+        // Set up the listener for the table selection
+        teachTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+            if (newSelection != null) {
+                teachNameInput.setText(newSelection.getName());
+                teachUsernameInput.setText(newSelection.getUsername());
+                teachDeptInput.setText(newSelection.getDepartment());
+                teachAgeInput.setText(newSelection.getAge());
+                teachPosInput.setValue(newSelection.getPosition());
+                teachGenderInput.setValue(newSelection.getGender());
+                teachPasswordInput.setText(newSelection.getPassword());
+            }
+        });
+
+        // Clear the selection when clicking on the table itself with no teacher selected
+        teachTable.setRowFactory(tv -> {
+            TableRow<Teacher> row = new TableRow<>();
+            row.setOnMouseClicked(event -> {
+                if (row.isEmpty()) {
+                    teachTable.getSelectionModel().clearSelection();
+                    clearFields();
+                }
+            });
+            return row;
+        });
+
+        // Add a mouse click event to the rootPane
+        rootPane.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> {
+            // Check if the click is outside the TableView
+            if (!teachTable.isHover()) {
+                if (!AnchorWithInputs.isHover())
+                {clearFields();}
+            }
+        });
 
         // Populate the table
         teachTable.setItems(teacherList);
     }
 
     @FXML
-    private void loadTeacherTable()
+    public List<Teacher> loadTeacherTable()
     {
+        List<Teacher> filteredTeachers = new ArrayList<>();
         if (noFilter())
         {
             allTeachers = teacherDatabase.getAll();
             teacherList = FXCollections.observableArrayList(allTeachers);
-
         }
         else {
             String usernameFilter = teachUsernameFilter.getText();
@@ -62,7 +94,6 @@ public class TeacherManagementController {
             String departmentFilter = teachDeptFilter.getText().toUpperCase();
 
             List<Teacher> allTeachers = teacherDatabase.getAll();
-            List<Teacher> filteredTeachers = new ArrayList<>();
 
             for (Teacher teacher : allTeachers) {
                 if ((usernameFilter.isEmpty() || usernameFilter.equals(teacher.getUsername())) &&
@@ -75,9 +106,10 @@ public class TeacherManagementController {
             teacherList = FXCollections.observableArrayList(filteredTeachers);
         }
         teachTable.getItems().setAll(teacherList);
+        return filteredTeachers;
     }
 
-    private boolean noFilter() {
+    public boolean noFilter() {
         return (teachDeptFilter.getText().isEmpty() &&
                 teachNameFilter.getText().isEmpty() &&
                 teachUsernameFilter.getText().isEmpty());
@@ -85,25 +117,26 @@ public class TeacherManagementController {
 
     @FXML
     public boolean updateTeacher(ActionEvent actionEvent) {
-        System.out.println("Updating Teacher");
-        if (teachUsernameInput.getText().isEmpty()) {
-            MsgSender.showMsg("Username field cannot be empty. Please enter a valid username.");
+        Teacher teacher = teachTable.getSelectionModel().getSelectedItem();
+        if (teacher == null)
+        {
+            MsgSender.showMsg("Please select a teacher to update");
             return false;
         }
-        for (Teacher teacher : allTeachers) {
-            if (teacher.getUsername().equals(teachUsernameInput.getText())) {
-                // found the teacher, we now validate the changes
-                boolean valid = validateUpdateInput(teacher);
-                if (valid) {
-                    // successfully validated the changes, show a confirmation message
-                    MsgSender.showConfirm("Update Teacher", "Are you sure you want to update teacher with username: " + teacher.getUsername() + " ?", () -> updateTeacherInDatabase(teacher));
-                }
-                return true;
-            }
+        List<String> changes = new ArrayList<>();
+
+        boolean valid = validateUpdateInput(teacher, changes);
+        if (valid && !changes.isEmpty()) {
+            // successfully validated the changes, show a confirmation message
+            MsgSender.showUpdateConfirm("Update Teacher: " + teacher.getUsername(), changes, () -> updateTeacherInDatabase(teacher));
+            return true;
+        }
+        // no changes detected
+        if (valid) {
+            MsgSender.showMsg("No changes detected");
+            return false;
         }
 
-        // username of teacher cannot be found
-        MsgSender.showMsg("Teacher cannot be found. Please enter a valid username.");
         return false;
     }
 
@@ -123,29 +156,19 @@ public class TeacherManagementController {
 
     @FXML
     public boolean deleteTeacher(ActionEvent actionEvent) {
-        String username = teachUsernameInput.getText();
-        if (username.isEmpty())
+        // delete teacher according to selection model
+        Teacher teacher = teachTable.getSelectionModel().getSelectedItem();
+        if (teacher == null)
         {
-            MsgSender.showMsg("Username field cannot be empty. Please enter a valid username.");
+            MsgSender.showMsg("Please select a teacher to delete");
+            return false;
         }
-        else
-        {
-            for (Teacher teacher : allTeachers)
-            {
-                if (teacher.getUsername().equals(username))
-                {
-                    // found the teacher, show a confirmation message
-                    MsgSender.showConfirm("Delete Teacher", "Are you sure you want to delete teacher with username: " + username + " ?", () -> deleteTeacherFromDatabase(teacher));
-                    return true;
-                }
-            }
-            // username of teacher cannot be found
-            MsgSender.showMsg("Teacher cannot be found. Please enter a valid username.");
-        }
-        return false;
+        String username = teacher.getUsername();
+        MsgSender.showConfirm("Delete Teacher", "Are you sure you want to delete teacher with username: " + username + " ?", () -> deleteTeacherFromDatabase(teacher));
+        return true;
     }
 
-    private void deleteTeacherFromDatabase(Teacher teacher)
+    public void deleteTeacherFromDatabase(Teacher teacher)
     {
         try
         {
@@ -160,11 +183,7 @@ public class TeacherManagementController {
     }
 
     @FXML
-    public void refreshTeacher(ActionEvent actionEvent) {
-        // this function will reset all the filters, reload the table and clear the input fields
-        teachDeptFilter.clear();
-        teachNameFilter.clear();
-        teachUsernameFilter.clear();
+    public void clearFields() {
         teachUsernameInput.clear();
         teachNameInput.clear();
         teachAgeInput.clear();
@@ -172,6 +191,17 @@ public class TeacherManagementController {
         teachPasswordInput.clear();
         teachGenderInput.setValue(null);
         teachPosInput.setValue(null);
+    }
+
+    @FXML
+    public void refreshTeacher(ActionEvent actionEvent) {
+        // this function will reset all the filters, reload the table and clear the input fields
+        teachDeptFilter.clear();
+        teachNameFilter.clear();
+        teachUsernameFilter.clear();
+
+        // clear input fields
+        clearFields();
 
         // reload the teacher Table
         loadTeacherTable();
@@ -179,7 +209,6 @@ public class TeacherManagementController {
 
     @FXML
     public void addTeacher(ActionEvent actionEvent) {
-        System.out.println("Adding Teacher");
         boolean valid = validateAddInput();
         if (valid)
         {
@@ -192,95 +221,96 @@ public class TeacherManagementController {
      *
      * @return Teacher     returns the updated Teacher object
      */
-    public boolean validateUpdateInput(Teacher teacher)
+    public boolean validateUpdateInput(Teacher teacher, List<String>changes)
     {
         // found the teacher, we now validate the rest of the inputs
+        String username = teachUsernameInput.getText();
         String name = teachNameInput.getText();
         String age = teachAgeInput.getText();
         String department = teachDeptInput.getText();
         String password = teachPasswordInput.getText();
+        String gender = teachGenderInput.getValue();
+        String position = teachPosInput.getValue();
 
-        // check which inputs are not null, we then use that to determine which fields to update
-        if (!name.isEmpty())
+        // check that all fields are filled
+        if (username.isEmpty() || name.isEmpty() || age.isEmpty() || department.isEmpty() || password.isEmpty() || gender.isEmpty() || position.isEmpty())
         {
-            // name is the same, prompt a different name
-            if (name.equals(teacher.getName()))
-            {
-                MsgSender.showMsg("Name is the same. Please input a different name");
-                return false;
-            }
-            if (!name.matches("^[a-zA-Z]*$"))
-            {
-                MsgSender.showMsg("Name must only contain alphabets");
-                return false;
-            }
+            MsgSender.showMsg("Please fill in all fields");
+            return false;
         }
 
-        if (!age.isEmpty())
+        // check that the username is the same
+        if (!username.equals(teacher.getUsername()))
         {
-            if (!validateAge(age))
-            {
-                MsgSender.showMsg("Please input a valid age");
-                return false;
-            }
-            // age is the same, prompt a different age
-            if (age.equals(teacher.getAge()))
-            {
-                MsgSender.showMsg("Age is the same. Please input a different age");
-                return false;
-            }
+            MsgSender.showMsg("Username must be the same!");
+            return false;
         }
-        if (!department.isEmpty())
-        {
-            department = department.toUpperCase();
-            if (!validateDepartment(department))
-            {
-                MsgSender.showMsg("Please input a valid department");
-                return false;
-            }
 
-            // department is the same, prompt a different department
-            if (department.equals(teacher.getDepartment()))
-            {
-                MsgSender.showMsg("Department is the same. Please input a different department");
-                return false;
-            }
-        }
-        if (!password.isEmpty())
+        // check the fields that are different, show a confirmation message to verify that
+        // if name is not in alphabets, return false
+        if (!name.matches("^[a-zA-Z]*$"))
         {
-            // password is the same, prompt a different password
-            if (password.equals(teacher.getPassword()))
-            {
-                MsgSender.showMsg("Password is the same. Please input a different password");
-                return false;
-            }
+            MsgSender.showMsg("Name must only contain alphabets");
+            return false;
         }
-        if (teachGenderInput.getValue() != null)
+
+        // add name into "changes" array if the name is different
+        if (!name.equals(teacher.getName()))
         {
-            // gender is the same, prompt a different gender
-            if (teachGenderInput.getValue().equals(teacher.getGender()))
-            {
-                MsgSender.showMsg("Gender is the same. Please input a different gender");
-                return false;
-            }
+            changes.add("Name: " + teacher.getName() + " -> " + name);
         }
-        if (teachPosInput.getValue() != null)
+
+        // validate the age
+        if (!validateAge(age))
         {
-            // position is the same, prompt a different position
-            if (teachPosInput.getValue().equals(teacher.getPosition()))
-            {
-                MsgSender.showMsg("Position is the same. Please input a different position");
-                return false;
-            }
+            return false;
+        }
+
+        // age is different, add into "changes" array
+        if (!age.equals(teacher.getAge()))
+        {
+            changes.add("Age: " + teacher.getAge() + " -> " + age);
+        }
+
+        department = department.toUpperCase();
+        // validate the department
+        if (!validateDepartment(department))
+        {
+            MsgSender.showMsg("Please input a valid department");
+            return false;
+        }
+
+        // department is not the same, add into "changes" array
+        if (!department.equals(teacher.getDepartment()))
+        {
+            changes.add("Department: " + teacher.getDepartment() + " -> " + department);
+        }
+
+        // password is not the same, add into "changes" array
+        if (!password.equals(teacher.getPassword()))
+        {
+            changes.add("Password: " + teacher.getPassword() + " -> " + password);
+        }
+
+        // gender is not the same, add into "changes" array
+        if (!gender.equals(teacher.getGender()))
+        {
+            changes.add("Gender: " + teacher.getGender() + " -> " + gender);
+        }
+
+        // position is not the same, add into "changes" array
+        if (!position.equals(teacher.getPosition()))
+        {
+            changes.add("Position: " + teacher.getPosition() + " -> " + position);
         }
 
         // successfully validated input, set the corresponding values and return true
-        if (!name.isEmpty()){teacher.setName(name);}
-        if (!age.isEmpty()){teacher.setAge(age);}
-        if (!department.isEmpty()){teacher.setDepartment(department);}
-        if (!password.isEmpty()){teacher.setPassword(password);}
-        if (teachGenderInput.getValue() != null){teacher.setGender(teachGenderInput.getValue());}
-        if (teachPosInput.getValue() != null){teacher.setPosition(teachPosInput.getValue());}
+        teacher.setName(name);
+        teacher.setAge(age);
+        teacher.setDepartment(department);
+        teacher.setPassword(password);
+        teacher.setGender(gender);
+        teacher.setPosition(teachPosInput.getValue());
 
         return true;
     }
@@ -305,6 +335,10 @@ public class TeacherManagementController {
             MsgSender.showMsg("Please fill in all fields");
             return false;
         }
+
+        // validate the username
+        if(!validateUsername(username)){return false;}
+
         // validate that name only has alphabets
         if (!name.matches("^[a-zA-Z]*$"))
         {
@@ -314,9 +348,6 @@ public class TeacherManagementController {
 
         // validate the age
         if(!validateAge(age)){return false;}
-
-        // validate the username
-        if(!validateUsername(username)){return false;}
 
         // validate the department
         department = department.toUpperCase();
@@ -437,77 +468,86 @@ public class TeacherManagementController {
         }
     }
 
-    private Database<Teacher> teacherDatabase;
-    private List<Teacher> allTeachers;
-    private ObservableList<Teacher> teacherList;
+    public Database<Teacher> teacherDatabase;
+    public List<Teacher> allTeachers;
+    public ObservableList<Teacher> teacherList;
 
     @FXML
-    private Button teachAdd;
+    public Button teachAdd;
 
     @FXML
-    private TableColumn<Teacher, String> teachAgeCol;
+    public TableColumn<Teacher, String> teachAgeCol;
 
     @FXML
-    private TextField teachAgeInput;
+    public TextField teachAgeInput;
 
     @FXML
-    private Button teachDelete;
+    public Button teachDelete;
 
     @FXML
-    private TableColumn<Teacher, String> teachDeptCol;
+    public TableColumn<Teacher, String> teachDeptCol;
 
     @FXML
-    private TableView<Teacher> teachTable;
+    public TableView<Teacher> teachTable;
 
     @FXML
-    private TextField teachDeptFilter;
+    public TextField teachDeptFilter;
 
     @FXML
-    private TextField teachDeptInput;
+    public TextField teachDeptInput;
 
     @FXML
-    private Button teachFilter;
+    public Button teachFilter;
 
     @FXML
-    private TableColumn<Teacher, String> teachGenderCol;
+    public TableColumn<Teacher, String> teachGenderCol;
 
     @FXML
-    private ComboBox<String> teachGenderInput;
+    public ComboBox<String> teachGenderInput;
 
     @FXML
-    private TableColumn<Teacher, String> teachNameCol;
+    public TableColumn<Teacher, String> teachNameCol;
 
     @FXML
-    private TextField teachNameFilter;
+    public TextField teachNameFilter;
 
     @FXML
-    private TextField teachNameInput;
+    public TextField teachNameInput;
 
     @FXML
-    private TableColumn<Teacher, String> teachPasswordCol;
+    public TableColumn<Teacher, String> teachPasswordCol;
 
     @FXML
-    private TextField teachPasswordInput;
+    public TextField teachPasswordInput;
 
     @FXML
-    private ComboBox<String> teachPosInput;
+    public ComboBox<String> teachPosInput;
 
     @FXML
-    private Button teachRefresh;
+    public Button teachRefresh;
 
     @FXML
-    private Button teachResetFilter;
+    public Button teachResetFilter;
 
     @FXML
-    private Button teachUpdate;
+    public Button teachUpdate;
 
     @FXML
-    private TableColumn<Teacher, String> teachUsernameCol;
+    public TableColumn<Teacher, String> teachUsernameCol;
 
     @FXML
-    private TextField teachUsernameFilter;
+    public TextField teachUsernameFilter;
 
     @FXML
-    private TextField teachUsernameInput;
+    public TextField teachUsernameInput;
+
+    @FXML
+    public TableColumn<Teacher, String> teachPositionCol;
+
+    @FXML
+    public AnchorPane rootPane;
+
+    @FXML
+    public AnchorPane AnchorWithInputs;
 
 }

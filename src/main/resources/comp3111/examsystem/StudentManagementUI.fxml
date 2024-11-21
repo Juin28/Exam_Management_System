@@ -9,8 +9,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Text?>
 
-
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="527.0" prefWidth="847.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="527.0" prefWidth="847.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="comp3111.examsystem.controller.StudentManagementController">
    <children>
       <SplitPane dividerPositions="0.23899878885748893" layoutY="7.0" orientation="VERTICAL" prefHeight="497.0" prefWidth="732.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <items>
@@ -19,49 +18,57 @@
                   <Text layoutX="66.0" layoutY="65.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Username:" wrappingWidth="49.03281021118164" />
                   <Text layoutX="235.0" layoutY="65.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Name:" wrappingWidth="49.03281021118164" />
                   <Text layoutX="396.0" layoutY="65.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Department:" wrappingWidth="73.03281021118164" />
-                  <TextField fx:id="usernameFilter" layoutX="115.0" layoutY="52.0" prefHeight="18.0" prefWidth="94.0" />
-                  <TextField fx:id="nameFilter" layoutX="272.0" layoutY="52.0" prefHeight="18.0" prefWidth="94.0" />
-                  <TextField fx:id="departmentFilter" layoutX="458.0" layoutY="52.0" prefHeight="18.0" prefWidth="94.0" />
-                  <Button fx:id="reset" layoutX="590.0" layoutY="51.0" mnemonicParsing="false" text="Reset" />
-                  <Button fx:id="filter" layoutX="649.0" layoutY="51.0" mnemonicParsing="false" prefHeight="19.0" prefWidth="38.0" text="Filter" />
+                  <TextField fx:id="studentUsernameFilter" layoutX="115.0" layoutY="52.0" prefHeight="18.0" prefWidth="94.0" />
+                  <TextField fx:id="studentNameFilter" layoutX="272.0" layoutY="52.0" prefHeight="18.0" prefWidth="94.0" />
+                  <TextField fx:id="studentDeptFilter" layoutX="458.0" layoutY="52.0" prefHeight="18.0" prefWidth="94.0" />
+                  <Button fx:id="studentResetFilter" layoutX="590.0" layoutY="51.0" mnemonicParsing="false" onAction="#resetFilter" text="Reset" />
+                  <Button fx:id="studentFilter" layoutX="649.0" layoutY="51.0" mnemonicParsing="false" onAction="#filterStudent" prefHeight="19.0" prefWidth="38.0" text="Filter" />
                </children>
             </AnchorPane>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="410.0" prefWidth="818.0">
                <children>
-                  <SplitPane dividerPositions="0.766824644549763" layoutX="469.0" layoutY="138.0" prefHeight="397.6" prefWidth="845.6" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                  <AnchorPane layoutX="223.0" layoutY="267.0" prefHeight="397.6" prefWidth="845.6" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <children>
+                        <Button fx:id="studentDelete" layoutX="524.0" layoutY="354.0" mnemonicParsing="false" onAction="#deleteStudent" text="Delete" />
+                        <Button fx:id="studentRefresh" layoutX="588.0" layoutY="354.0" mnemonicParsing="false" onAction="#refreshStudent" text="Refresh" />
+                        <Button fx:id="studentAdd" layoutX="654.0" layoutY="354.0" mnemonicParsing="false" onAction="#addStudent" text="Add" />
+                        <Button fx:id="studentUpdate" layoutX="706.0" layoutY="354.0" mnemonicParsing="false" onAction="#updateStudent" text="Update" />
+                     </children>
+                  </AnchorPane>
+                  <SplitPane dividerPositions="0.766824644549763" layoutX="469.0" layoutY="138.0" prefHeight="318.0" prefWidth="846.0" AnchorPane.bottomAnchor="80.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                     <items>
-                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="413.0" prefWidth="644.0">
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="340.0" prefWidth="644.0">
                            <children>
                               <AnchorPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                  <children>
-                                    <TableView layoutX="47.0" layoutY="24.0" prefHeight="396.0" prefWidth="644.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                    <TableView fx:id="studentTable" layoutX="47.0" layoutY="24.0" prefHeight="396.0" prefWidth="644.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                       <columns>
-                                        <TableColumn fx:id="usernameCol" prefWidth="107.20000296831131" text="Username" />
-                                          <TableColumn fx:id="nameCol" prefWidth="106.39996337890625" text="Name" />
-                                          <TableColumn fx:id="ageCol" prefWidth="100.00004577636719" text="Age" />
-                                          <TableColumn fx:id="genderCol" prefWidth="98.39996337890625" text="Gender" />
-                                          <TableColumn fx:id="deptCol" prefWidth="111.20001220703125" text="Department" />
-                                          <TableColumn fx:id="passwordCol" prefWidth="117.5999755859375" text="Password" />
+                                        <TableColumn fx:id="studentUsernameCol" prefWidth="107.20000296831131" text="Username" />
+                                          <TableColumn fx:id="studentNameCol" prefWidth="106.39996337890625" text="Name" />
+                                          <TableColumn fx:id="studentAgeCol" prefWidth="100.00004577636719" text="Age" />
+                                          <TableColumn fx:id="studentGenderCol" prefWidth="98.39996337890625" text="Gender" />
+                                          <TableColumn fx:id="studentDeptCol" prefWidth="111.20001220703125" text="Department" />
+                                          <TableColumn fx:id="studentPasswordCol" prefWidth="117.5999755859375" text="Password" />
                                       </columns>
                                     </TableView>
                                  </children>
                               </AnchorPane>
                            </children>
                         </AnchorPane>
-                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+                      <AnchorPane fx:id="AnchorWithInputs" minHeight="0.0" minWidth="0.0" prefHeight="331.0" prefWidth="194.0">
                            <children>
-                              <Text layoutX="14.0" layoutY="25.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Username:" />
-                              <Text layoutX="14.0" layoutY="82.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Name:" />
-                              <Text layoutX="14.0" layoutY="138.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Age:" />
-                              <Text layoutX="14.0" layoutY="194.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Gender:" />
-                              <Text layoutX="14.0" layoutY="250.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Department:" />
-                              <Text layoutX="15.0" layoutY="304.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Password:" />
-                              <TextField fx:id="usernameInput" layoutX="15.0" layoutY="35.0" prefHeight="19.0" prefWidth="116.0" />
-                              <TextField layoutX="15.0" layoutY="93.0" />
-                              <TextField fx:id="ageInput" layoutX="15.0" layoutY="150.0" />
-                              <TextField fx:id="departmentInput" layoutX="15.0" layoutY="262.0" />
-                              <TextField fx:id="passwordInput" layoutX="15.0" layoutY="317.0" prefHeight="0.0" prefWidth="116.0" />
-                              <ComboBox fx:id="genderInput" layoutX="15.0" layoutY="204.0" prefHeight="19.0" prefWidth="116.0" promptText="Gender" />
+                              <Text layoutX="14.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Username:" />
+                              <Text layoutX="15.0" layoutY="71.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Name:" />
+                              <Text layoutX="15.0" layoutY="154.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Age:" />
+                              <Text layoutX="15.0" layoutY="112.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Gender:" />
+                              <Text layoutX="16.0" layoutY="196.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Department:" />
+                              <Text layoutX="17.0" layoutY="240.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Password:" />
+                              <TextField fx:id="studentUsernameInput" layoutX="15.0" layoutY="35.0" prefHeight="19.0" prefWidth="116.0" />
+                              <TextField fx:id="studentNameInput" layoutX="16.0" layoutY="76.0" />
+                              <TextField fx:id="studentAgeInput" layoutX="16.0" layoutY="159.0" />
+                              <TextField fx:id="studentDeptInput" layoutX="17.0" layoutY="202.0" />
+                              <TextField fx:id="studentPasswordInput" layoutX="17.0" layoutY="244.0" prefHeight="0.0" prefWidth="116.0" />
+                              <ComboBox fx:id="studentGenderInput" layoutX="16.0" layoutY="116.0" prefHeight="19.0" prefWidth="116.0" promptText="Gender" />
                            </children>
                         </AnchorPane>
                     </items>
