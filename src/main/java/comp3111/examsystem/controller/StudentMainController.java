@@ -60,40 +60,54 @@ public class StudentMainController implements Initializable {
     /**
      * Loads the student's grades.
      */
-    public void loadStudentGrades(){
-        // getting the student's grades
-        for(int i = 0; i < gradeDatabase.getAll().size(); ++i){
-            String gradeId = gradeDatabase.getAll().get(i).getStudentId();
-            if(gradeId.equals(Long.toString(student.getId()))){
-                studentGrades.add(gradeDatabase.getAll().get(i));
+    public void loadStudentGrades() {
+        // Attempt to load the student's grades from the database
+        try {
+            // Iterate through all grades in the database
+            for (int i = 0; i < gradeDatabase.getAll().size(); ++i) {
+                String gradeId = gradeDatabase.getAll().get(i).getStudentId();
+                // Check if the grade belongs to the logged-in student
+                if (gradeId.equals(Long.toString(student.getId()))) {
+                    studentGrades.add(gradeDatabase.getAll().get(i));
+                }
             }
+        } catch (Exception e) {
+            // Handle any exceptions that occur during the process
+            e.printStackTrace();
+            MsgSender.showMsg("Error loading student grades.");
         }
     }
 
     /**
      * Checks the validity of the quizzes.
      */
-    public void checkQuizValidity(){
-        // formatting the quiz information
-        for(Quiz quiz : quizDatabase.getAll()){
-            String quizId = Long.toString(quiz.getId());
-            String quizPublished = quiz.getPublishStatus();
-            if (quizPublished.equalsIgnoreCase("yes")){
-                quizPublished = "true";
-            }
-            else{
-                quizPublished = "false";
-            }
-            boolean taken = false;
-
-            // filtering out quizzes that have already been taken
-            for (Grade studentGrade : studentGrades) {
-                if (studentGrade.getQuestionId().equals(quizId)) {
-                    taken = true;
-                    break;
+    public void checkQuizValidity() {
+        // Attempt to check the validity of quizzes
+        try {
+            // Formatting the quiz information
+            for (Quiz quiz : quizDatabase.getAll()) {
+                String quizId = Long.toString(quiz.getId());
+                String quizPublished = quiz.getPublishStatus();
+                if (quizPublished.equalsIgnoreCase("yes")) {
+                    quizPublished = "true";
+                } else {
+                    quizPublished = "false";
                 }
+                boolean taken = false;
+
+                // Filtering out quizzes that have already been taken
+                for (Grade studentGrade : studentGrades) {
+                    if (studentGrade.getQuestionId().equals(quizId)) {
+                        taken = true;
+                        break;
+                    }
+                }
+                formatQuizInfo(taken, Boolean.parseBoolean(quizPublished), quiz);
             }
-            formatQuizInfo(taken, Boolean.parseBoolean(quizPublished), quiz);
+        } catch (Exception e) {
+            // Handle any exceptions that occur during the process
+            e.printStackTrace();
+            MsgSender.showMsg("Error checking quiz validity.");
         }
     }
 
@@ -122,48 +136,38 @@ public class StudentMainController implements Initializable {
      */
     @FXML
     public void openExamUI(ActionEvent e) {
-        if(examCombox.getValue() == null){
+        // Check if no quiz is selected
+        if (examCombox.getValue() == null) {
             MsgSender.showMsg("Please select a quiz to start.");
-        }
-        else{
+        } else {
+            // Load the QuizViewUI.fxml file
             FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("QuizViewUI.fxml"));
             Stage stage = new Stage();
-            // Remove spaces and split the by "|"
+            // Remove spaces and split the selected quiz by "|"
             String[] parts = formatString(examCombox.getValue());
             try {
+                // Query the database for quizzes with the selected course ID
                 List<Quiz> listOfQuizzes = quizDatabase.queryByField("courseID", parts[0]);
-                for(int i = 0; i < listOfQuizzes.size(); ++i){
-                    if(listOfQuizzes.get(i).getQuizName().replace(" ", "").equals(parts[1])){
+                // Find the selected quiz by name
+                for (int i = 0; i < listOfQuizzes.size(); ++i) {
+                    if (listOfQuizzes.get(i).getQuizName().replace(" ", "").equals(parts[1])) {
                         chosenQuiz = listOfQuizzes.get(i);
                     }
                 }
+                // Set the stage title and load the scene
                 stage.setTitle("Start Exam");
                 try {
                     stage.setScene(new Scene(fxmlLoader.load()));
                 } catch (IOException e1) {
                     e1.printStackTrace();
                 }
+                // Show the new stage and close the current window
                 stage.show();
                 ((Stage) ((Button) e.getSource()).getScene().getWindow()).close();
             } catch (Exception e1) {
                 MsgSender.showMsg("Error: No Quizzes not found.");
                 e1.printStackTrace();
             }
-//            List<Quiz> listOfQuizzes = quizDatabase.queryByField("courseID", parts[0]);
-            // Setting the chosenQuiz
-//            for(int i = 0; i < listOfQuizzes.size(); ++i){
-//                if(listOfQuizzes.get(i).getQuizName().replace(" ", "").equals(parts[1])){
-//                    chosenQuiz = listOfQuizzes.get(i);
-//                }
-//            }
-//            stage.setTitle("Start Exam");
-//            try {
-//                stage.setScene(new Scene(fxmlLoader.load()));
-//            } catch (IOException e1) {
-//                e1.printStackTrace();
-//            }
-//            stage.show();
-//            ((Stage) ((Button) e.getSource()).getScene().getWindow()).close();
         }
     }
 
@@ -205,9 +209,6 @@ public class StudentMainController implements Initializable {
 
     // Helper function to split a String by "|"
     public static String[] splitByPipe(String input) {
-//        if (input == null) {
-//            return new String[0]; // Return an empty array if input is null
-//        }
         return input.split("\\|"); // Split by "|" character
     }
 }
