@@ -41,8 +41,6 @@ class QuizViewControllerTest {
     @BeforeEach
     void setUp() throws IOException {
         MockitoAnnotations.openMocks(this);
-//        FXMLLoader loader = new FXMLLoader(getClass().getResource("/comp3111/examsystem/StudentLoginUI.fxml"));
-//        Parent root = loader.load();
         controller = new QuizViewController();
 
         controller.gradeDatabase = mockGradeDatabase;

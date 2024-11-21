@@ -102,10 +102,16 @@ public class QuizViewController implements Initializable {
      * @param resourceBundle The resources used to localize the root object.
      */
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        questionDatabase = new Database<>(Question.class);
-        gradeDatabase = new Database<>(Grade.class);
-        allQuestionDesc = new ArrayList<>();
-        selectedAnswers = new HashMap<>();
+        try{
+            questionDatabase = new Database<>(Question.class);
+            gradeDatabase = new Database<>(Grade.class);
+            allQuestionDesc = new ArrayList<>();
+            selectedAnswers = new HashMap<>();
+        }
+        catch (Exception e){
+            MsgSender.showMsg("Error fetching database");
+            e.printStackTrace();
+        }
 
         currentQuiz = StudentMainController.chosenQuiz;
         curStudent = StudentLoginController.loggedInStudent;
@@ -165,11 +171,16 @@ public class QuizViewController implements Initializable {
      */
     @FXML
     public void handleNext() {
-        if (currentQuestionIndex < allQuestionDesc.size() - 1) {
-            currentQuestionIndex++;
-            updateQuestionUI();
-        } else {
-            MsgSender.showMsg("This is the last question.");
+        try {
+            if (currentQuestionIndex < allQuestionDesc.size() - 1) {
+                currentQuestionIndex++;
+                updateQuestionUI();
+            } else {
+                MsgSender.showMsg("This is the last question.");
+            }
+        } catch (Exception e) {
+            MsgSender.showMsg("An error occurred while moving to the next question.");
+            e.printStackTrace();
         }
     }
 
@@ -177,43 +188,66 @@ public class QuizViewController implements Initializable {
      * Updates the question details in the UI based on the current question index.
      */
     public void updateQuestionUI() {
-        // Get the next question description
-        questionDesc = allQuestionDesc.get(currentQuestionIndex);
-        // Update the question details in the UI
-        currQuestion = questionDatabase.queryByField("questionDescription", questionDesc).get(0);
-        question.setText(questionDesc);
-        currQNum.setText("Question " + (currentQuestionIndex + 1));
+        try {
+            // Get the next question description
+            questionDesc = allQuestionDesc.get(currentQuestionIndex);
+            // Update the question details in the UI
+            currQuestion = questionDatabase.queryByField("questionDescription", questionDesc).get(0);
+            question.setText(questionDesc);
+            currQNum.setText("Question " + (currentQuestionIndex + 1));
 
-        // Set the answer descriptions
-        setAnsDescriptions(currQuestion);
-        // Load the selected answers for this question (if any)
-        loadSelectedAnswers();
+            // Set the answer descriptions
+            setAnsDescriptions(currQuestion);
+            // Load the selected answers for this question (if any)
+            loadSelectedAnswers();
+        } catch (Exception e) {
+            MsgSender.showMsg("An error occurred while updating the question UI.");
+            e.printStackTrace();
+        }
     }
 
     /**
      * Shows the details of the selected question.
+     * Initializes the choice listeners, sets the first question description,
+     * and updates the UI with the question details.
      */
     public void showQuestionDet() {
+        // Set listeners for choice selection
         setChoiceListeners();
+
+        // Get the first question description and update the UI
         questionDesc = allQuestionDesc.getFirst();
         currQNum.setText("Question 1");
         question.setText(questionDesc);
-        currQuestion = questionDatabase.queryByField("questionDescription", questionDesc).getFirst();
-        setAnsDescriptions(currQuestion);
-        questionList.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observableValue, String s, String t1) {
-                questionDesc = questionList.getSelectionModel().getSelectedItem();
-                currQuestion = questionDatabase.queryByField("questionDescription", questionDesc).getFirst();
-                question.setText(questionDesc);
-                currQNum.setText("Question " + (allQuestionDesc.indexOf(questionDesc)+1));
-                currentQuestionIndex = allQuestionDesc.indexOf(questionDesc);
-                setAnsDescriptions(currQuestion);
-                // Load selected answer for this question, if available
-                loadSelectedAnswers();
-            }
-        });
-        Platform.runLater(this::setupCloseRequestHandler);
+
+        try {
+            // Query the database for the first question and set its answer descriptions
+            currQuestion = questionDatabase.queryByField("questionDescription", questionDesc).getFirst();
+            setAnsDescriptions(currQuestion);
+
+            // Add a listener to update the UI when a different question is selected from the list
+            questionList.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
+                @Override
+                public void changed(ObservableValue<? extends String> observableValue, String s, String t1) {
+                    // Update the question description and UI elements based on the selected question
+                    questionDesc = questionList.getSelectionModel().getSelectedItem();
+                    currQuestion = questionDatabase.queryByField("questionDescription", questionDesc).getFirst();
+                    question.setText(questionDesc);
+                    currQNum.setText("Question " + (allQuestionDesc.indexOf(questionDesc) + 1));
+                    currentQuestionIndex = allQuestionDesc.indexOf(questionDesc);
+                    setAnsDescriptions(currQuestion);
+                    // Load selected answers for the current question, if available
+                    loadSelectedAnswers();
+                }
+            });
+
+            // Set up the close request handler for the quiz window
+            Platform.runLater(this::setupCloseRequestHandler);
+        } catch (Exception e) {
+            // Show an error message if no questions are found and print the stack trace
+            MsgSender.showMsg("Error: No questions found.");
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -318,37 +352,46 @@ public class QuizViewController implements Initializable {
     /**
      * Checks the answers for the quiz and calculates the score.
      */
-    public void checkAnswers(){
+    public void checkAnswers() {
         score = 0;
         numOfCorrect = 0;
         long endTime = System.currentTimeMillis();
-        for(int i = 0; i < questionIds.length; ++i){
-            Question ques = questionDatabase.queryByField("id", questionIds[i]).getFirst();
-            totalScore += Integer.parseInt(ques.getQuestionScore());
-            List<String> choices = selectedAnswers.get(Long.parseLong(questionIds[i]));
-            if(choices != null){
-                Collections.sort(choices);
-                String ans = "";
-                for(int j = 0; j < choices.size(); ++j){
-                    ans = ans.concat(choices.get(j));
-                }
-                if(ans.equals(ques.getAnswer())){
-                    score += Integer.parseInt(ques.getQuestionScore());
-                    numOfCorrect += 1;
+        try {
+            for (int i = 0; i < questionIds.length; ++i) {
+                // Fetch the question from the database
+                Question ques = questionDatabase.queryByField("id", questionIds[i]).getFirst();
+                totalScore += Integer.parseInt(ques.getQuestionScore());
+                List<String> choices = selectedAnswers.get(Long.parseLong(questionIds[i]));
+                if (choices != null) {
+                    Collections.sort(choices);
+                    String ans = "";
+                    for (int j = 0; j < choices.size(); ++j) {
+                        ans = ans.concat(choices.get(j));
+                    }
+                    // Check if the selected answer matches the correct answer
+                    if (ans.equals(ques.getAnswer())) {
+                        score += Integer.parseInt(ques.getQuestionScore());
+                        numOfCorrect += 1;
+                    }
                 }
             }
-
+            // Calculate the time used for the quiz
+            Long usedTime = ((endTime - startTime) / 1000) / 60;
+            if (usedTime >= Long.parseLong(currentQuiz.getQuizTime())) {
+                usedTime = Long.parseLong(currentQuiz.getQuizTime());
+            }
+            // Create a new Grade object and add it to the database
+            Grade tmp = new Grade(
+                    String.valueOf(curStudent.getId()),
+                    String.valueOf(currentQuiz.getId()),
+                    String.valueOf(score),
+                    String.valueOf(usedTime));
+            gradeDatabase.add(tmp);
+        } catch (Exception e) {
+            // Handle any exceptions that occur during the process
+            MsgSender.showMsg("An error occurred while checking answers.");
+            e.printStackTrace();
         }
-        Long usedTime = ((endTime-startTime)/1000)/60;
-        if(usedTime >= Long.parseLong(currentQuiz.getQuizTime())){
-            usedTime = Long.parseLong(currentQuiz.getQuizTime());
-        }
-        Grade tmp = new Grade(
-                String.valueOf(curStudent.getId()),
-                String.valueOf(currentQuiz.getId()),
-                String.valueOf(score),
-                String.valueOf(usedTime));
-        gradeDatabase.add(tmp);
     }
 
 }
