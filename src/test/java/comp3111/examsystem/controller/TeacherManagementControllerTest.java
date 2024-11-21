@@ -101,37 +101,6 @@ class TeacherManagementControllerTest {
         controller.teacherDatabase = mockDatabase;
         controller.allTeachers = new ArrayList<>();
         controller.teacherList = FXCollections.observableArrayList();
-
-//
-//        controller.teachTable = teachTable;
-//        controller.teachUsernameCol = teachUsernameCol;
-//        controller.teachNameCol = teachNameCol;
-//        controller.teachAgeCol = teachAgeCol;
-//        controller.teachGenderCol = teachGenderCol;
-//        controller.teachDeptCol = teachDeptCol;
-//        controller.teachPasswordCol = teachPasswordCol;
-//        controller.teachPositionCol = teachPositionCol;
-//        controller.teachUsernameInput = teachUsernameInput;
-//        controller.teachNameInput = teachNameInput;
-//        controller.teachAgeInput = teachAgeInput;
-//        controller.teachDeptInput = teachDeptInput;
-//        controller.teachPasswordInput = teachPasswordInput;
-//        controller.teachUsernameFilter = teachUsernameFilter;
-//        controller.teachNameFilter = teachNameFilter;
-//        controller.teachDeptFilter = teachDeptFilter;
-//        controller.teachGenderInput = teachGenderInput;
-//        controller.teachPosInput = teachPosInput;
-//        controller.teachAdd = teachAdd;
-//        controller.teachDelete = teachDelete;
-//        controller.teachFilter = teachFilter;
-//        controller.teachRefresh = teachRefresh;
-//        controller.teachResetFilter = teachResetFilter;
-//        controller.teachUpdate = teachUpdate;
-//        controller.rootPane = rootPane;
-//        controller.AnchorWithInputs = AnchorWithInputs;
-//        controller.teacherDatabase = teacherDatabase;
-//        controller.allTeachers = new ArrayList<>();
-//        controller.teacherList = FXCollections.observableArrayList();
     }
 
     @AfterAll
@@ -194,18 +163,11 @@ class TeacherManagementControllerTest {
         controller.teachUsernameFilter.setText("");
         controller.teachDeptFilter.setText("");
 
-//        // set up teachTable
-//        controller.teachTable = teachTable;
-//        when(teachTable.getItems()).thenReturn(FXCollections.observableArrayList());
-
         // set up mock database
         Teacher teacher1 = new Teacher("John123", "John", "Male", "21", "CSE", "password", "Professor",0);
         Teacher teacher2 = new Teacher("Amy123", "Amy", "Female", "21", "SUST", "password", "Professor",0);
         Teacher teacher3 = new Teacher("Cindy123", "Cindy", "Female", "21", "CSE", "password", "Professor",0);
 
-//        // mock the getItems method
-//        ObservableList<Teacher> mockItems = FXCollections.observableArrayList();
-//        when(teachTable.getItems()).thenReturn(mockItems);
 
         List<Teacher> allTeachers = List.of(teacher1, teacher2, teacher3);
         when(mockDatabase.getAll()).thenReturn(allTeachers);
