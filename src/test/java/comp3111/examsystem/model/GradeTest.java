@@ -12,15 +12,17 @@ class GradeTest {
         assertEquals("questionId", grade.getQuestionId());
         assertEquals("studentScore", grade.getStudentScore());
         assertEquals(0, grade.id);
+        assertEquals("timeSpent", grade.getTimeSpent());
     }
 
     @Test
     void testParameterizedConstructor() {
-        Grade grade = new Grade("12345", "67890", "95");
+        Grade grade = new Grade("12345", "67890", "95", "1");
         assertEquals("12345", grade.getStudentId());
         assertEquals("67890", grade.getQuestionId());
         assertEquals("95", grade.getStudentScore());
         assertEquals(0, grade.id);
+        assertEquals("1", grade.getTimeSpent());
     }
 
     @Test
@@ -30,10 +32,12 @@ class GradeTest {
         grade.setQuestionId("67890");
         grade.setStudentScore("95");
         grade.id = 1;
+        grade.setTimeSpent("1");
 
         assertEquals("12345", grade.getStudentId());
         assertEquals("67890", grade.getQuestionId());
         assertEquals("95", grade.getStudentScore());
         assertEquals(1, grade.id);
+        assertEquals("1", grade.getTimeSpent());
     }
 }

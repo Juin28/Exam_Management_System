@@ -12,17 +12,14 @@ public class Grade {
         this.studentId = "studentId";
         this.questionId = "questionId";
         this.studentScore = "studentScore";
-        // testing
         this.timeSpent = "timeSpent";
         this.id = 0;
     }
 
-    // testing
     public String getTimeSpent() {
         return timeSpent;
     }
 
-    // testing
     public void setTimeSpent(String timeSpent) {
         this.timeSpent = timeSpent;
     }
@@ -31,7 +28,6 @@ public class Grade {
         this.studentId = studentId;
         this.questionId = questionId;
         this.studentScore = studentScore;
-        // testing
         this.timeSpent = timeSpent;
         this.id = 0;
     }
