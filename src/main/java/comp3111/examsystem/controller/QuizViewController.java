@@ -22,78 +22,78 @@ import java.util.*;
  * Controller class for handling student interactions in the quiz view.
  */
 public class QuizViewController implements Initializable {
-    private Student curStudent;
-    private Database<Question> questionDatabase;
-    private Database<Grade> gradeDatabase;
-    private DecimalFormat df;
+    public Student curStudent;
+    public Database<Question> questionDatabase;
+    public Database<Grade> gradeDatabase;
+    public DecimalFormat df;
 
     // variable to store number of questions
-    private int totalNumQ;
+    public int totalNumQ;
     // variable to store current quiz
-    private Quiz currentQuiz;
+    public Quiz currentQuiz;
     // variable to store current question
-    private Question currQuestion;
+    public Question currQuestion;
     // variable to store the current question index
-    private int currentQuestionIndex;
+    public int currentQuestionIndex;
     // variable to store the question description
-    private String questionDesc;
+    public String questionDesc;
     // array to store questionIds
-    private String[] questionIds;
+    public String[] questionIds;
     // list to store all question descriptions
-    private List<String> allQuestionDesc;
+    public List<String> allQuestionDesc;
     // hashmap to store selected answers with id as key and list of answers as values
-    private Map<Long, List<String>> selectedAnswers;
+    public Map<Long, List<String>> selectedAnswers;
 
-    private long startTime;
-    private int numOfCorrect = 0;
-    private int totalScore;
-    private int score = 0;
-    private Timer timer;
-
-    @FXML
-    private Label ansA;
+    public long startTime;
+    public int numOfCorrect = 0;
+    public int totalScore;
+    public int score = 0;
+    public Timer timer;
 
     @FXML
-    private Label ansB;
+    public Label ansA;
 
     @FXML
-    private Label ansC;
+    public Label ansB;
 
     @FXML
-    private Label ansD;
+    public Label ansC;
 
     @FXML
-    private RadioButton choiceA;
+    public Label ansD;
 
     @FXML
-    private RadioButton choiceB;
+    public RadioButton choiceA;
 
     @FXML
-    private RadioButton choiceC;
+    public RadioButton choiceB;
 
     @FXML
-    private Label currQNum;
+    public RadioButton choiceC;
 
     @FXML
-    private RadioButton choiceD;
+    public Label currQNum;
 
     @FXML
-    private Label currQuiz;
+    public RadioButton choiceD;
 
     @FXML
-    private Label numQ;
+    public Label currQuiz;
 
     @FXML
-    private Label question;
+    public Label numQ;
 
     @FXML
-    private ListView<String> questionList;
+    public Label question;
 
     @FXML
-    private Label rTime;
+    public ListView<String> questionList;
 
     @FXML
-    private Button submit;
+    public Label rTime;
+
+    @FXML
+    public Button submit;
 
     /**
      * Initializes the controller.
@@ -149,7 +149,7 @@ public class QuizViewController implements Initializable {
      * Handles the submit button action.
      */
     @FXML
-    private void handleSubmit() {
+    public void handleSubmit() {
         checkAnswers();  // Check answers when submitting
         MsgSender.showMsg(numOfCorrect + "/" +
                 totalNumQ + " Correct, the precision is " +
@@ -164,7 +164,7 @@ public class QuizViewController implements Initializable {
      * Handles the next button action.
      */
     @FXML
-    private void handleNext() {
+    public void handleNext() {
         if (currentQuestionIndex < allQuestionDesc.size() - 1) {
             currentQuestionIndex++;
             updateQuestionUI();
@@ -176,18 +176,16 @@ public class QuizViewController implements Initializable {
     /**
      * Updates the question details in the UI based on the current question index.
      */
-    private void updateQuestionUI() {
+    public void updateQuestionUI() {
         // Get the next question description
         questionDesc = allQuestionDesc.get(currentQuestionIndex);
-
         // Update the question details in the UI
-        currQuestion = questionDatabase.queryByField("questionDescription", questionDesc).getFirst();
+        currQuestion = questionDatabase.queryByField("questionDescription", questionDesc).get(0);
         question.setText(questionDesc);
         currQNum.setText("Question " + (currentQuestionIndex + 1));
 
         // Set the answer descriptions
         setAnsDescriptions(currQuestion);
-
         // Load the selected answers for this question (if any)
         loadSelectedAnswers();
     }
@@ -195,7 +193,7 @@ public class QuizViewController implements Initializable {
     /**
      * Shows the details of the selected question.
      */
-    private void showQuestionDet() {
+    public void showQuestionDet() {
         setChoiceListeners();
         questionDesc = allQuestionDesc.getFirst();
         currQNum.setText("Question 1");
@@ -223,7 +221,7 @@ public class QuizViewController implements Initializable {
      *
      * @param question The question object containing answer descriptions.
      */
-    private void setAnsDescriptions(Question question){
+    public void setAnsDescriptions(Question question){
         ansA.setText(question.getOptionA());
         ansB.setText(question.getOptionB());
         ansC.setText(question.getOptionC());
@@ -235,11 +233,12 @@ public class QuizViewController implements Initializable {
      *
      * @param quiz The quiz object containing questions to display.
      */
-    private void showQuestions(Quiz quiz){
+    public void showQuestions(Quiz quiz){
         questionIds = StudentMainController.splitByPipe(quiz.getQuestionIDs());
+
         totalNumQ = questionIds.length;
         for(int i = 0; i < questionIds.length; ++i){
-            Question q = questionDatabase.queryByField("id", questionIds[i]).getFirst();
+            Question q = questionDatabase.queryByField("id", questionIds[i]).get(0);
             allQuestionDesc.add(q.questionDescription);
         }
         questionList.getItems().addAll(allQuestionDesc);
@@ -250,7 +249,7 @@ public class QuizViewController implements Initializable {
      *
      * @param time The time duration for the quiz timer.
      */
-    private void setTimer(String time){
+    public void setTimer(String time){
 
         TimerTask task = new TimerTask() {
             int counter = Integer.parseInt(time)*60;
@@ -292,7 +291,7 @@ public class QuizViewController implements Initializable {
      * @param option The selected answer option.
      * @param isSelected A boolean indicating whether the option is selected.
      */
-    private void updateSelectedAnswers(String option, boolean isSelected) {
+    public void updateSelectedAnswers(String option, boolean isSelected) {
         Long questionId = currQuestion.getId();
         selectedAnswers.putIfAbsent(questionId, new ArrayList<>());
         List<String> answers = selectedAnswers.get(questionId);
@@ -307,7 +306,7 @@ public class QuizViewController implements Initializable {
     /**
      * Loads previously selected answers for the current question.
      */
-    private void loadSelectedAnswers() {
+    public void loadSelectedAnswers() {
         Long questionId = currQuestion.getId();
         List<String> selected = selectedAnswers.getOrDefault(questionId, new ArrayList<>());
         choiceA.setSelected(selected.contains("A"));
@@ -319,7 +318,7 @@ public class QuizViewController implements Initializable {
     /**
      * Checks the answers for the quiz and calculates the score.
      */
-    private void checkAnswers(){
+    public void checkAnswers(){
         score = 0;
         numOfCorrect = 0;
         long endTime = System.currentTimeMillis();

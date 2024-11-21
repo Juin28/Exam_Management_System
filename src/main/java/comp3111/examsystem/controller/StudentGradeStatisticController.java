@@ -65,52 +65,52 @@ public class StudentGradeStatisticController implements Initializable {
         }
     }
 
-    private Database<Course> courseDatabase;
-    private Database<Grade> gradeDatabase;
-    private Database<Quiz> quizDatabase;
-    private Database<Question> questionDatabase;
+    public Database<Course> courseDatabase;
+    public Database<Grade> gradeDatabase;
+    public Database<Quiz> quizDatabase;
+    public Database<Question> questionDatabase;
 
-    private Student currStudent;
-    private List<String> coursesList;
-    private String[] questionIds;
-
-    @FXML
-    private BarChart<String, Number> barChart;
+    public Student currStudent;
+    public List<String> coursesList;
+    public String[] questionIds;
 
     @FXML
-    private TableColumn<?, ?> courseColumn;
+    public BarChart<String, Number> barChart;
 
     @FXML
-    private ChoiceBox<String> courseCombox;
+    public TableColumn<?, ?> courseColumn;
 
     @FXML
-    private TableColumn<?, ?> examColumn;
+    public ChoiceBox<String> courseCombox;
 
     @FXML
-    private Button filterBtn;
+    public TableColumn<?, ?> examColumn;
 
     @FXML
-    private TableColumn<?, ?> fullScoreColumn;
+    public Button filterBtn;
 
     @FXML
-    private TableView<GradeTableRow> gradeTable;
+    public TableColumn<?, ?> fullScoreColumn;
 
     @FXML
-    private Button resetBtn;
+    public TableView<GradeTableRow> gradeTable;
 
     @FXML
-    private TableColumn<?, ?> scoreColumn;
+    public Button resetBtn;
 
     @FXML
-    private TableColumn<?, ?> timeSpendColumn;
+    public TableColumn<?, ?> scoreColumn;
 
     @FXML
-    private CategoryAxis xAxis;
+    public TableColumn<?, ?> timeSpendColumn;
 
     @FXML
-    private NumberAxis yAxis;
+    public CategoryAxis xAxis;
 
-    private final ObservableList<GradeTableRow> gradeRows = FXCollections.observableArrayList();
+    @FXML
+    public NumberAxis yAxis;
+
+    public ObservableList<GradeTableRow> gradeRows = FXCollections.observableArrayList();
 
     /**
      * Initializes the controller.
@@ -139,7 +139,7 @@ public class StudentGradeStatisticController implements Initializable {
     /**
      * Shows the bar chart with the student's grades.
      */
-    private void showBarChart() {
+    public void showBarChart() {
         barChart.getData().clear();
 
         // Create a series for the chart
@@ -159,7 +159,7 @@ public class StudentGradeStatisticController implements Initializable {
     /**
      * Shows the courses in the courseCombox.
      */
-    private void showCourses() {
+    public void showCourses() {
         for(int i = 0; i < gradeDatabase.getAll().size(); ++i){
             Grade grade = gradeDatabase.getAll().get(i);
             if(grade.getStudentId().equals(String.valueOf(currStudent.getId()))){
@@ -187,7 +187,7 @@ public class StudentGradeStatisticController implements Initializable {
     /**
      * Initializes the table with the student's grades.
      */
-    private void initTable() {
+    public void initTable() {
         // Retrieve all grades for the current student
         List<Grade> studentGrades = new ArrayList<>();
         for (Grade grade : gradeDatabase.getAll()) {

@@ -30,36 +30,52 @@ import java.util.ResourceBundle;
 public class StudentMainController implements Initializable {
     @FXML
     ComboBox<String> examCombox;
-    private Database<Quiz> quizDatabase;
-    private Database<Grade> gradeDatabase;
+    public Database<Quiz> quizDatabase;
+    public Database<Grade> gradeDatabase;
     // Variable used to keep track of the loggedInStudent
-    private Student student;
-    private List<String> quizzes;
-    private List<Grade> studentGrades;
+    public Student student;
+    public List<String> quizzes;
+    public List<Grade> studentGrades;
     public static Quiz chosenQuiz;
 
     /**
      * Initializes the controller.
      *
-     * @param location   The location used to resolve relative paths for the root object.
-     * @param resources  The resources used to localize the root object.
+     * @param url   The location used to resolve relative paths for the root object.
+     * @param resourceBundle  The resources used to localize the root object.
      */
-    public void initialize(URL location, ResourceBundle resources) {
+    public void initialize(URL url, ResourceBundle resourceBundle) {
         // initializing the quizDatabase
         quizDatabase = new Database<>(Quiz.class);
         gradeDatabase = new Database<>(Grade.class);
         quizzes = new ArrayList<>();
         studentGrades = new ArrayList<>();
-        student = StudentLoginController.loggedInStudent;
-        System.out.println(gradeDatabase.getAll().size());
+        student = StudentLoginController.getLoggedInStudent();
+        loadStudentGrades();
+        checkQuizValidity();
+        // dynamically adding quizzes to the examCombox
+        examCombox.getItems().addAll(quizzes);
+    }
+
+    /**
+     * Loads the student's grades.
+     */
+    public void loadStudentGrades(){
+        // getting the student's grades
         for(int i = 0; i < gradeDatabase.getAll().size(); ++i){
-            if(gradeDatabase.getAll().get(i).getStudentId().equals(Long.toString(student.getId()))){
+            String gradeId = gradeDatabase.getAll().get(i).getStudentId();
+            if(gradeId.equals(Long.toString(student.getId()))){
                 studentGrades.add(gradeDatabase.getAll().get(i));
             }
         }
+    }
+
+    /**
+     * Checks the validity of the quizzes.
+     */
+    public void checkQuizValidity(){
         // formatting the quiz information
-        for(int i = 0; i < quizDatabase.getAll().size(); ++i){
-            Quiz quiz = quizDatabase.getAll().get(i);
+        for(Quiz quiz : quizDatabase.getAll()){
             String quizId = Long.toString(quiz.getId());
             String quizPublished = quiz.getPublishStatus();
             if (quizPublished.equalsIgnoreCase("yes")){
@@ -71,22 +87,32 @@ public class StudentMainController implements Initializable {
             boolean taken = false;
 
             // filtering out quizzes that have already been taken
-            for(int j = 0; j < studentGrades.size(); ++j){
-                if(studentGrades.get(j).getQuestionId().equals(quizId)){
+            for (Grade studentGrade : studentGrades) {
+                if (studentGrade.getQuestionId().equals(quizId)) {
                     taken = true;
+                    break;
                 }
             }
-            // only display quizzes that have not been taken
-            if (!taken && Boolean.parseBoolean(quizPublished)){
-                String tmp = quiz.getCourseID();
-                tmp = tmp.concat(" | ");
-                tmp = tmp.concat(quiz.getQuizName());
-                // adding each quiz to the quizzes list
-                this.quizzes.add(tmp);
-            }
+            formatQuizInfo(taken, Boolean.parseBoolean(quizPublished), quiz);
         }
-        // dynamically adding quizzes to the examCombox
-        examCombox.getItems().addAll(quizzes);
+    }
+
+    /**
+     * Formats the quiz information to be displayed in the examCombox.
+     *
+     * @param taken     A boolean indicating whether the quiz has been taken.
+     * @param published A boolean indicating whether the quiz has been published.
+     * @param quiz      The quiz to be formatted.
+     */
+    public void formatQuizInfo(Boolean taken, Boolean published, Quiz quiz){
+        if(taken || !published){
+            return;
+        }
+        String tmp = quiz.getCourseID();
+        tmp = tmp.concat(" | ");
+        tmp = tmp.concat(quiz.getQuizName());
+        // adding each quiz to the quizzes list
+        this.quizzes.add(tmp);
     }
 
     /**
@@ -96,30 +122,48 @@ public class StudentMainController implements Initializable {
      */
     @FXML
     public void openExamUI(ActionEvent e) {
-        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("QuizViewUI.fxml"));
-        Stage stage = new Stage();
-
         if(examCombox.getValue() == null){
             MsgSender.showMsg("Please select a quiz to start.");
         }
         else{
+            FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("QuizViewUI.fxml"));
+            Stage stage = new Stage();
             // Remove spaces and split the by "|"
             String[] parts = formatString(examCombox.getValue());
-            List<Quiz> listOfQuizzes = quizDatabase.queryByField("courseID", parts[0]);
-            // Setting the chosenQuiz
-            for(int i = 0; i < listOfQuizzes.size(); ++i){
-                if(listOfQuizzes.get(i).getQuizName().replace(" ", "").equals(parts[1])){
-                    chosenQuiz = listOfQuizzes.get(i);
-                }
-            }
-            stage.setTitle("Start Exam");
             try {
-                stage.setScene(new Scene(fxmlLoader.load()));
-            } catch (IOException e1) {
+                List<Quiz> listOfQuizzes = quizDatabase.queryByField("courseID", parts[0]);
+                for(int i = 0; i < listOfQuizzes.size(); ++i){
+                    if(listOfQuizzes.get(i).getQuizName().replace(" ", "").equals(parts[1])){
+                        chosenQuiz = listOfQuizzes.get(i);
+                    }
+                }
+                stage.setTitle("Start Exam");
+                try {
+                    stage.setScene(new Scene(fxmlLoader.load()));
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
+                stage.show();
+                ((Stage) ((Button) e.getSource()).getScene().getWindow()).close();
+            } catch (Exception e1) {
+                MsgSender.showMsg("Error: No Quizzes not found.");
                 e1.printStackTrace();
             }
-            stage.show();
-            ((Stage) ((Button) e.getSource()).getScene().getWindow()).close();
+//            List<Quiz> listOfQuizzes = quizDatabase.queryByField("courseID", parts[0]);
+            // Setting the chosenQuiz
+//            for(int i = 0; i < listOfQuizzes.size(); ++i){
+//                if(listOfQuizzes.get(i).getQuizName().replace(" ", "").equals(parts[1])){
+//                    chosenQuiz = listOfQuizzes.get(i);
+//                }
+//            }
+//            stage.setTitle("Start Exam");
+//            try {
+//                stage.setScene(new Scene(fxmlLoader.load()));
+//            } catch (IOException e1) {
+//                e1.printStackTrace();
+//            }
+//            stage.show();
+//            ((Stage) ((Button) e.getSource()).getScene().getWindow()).close();
         }
     }
 
@@ -152,7 +196,7 @@ public class StudentMainController implements Initializable {
     }
 
     // Helper function to remove whitespaces and split by "|"
-    private static String[] formatString(String input) {
+    public static String[] formatString(String input) {
         if (input == null) {
             return null; // Handle null case
         }
@@ -160,10 +204,10 @@ public class StudentMainController implements Initializable {
     }
 
     // Helper function to split a String by "|"
-    protected static String[] splitByPipe(String input) {
-        if (input == null) {
-            return new String[0]; // Return an empty array if input is null
-        }
+    public static String[] splitByPipe(String input) {
+//        if (input == null) {
+//            return new String[0]; // Return an empty array if input is null
+//        }
         return input.split("\\|"); // Split by "|" character
     }
 }
