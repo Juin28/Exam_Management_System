@@ -55,4 +55,9 @@ public class Grade {
     public void setStudentId(String studentId) {
         this.studentId = studentId;
     }
+
+    public long getID(){
+        return id;
+    }
+
 }

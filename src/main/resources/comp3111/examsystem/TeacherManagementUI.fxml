@@ -9,11 +9,11 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="527.0" prefWidth="847.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="comp3111.examsystem.controller.TeacherManagementController">
+<AnchorPane fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="527.0" prefWidth="847.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="comp3111.examsystem.controller.TeacherManagementController">
    <children>
-      <SplitPane dividerPositions="0.23899878885748893" layoutY="7.0" orientation="VERTICAL" prefHeight="497.0" prefWidth="732.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <SplitPane dividerPositions="0.23899878885748893" layoutY="7.0" orientation="VERTICAL" prefHeight="527.0" prefWidth="847.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <items>
-          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="146.0" prefWidth="891.0">
                <children>
                   <Text layoutX="66.0" layoutY="65.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Username:" wrappingWidth="49.03281021118164" />
                   <Text layoutX="235.0" layoutY="65.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Name:" wrappingWidth="49.03281021118164" />
@@ -21,41 +21,39 @@
                   <TextField fx:id="teachUsernameFilter" layoutX="115.0" layoutY="52.0" prefHeight="18.0" prefWidth="94.0" />
                   <TextField fx:id="teachNameFilter" layoutX="272.0" layoutY="52.0" prefHeight="18.0" prefWidth="94.0" />
                   <TextField fx:id="teachDeptFilter" layoutX="458.0" layoutY="52.0" prefHeight="18.0" prefWidth="94.0" />
-                  <Button fx:id="teachResetFilter" onAction="#resetFilter" layoutX="590.0" layoutY="51.0" mnemonicParsing="false" text="Reset" />
-                  <Button fx:id="teachFilter" onAction="#filterTeacher" layoutX="649.0" layoutY="51.0" mnemonicParsing="false" prefHeight="19.0" prefWidth="38.0" text="Filter" />
+                  <Button fx:id="teachResetFilter" layoutX="590.0" layoutY="51.0" mnemonicParsing="false" onAction="#resetFilter" text="Reset" />
+                  <Button fx:id="teachFilter" layoutX="649.0" layoutY="51.0" mnemonicParsing="false" onAction="#filterTeacher" prefHeight="19.0" prefWidth="38.0" text="Filter" />
                </children>
             </AnchorPane>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="410.0" prefWidth="818.0">
                <children>
                   <AnchorPane layoutX="223.0" layoutY="267.0" prefHeight="397.6" prefWidth="845.6" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <children>
-                        <Button fx:id="teachDelete" onAction="#deleteTeacher" layoutX="524.0" layoutY="354.0" mnemonicParsing="false" text="Delete" />
-                        <Button fx:id="teachRefresh" onAction="#refreshTeacher" layoutX="588.0" layoutY="354.0" mnemonicParsing="false" text="Refresh" />
-                        <Button fx:id="teachAdd" onAction="#addTeacher" layoutX="654.0" layoutY="354.0" mnemonicParsing="false" text="Add" />
-                        <Button fx:id="teachUpdate" onAction="#updateTeacher" layoutX="706.0" layoutY="354.0" mnemonicParsing="false" text="Update" />
+                        <Button fx:id="teachDelete" layoutX="524.0" layoutY="354.0" mnemonicParsing="false" onAction="#deleteTeacher" text="Delete" />
+                        <Button fx:id="teachRefresh" layoutX="588.0" layoutY="354.0" mnemonicParsing="false" onAction="#refreshTeacher" text="Refresh" />
+                        <Button fx:id="teachAdd" layoutX="654.0" layoutY="354.0" mnemonicParsing="false" onAction="#addTeacher" text="Add" />
+                        <Button fx:id="teachUpdate" layoutX="706.0" layoutY="354.0" mnemonicParsing="false" onAction="#updateTeacher" text="Update" />
                      </children>
                   </AnchorPane>
                   <SplitPane dividerPositions="0.766824644549763" layoutX="469.0" layoutY="138.0" prefHeight="318.0" prefWidth="846.0" AnchorPane.bottomAnchor="80.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                     <items>
                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="340.0" prefWidth="644.0">
                            <children>
-                              <AnchorPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                                 <children>
-                                    <TableView fx:id="teachTable" layoutX="47.0" layoutY="24.0" prefHeight="396.0" prefWidth="644.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                                      <columns>
-                                        <TableColumn fx:id="teachUsernameCol" prefWidth="107.20000296831131" text="Username" />
-                                          <TableColumn fx:id="teachNameCol" prefWidth="106.39996337890625" text="Name" />
-                                          <TableColumn fx:id="teachAgeCol" prefWidth="100.00004577636719" text="Age" />
-                                          <TableColumn fx:id="teachGenderCol" prefWidth="98.39996337890625" text="Gender" />
-                                          <TableColumn fx:id="teachDeptCol" prefWidth="111.20001220703125" text="Department" />
-                                          <TableColumn fx:id="teachPasswordCol" prefWidth="117.5999755859375" text="Password" />
-                                      </columns>
-                                    </TableView>
-                                 </children>
-                              </AnchorPane>
+                              <AnchorPane layoutX="43.0" prefHeight="316.0" prefWidth="728.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="43.0" AnchorPane.rightAnchor="-127.0" AnchorPane.topAnchor="0.0" />
+                              <TableView fx:id="teachTable" layoutX="-497.0" layoutY="-54.0" prefHeight="316.0" prefWidth="644.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                <columns>
+                                  <TableColumn fx:id="teachUsernameCol" prefWidth="95.99999696016312" text="Username" />
+                                    <TableColumn fx:id="teachNameCol" prefWidth="81.60000610351562" text="Name" />
+                                    <TableColumn fx:id="teachAgeCol" prefWidth="81.59999084472656" text="Age" />
+                                    <TableColumn fx:id="teachGenderCol" prefWidth="88.0" text="Gender" />
+                                    <TableColumn fx:id="teachPositionCol" minWidth="0.0" prefWidth="97.60003662109375" text="Position" />
+                                    <TableColumn fx:id="teachDeptCol" prefWidth="99.20001220703125" text="Department" />
+                                    <TableColumn fx:id="teachPasswordCol" minWidth="0.0" prefWidth="100.79998779296875" text="Password" />
+                                </columns>
+                              </TableView>
                            </children>
                         </AnchorPane>
-                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="331.0" prefWidth="194.0">
+                      <AnchorPane fx:id="AnchorWithInputs" minHeight="0.0" minWidth="0.0" prefHeight="331.0" prefWidth="194.0">
                            <children>
                               <Text layoutX="14.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Username:" />
                               <Text layoutX="15.0" layoutY="71.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Name:" />
