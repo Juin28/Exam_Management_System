@@ -5,6 +5,7 @@ import static org.mockito.Mockito.*;
 
 import comp3111.examsystem.model.*;
 import comp3111.examsystem.service.Database;
+import comp3111.examsystem.service.JavaFXInitializer;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -58,15 +59,10 @@ class TeacherGradeStatisticControllerTest {
 
     @BeforeAll
     static void initJavaFX() throws InterruptedException {
-        CountDownLatch latch = new CountDownLatch(1);
-        Platform.startup(latch::countDown); // Initialize JavaFX
-        latch.await();
+        JavaFXInitializer.initToolkit();
+
     }
 
-    @AfterAll
-    static void tearDownJavaFX() {
-        Platform.exit();
-    }
 
     @BeforeEach
     void setUp() {

@@ -3,6 +3,7 @@ package comp3111.examsystem.controller;
 import comp3111.examsystem.model.Grade;
 import comp3111.examsystem.model.Student;
 import comp3111.examsystem.service.Database;
+import comp3111.examsystem.service.JavaFXInitializer;
 import comp3111.examsystem.service.MsgSender;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -51,9 +52,7 @@ class StudentManagementControllerTest {
 
     @BeforeAll
     public static void initJavaFx() throws InterruptedException {
-        final CountDownLatch latch = new CountDownLatch(1);
-        Platform.startup(latch::countDown);
-        latch.await();
+        JavaFXInitializer.initToolkit();
     }
 
     @BeforeEach
@@ -83,13 +82,6 @@ class StudentManagementControllerTest {
         controller.allStudents = new ArrayList<>();
         controller.studentList = FXCollections.observableArrayList();
     }
-
-    @AfterAll
-    public static void tearDownJavaFx() {
-        Platform.exit();
-    }
-
-    // --- Test cases (converted from TeacherManagementControllerTest) ---
 
     @Test
     void testNoFilterTrue() {

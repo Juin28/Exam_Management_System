@@ -6,6 +6,7 @@ import comp3111.examsystem.model.Grade;
 import comp3111.examsystem.model.Question;
 import comp3111.examsystem.model.Quiz;
 import comp3111.examsystem.service.Database;
+import comp3111.examsystem.service.JavaFXInitializer;
 import comp3111.examsystem.service.MsgSender;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -56,9 +57,11 @@ class CourseManagementControllerTest {
 
     @BeforeAll
     static void initJavaFX() throws InterruptedException {
-        CountDownLatch latch = new CountDownLatch(1);
-        Platform.startup(latch::countDown); // Initialize JavaFX
-        latch.await();
+//        CountDownLatch latch = new CountDownLatch(1);
+//        Platform.startup(latch::countDown); // Initialize JavaFX
+//        latch.await();
+        JavaFXInitializer.initToolkit();
+
     }
 
     @BeforeEach
@@ -81,10 +84,10 @@ class CourseManagementControllerTest {
 
     }
 
-    @AfterAll
-    static void tearDownJavaFX() {
-        Platform.exit();
-    }
+//    @AfterAll
+//    static void tearDownJavaFX() {
+//        Platform.exit();
+//    }
 
     @Test
     void testNoFilter()

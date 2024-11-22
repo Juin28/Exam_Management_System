@@ -5,6 +5,7 @@ import static org.mockito.Mockito.*;
 
 import comp3111.examsystem.model.Question;
 import comp3111.examsystem.service.Database;
+import comp3111.examsystem.service.JavaFXInitializer;
 import comp3111.examsystem.service.MsgSender;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -33,7 +34,7 @@ class TeacherQuestionBankManagementControllerTest {
 
     @BeforeAll
     static void initToolkit() {
-        Platform.startup(() -> {});
+        JavaFXInitializer.initToolkit();
     }
 
     @BeforeEach
