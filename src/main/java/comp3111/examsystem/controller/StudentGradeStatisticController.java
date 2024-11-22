@@ -322,4 +322,20 @@ public class StudentGradeStatisticController implements Initializable {
         gradeTable.setItems(gradeRows);
         showBarChart();
     }
+
+    /**
+     * Event handler for refreshing the view.
+     *
+     * @param event the ActionEvent triggering the refresh
+     */
+    @FXML
+    void refresh(ActionEvent event) {
+        // Reset filters and show all data
+        gradeRows = FXCollections.observableArrayList();
+        gradeTable.getItems().clear();
+        courseCombox.getItems().clear();
+        showCourses();
+        initTable();
+        showBarChart();
+    }
 }

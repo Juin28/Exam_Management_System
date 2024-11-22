@@ -189,4 +189,12 @@ class QuizViewControllerTest {
         controller.updateSelectedAnswers("A", false);
         assert (!controller.selectedAnswers.get(Long.valueOf("11")).contains("A"));
     }
+
+    @Test
+    void testHandleChoiceSelection(){
+        Question sampleQuestion1 = new Question("Q1", "Q1A", "Q1B", "Q1C", "Q1D", "A", "20", "Single", 11);
+        controller.currQuestion = sampleQuestion1;
+        controller.handleChoiceSelection("A", true);
+        assert (controller.selectedAnswers.get(Long.valueOf("11")).contains("A"));
+    }
 }
