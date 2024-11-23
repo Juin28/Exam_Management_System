@@ -3,7 +3,6 @@ package comp3111.examsystem.controller;
 
 import comp3111.examsystem.model.Grade;
 import comp3111.examsystem.model.Student;
-import comp3111.examsystem.model.Teacher;
 import comp3111.examsystem.service.Database;
 import comp3111.examsystem.service.MsgSender;
 import javafx.beans.property.SimpleStringProperty;
@@ -18,12 +17,36 @@ import javafx.scene.layout.AnchorPane;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Controller for managing students in the HKUST Examination System.
+ * Provides functionality for adding, deleting, updating, filtering, and managing student data.
+ * Includes integration with the database to ensure persistent storage and validation mechanisms.
+ */
 public class StudentManagementController {
 
+    /**
+     * Database instance for managing student records.
+     */
     public Database<Student> studentDatabase;
+
+    /**
+     * List containing all student records retrieved from the database.
+     */
     public List<Student> allStudents;
+
+    /**
+     * Observable list for displaying student records in the TableView.
+     */
     public ObservableList<Student> studentList;
+
+    /**
+     * Database instance for managing grade records.
+     */
     public Database<Grade> gradeDatabase;
+
+    /**
+     * List containing all grade records retrieved from the database.
+     */
     public List<Grade> allGrades;
 
     @FXML
@@ -98,6 +121,10 @@ public class StudentManagementController {
     @FXML
     public TextField studentNameFilter;
 
+    /**
+     * Initializes the Student Management Controller.
+     * Sets up the database connections, loads student data, configures the TableView, and establishes event listeners.
+     */
     @FXML
     public void initialize()
     {
@@ -157,6 +184,12 @@ public class StudentManagementController {
 
     }
 
+    /**
+     * Adds a new student to the database after validation.
+     * Displays a confirmation dialog before adding the student.
+     *
+     * @param event The event triggered by clicking the "Add" button.
+     */
     @FXML
     void addStudent(ActionEvent event) {
         boolean valid = validateAddInput();
@@ -166,6 +199,12 @@ public class StudentManagementController {
         }
     }
 
+    /**
+     * Deletes a student and their associated grades from the database.
+     * Displays a confirmation dialog before performing the deletion.
+     *
+     * @param actionEvent The event triggered by clicking the "Delete" button.
+     */
     @FXML
     public void deleteStudent(ActionEvent actionEvent) {
         // delete student according to selection model
@@ -179,12 +218,22 @@ public class StudentManagementController {
         MsgSender.showConfirm("Delete Student", "Are you sure you want to delete student with username: " + username + " and all of their grades? ", () -> deleteStudentAndGradesFromDatabase(student));
     }
 
+    /**
+     * Filters the students displayed in the TableView based on input criteria.
+     *
+     * @param actionEvent The event triggered by clicking the "Filter" button.
+     */
     @FXML
     public void filterStudent(ActionEvent actionEvent) {
         // filtering functionality is implemented in the loadStudentTable function
         loadStudentTable();
     }
 
+    /**
+     * Refreshes the student table by clearing all filters and reloading the data.
+     *
+     * @param actionEvent The event triggered by clicking the "Refresh" button.
+     */
     @FXML
     public void refreshStudent(ActionEvent actionEvent) {
         // this function will reset all the filters, reload the table and clear the input fields
@@ -199,6 +248,11 @@ public class StudentManagementController {
         loadStudentTable();
     }
 
+    /**
+     * Resets all filters applied to the student table.
+     *
+     * @param actionEvent The event triggered by clicking the "Reset Filter" button.
+     */
     @FXML
     public void resetFilter(ActionEvent actionEvent) {
         studentDeptFilter.clear();
@@ -207,6 +261,13 @@ public class StudentManagementController {
         loadStudentTable();
     }
 
+    /**
+     * Updates an existing student's data in the database.
+     * Displays a confirmation dialog for detected changes.
+     *
+     * @param actionEvent The event triggered by clicking the "Update" button.
+     * @return true if the update is successful, false otherwise.
+     */
     @FXML
     public boolean updateStudent(ActionEvent actionEvent) {
         Student student = studentTable.getSelectionModel().getSelectedItem();
@@ -232,6 +293,12 @@ public class StudentManagementController {
         return false;
     }
 
+    /**
+     * Updates the selected student's information in the database.
+     * Displays a message upon successful update or if an error occurs.
+     *
+     * @param student The student object with updated information.
+     */
     public void updateStudentInDatabase(Student student)
     {
         try
@@ -244,6 +311,13 @@ public class StudentManagementController {
         }
     }
 
+
+    /**
+     * Deletes a selected student and their associated grades from the database.
+     * Displays a message upon successful deletion or if an error occurs.
+     *
+     * @param student The student object to delete.
+     */
     public void deleteStudentAndGradesFromDatabase(Student student)
     {
         // Delete the grades of the student from the database
@@ -284,9 +358,12 @@ public class StudentManagementController {
 
 
     /**
-     * This function validates the input fields for updating a student
+     * Validates the input fields for updating a student.
+     * Ensures all required fields are filled, and changes are detected for the selected student.
      *
-     * @return Student     returns the updated Student object
+     * @param student The student object to validate against.
+     * @param changes A list to record detected changes in student information.
+     * @return true if the input is valid, false otherwise.
      */
     public boolean validateUpdateInput(Student student, List<String>changes)
     {
@@ -374,6 +451,13 @@ public class StudentManagementController {
 
         return true;
     }
+
+    /**
+     * Validates the input fields for adding a new student.
+     * Ensures that all fields are filled and contain valid data.
+     *
+     * @return true if the input is valid, false otherwise.
+     */
     public boolean validateAddInput() {
         // check to ensure that all the fields are filled
         String username = studentUsernameInput.getText();
@@ -414,10 +498,10 @@ public class StudentManagementController {
     }
 
     /**
-     * This function validates the department input
+     * Validates the department input against a predefined list of valid departments.
      *
-     * @param   department  The department input as a String
-     * @return  boolean     True if the department is valid, false otherwise
+     * @param department The department input to validate.
+     * @return true if the department is valid, false otherwise.
      */
     public boolean validateDepartment(String department)
     {
@@ -435,10 +519,11 @@ public class StudentManagementController {
     }
 
     /**
-     * This function validates the username input
+     * Validates the username input for uniqueness and format.
+     * Ensures the username is alphanumeric and does not already exist.
      *
-     * @param   username    The username input as a String
-     * @return  boolean     True if the username is valid, false otherwise
+     * @param username The username input to validate.
+     * @return true if the username is valid, false otherwise.
      */
     public boolean validateUsername(String username)
     {
@@ -462,10 +547,10 @@ public class StudentManagementController {
     }
 
     /**
-     * This function validates the age input
+     * Validates the age input for numeric format and range.
      *
-     * @param   age        The age input as a String
-     * @return  boolean    True if the age is valid, false otherwise
+     * @param age The age input to validate.
+     * @return true if the age is valid, false otherwise.
      */
     public boolean validateAge(String age)
     {
@@ -491,7 +576,8 @@ public class StudentManagementController {
     }
 
     /**
-     * This function adds a student to the database
+     * Adds a new student to the database using the input fields.
+     * Displays a message upon successful addition or if an error occurs.
      */
     public void addStudentToDatabase()
     {
@@ -513,6 +599,9 @@ public class StudentManagementController {
         }
     }
 
+    /**
+     * Clears all input fields in the student management form.
+     */
     public void clearFields()
     {
         studentNameInput.clear();
@@ -523,13 +612,23 @@ public class StudentManagementController {
         studentPasswordInput.clear();
     }
 
+    /**
+     * Checks if no filters are currently applied to the student table.
+     *
+     * @return true if no filters are applied, false otherwise.
+     */
     public boolean noFilter() {
         return (studentDeptFilter.getText().isEmpty() &&
                 studentNameFilter.getText().isEmpty() &&
                 studentUsernameFilter.getText().isEmpty());
     }
 
-
+    /**
+     * Loads student data into the TableView.
+     * If filters are applied, displays filtered results; otherwise, displays all students.
+     *
+     * @return A list of filtered students if filters are applied, or an empty list otherwise
+     */
     @FXML
     public List<Student> loadStudentTable()
     {

@@ -11,6 +11,11 @@ import javafx.stage.Stage;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+/**
+ * Controller for the Teacher Main UI in the HKUST Examination System.
+ * Provides navigation options for managing the question bank, exams, and grade statistics.
+ * Includes functionality to exit the application.
+ */
 public class TeacherMainController implements Initializable {
     @FXML
     public VBox mainbox;

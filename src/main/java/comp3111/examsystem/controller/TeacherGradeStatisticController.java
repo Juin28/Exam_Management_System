@@ -15,7 +15,16 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import java.net.URL;
 import java.util.*;
 
+/**
+ * Controller for managing teacher grade statistics in the HKUST Examination System.
+ * Provides functionality to display grade statistics in a tabular format, as well as visualizations
+ * through bar charts, pie charts, and line charts. Allows filtering of data by course, exam, and student.
+ */
 public class TeacherGradeStatisticController implements Initializable {
+
+    /**
+     * Represents an example grade record for table view. Used for displaying grade statistics.
+     */
     public static class GradeExampleClass {
         public String getStudentName() {
             return "student";
@@ -37,6 +46,9 @@ public class TeacherGradeStatisticController implements Initializable {
         }
     }
 
+    /**
+     * Represents a grade record for table view. Used for displaying grade statistics.
+     */
     public static class GradeStatisticClass{
         public String course;
         public String exam;
@@ -44,6 +56,17 @@ public class TeacherGradeStatisticController implements Initializable {
         public String score;
         public String fullScore;
         public String timeSpend;
+
+        /**
+         * Constructor for GradeStatisticClass.
+         *
+         * @param student    Name of the student.
+         * @param course     Course associated with the grade.
+         * @param exam       Exam name.
+         * @param score      Score obtained by the student.
+         * @param fullScore  Full score of the exam.
+         * @param timeSpend  Time spent on the exam.
+         */
         public GradeStatisticClass(String student, String course, String exam, String score, String fullScore, String timeSpend){
             this.course = course;
             this.exam = exam;
@@ -52,6 +75,7 @@ public class TeacherGradeStatisticController implements Initializable {
             this.fullScore = fullScore;
             this.timeSpend = timeSpend;
         }
+
         public String getStudent() {
             return student;
         }
@@ -119,8 +143,12 @@ public class TeacherGradeStatisticController implements Initializable {
     public List<Course> courseList;
     public List<GradeStatisticClass> gradeStatisticList;
 
-
-
+    /**
+     * Initializes the controller and sets up the database connections, table columns, and charts.
+     *
+     * @param url            The location of the FXML file (not used).
+     * @param resourceBundle The resources used to localize the FXML (not used).
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         gradeDatabase = new Database<>(Grade.class);
@@ -155,10 +183,11 @@ public class TeacherGradeStatisticController implements Initializable {
 
         refresh();
         loadChart(gradeStatisticList);
-
-
     }
 
+    /**
+     * Populates the ChoiceBoxes for filtering grades based on course, exam, and student.
+     */
     public void populateChoiceBoxes()
     {
 
@@ -186,6 +215,11 @@ public class TeacherGradeStatisticController implements Initializable {
         studentCombox.getItems().addAll(studentNames);
     }
 
+    /**
+     * Populates the list of grade statistics using data from the database.
+     *
+     * @return A list of GradeStatisticClass objects representing the grade statistics.
+     */
     public List<GradeStatisticClass> populateGradeStatisticList()
     {
         gradeList = gradeDatabase.getAll();
@@ -234,9 +268,11 @@ public class TeacherGradeStatisticController implements Initializable {
         gradeTable.setItems(gradeListObservable);
         return gradeStatisticList;
 
-
     }
 
+    /**
+     * Refreshes the view by clearing the filters and reloading all data.
+     */
     @FXML
     public void refresh() {
         // clear the combox boxes and load the data
@@ -254,6 +290,11 @@ public class TeacherGradeStatisticController implements Initializable {
         loadList(gradeStatisticList);
     }
 
+    /**
+     * Loads all charts (bar, pie, line) using the provided grade statistics.
+     *
+     * @param gradeStatisticList A list of GradeStatisticClass objects to be visualized.
+     */
     public void loadChart(List<GradeStatisticClass> gradeStatisticList) {
 
         loadBarChart(gradeStatisticList);
@@ -262,6 +303,11 @@ public class TeacherGradeStatisticController implements Initializable {
 
     }
 
+    /**
+     * Loads the bar chart to display the average grades for each course.
+     *
+     * @param gradeStatisticList A list of GradeStatisticClass objects for the bar chart.
+     */
     public void loadBarChart(List<GradeStatisticClass> gradeStatisticList)
     {
         XYChart.Series<String, Number> seriesBar = new XYChart.Series<>();
@@ -284,11 +330,14 @@ public class TeacherGradeStatisticController implements Initializable {
             seriesBar.getData().add(new XYChart.Data<>(entry.getKey(), entry.getValue().get(0) / entry.getValue().get(1)));
         }
 
-//        seriesBar.getData().add(new XYChart.Data<>("COMP" + i, 50));
-
         barChart.getData().add(seriesBar);
     }
 
+    /**
+     * Loads the pie chart to display the distribution of grades among students.
+     *
+     * @param gradeStatisticList A list of GradeStatisticClass objects for the pie chart.
+     */
     public void loadPieChart(List<GradeStatisticClass> gradeStatisticList)
     {
         pieChart.getData().clear();
@@ -311,6 +360,11 @@ public class TeacherGradeStatisticController implements Initializable {
 
     }
 
+    /**
+     * Loads the line chart to display the average grades for each exam.
+     *
+     * @param gradeStatisticList A list of GradeStatisticClass objects for the line chart.
+     */
     public void loadLineChart(List<GradeStatisticClass> gradeStatisticList)
     {
         XYChart.Series<String, Number> seriesLine = new XYChart.Series<>();
@@ -333,15 +387,15 @@ public class TeacherGradeStatisticController implements Initializable {
             seriesLine.getData().add(new XYChart.Data<>(entry.getKey(), entry.getValue().get(0) / entry.getValue().get(1)));
         }
 
-//        for (int i = 0;  i < 6; i++) {
-//            seriesLine.getData().add(new XYChart.Data<>("COMP3111" + "-" + "quiz" + i, 70));
-//        }
+
         lineChart.getData().add(seriesLine);
         lineChart.setAnimated(false); // Ensure animation is disabled to avoid rendering issues
 
     }
 
-    // reset filters
+    /**
+     * Resets all filters and reloads the original data.
+     */
     @FXML
     public void reset() {
         // clear the combox boxes and load the data
@@ -357,7 +411,10 @@ public class TeacherGradeStatisticController implements Initializable {
     }
 
 
-    // apply filters
+    /**
+     * Applies filters based on the selected course, exam, and student.
+     * Updates the charts and the table view with the filtered data.
+     */
     @FXML
     public void query() {
         String course = courseCombox.getValue();
@@ -375,6 +432,11 @@ public class TeacherGradeStatisticController implements Initializable {
         loadList(filteredList);
     }
 
+    /**
+     * Loads the filtered grade statistics into the table view.
+     *
+     * @param gradeStatisticList A list of GradeStatisticClass objects to display in the table.
+     */
     public void loadList(List<GradeStatisticClass> gradeStatisticList)
     {
         gradeListObservable.clear();
@@ -385,7 +447,13 @@ public class TeacherGradeStatisticController implements Initializable {
 
     }
 
-    // Utility method to check if a similar object exists in the list
+    /**
+     * Checks if a grade statistic entry is a duplicate of an existing entry.
+     *
+     * @param newGrade            The new GradeStatisticClass object to check.
+     * @param gradeStatisticList  The list of existing GradeStatisticClass objects.
+     * @return true if the new grade is a duplicate, false otherwise.
+     */
     public boolean isDuplicate(GradeStatisticClass newGrade, List<GradeStatisticClass> gradeStatisticList) {
         for (GradeStatisticClass existingGrade : gradeStatisticList) {
             if (existingGrade.getCourse().equals(newGrade.getCourse()) &&
