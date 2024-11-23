@@ -262,7 +262,7 @@ class StudentManagementControllerTest {
             assertTrue(result);
 
             mockedMsgSender.verify(() -> MsgSender.showUpdateConfirm(
-                    anyString(), anyList(), any(Runnable.class)
+                    anyString(), anyList(), any(Runnable.class), any(Runnable.class)
             ));
         }
     }

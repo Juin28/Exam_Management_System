@@ -276,12 +276,16 @@ public class StudentManagementController {
             MsgSender.showMsg("Please select a student to update");
             return false;
         }
+
+        // create a copy of the student object to restore the state if the user cancels the update
+        Student originalStudent = new Student(student.getUsername(), student.getName(), student.getGender(), student.getAge(), student.getDepartment(), student.getPassword(), student.getId());
+
         List<String> changes = new ArrayList<>();
 
         boolean valid = validateUpdateInput(student, changes);
         if (valid && !changes.isEmpty()) {
             // successfully validated the changes, show a confirmation message
-            MsgSender.showUpdateConfirm("Update Student: " + student.getUsername(), changes, () -> updateStudentInDatabase(student));
+            MsgSender.showUpdateConfirm("Update Student: " + student.getUsername(), changes, () -> updateStudentInDatabase(student), () -> restoreStudentState(student, originalStudent));
             return true;
         }
         // no changes detected
@@ -292,6 +296,22 @@ public class StudentManagementController {
 
         return false;
     }
+
+    /**
+     * Restores the student's state to the original values if the user cancels the update.
+     *
+     * @param current The student object to restore.
+     * @param original The original student object to restore to.
+     */
+    private void restoreStudentState(Student current, Student original) {
+        current.setUsername(original.getUsername());
+        current.setName(original.getName());
+        current.setGender(original.getGender());
+        current.setAge(original.getAge());
+        current.setDepartment(original.getDepartment());
+        current.setPassword(original.getPassword());
+    }
+
 
     /**
      * Updates the selected student's information in the database.

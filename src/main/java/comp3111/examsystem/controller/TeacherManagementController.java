@@ -1,5 +1,6 @@
 package comp3111.examsystem.controller;
 
+import comp3111.examsystem.model.Student;
 import comp3111.examsystem.model.Teacher;
 import comp3111.examsystem.service.Database;
 import comp3111.examsystem.service.MsgSender;
@@ -235,10 +236,12 @@ public class TeacherManagementController {
         }
         List<String> changes = new ArrayList<>();
 
+        Teacher teacherCopy = new Teacher(teacher.getUsername(), teacher.getName(), teacher.getGender(), teacher.getAge(), teacher.getDepartment(), teacher.getPassword(), teacher.getPosition(), teacher.getId());
+
         boolean valid = validateUpdateInput(teacher, changes);
         if (valid && !changes.isEmpty()) {
             // successfully validated the changes, show a confirmation message
-            MsgSender.showUpdateConfirm("Update Teacher: " + teacher.getUsername(), changes, () -> updateTeacherInDatabase(teacher));
+            MsgSender.showUpdateConfirm("Update Teacher: " + teacher.getUsername(), changes, () -> updateTeacherInDatabase(teacher), () -> restoreTeacherState(teacher, teacherCopy));
             return true;
         }
         // no changes detected
@@ -248,6 +251,22 @@ public class TeacherManagementController {
         }
 
         return false;
+    }
+
+    /**
+     * Restores the teacher's state to the original values if the user cancels the update.
+     *
+     * @param current The teacher object to restore.
+     * @param original The original teacher object to restore to.
+     */
+    private void restoreTeacherState(Teacher current, Teacher original) {
+        current.setUsername(original.getUsername());
+        current.setName(original.getName());
+        current.setGender(original.getGender());
+        current.setAge(original.getAge());
+        current.setDepartment(original.getDepartment());
+        current.setPassword(original.getPassword());
+        current.setPosition(original.getPosition());
     }
 
     /**

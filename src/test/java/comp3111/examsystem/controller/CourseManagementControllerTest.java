@@ -521,7 +521,7 @@ class CourseManagementControllerTest {
         try (MockedStatic<MsgSender> mockedMsgSender = mockStatic(MsgSender.class)) {
             assertTrue(controller.updateCourse(actionEvent));
             // Verify message
-            mockedMsgSender.verify(() -> MsgSender.showUpdateConfirm(anyString(), any(List.class), any(Runnable.class)));
+            mockedMsgSender.verify(() -> MsgSender.showUpdateConfirm(anyString(), any(List.class), any(Runnable.class), any(Runnable.class)));
         }
 
     }

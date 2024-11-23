@@ -1,8 +1,6 @@
 package comp3111.examsystem.controller;
 
-import comp3111.examsystem.model.Grade;
-import comp3111.examsystem.model.Quiz;
-import comp3111.examsystem.model.Teacher;
+import comp3111.examsystem.model.*;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -12,7 +10,6 @@ import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 
-import comp3111.examsystem.model.Course;
 import comp3111.examsystem.service.Database;
 import comp3111.examsystem.service.MsgSender;
 
@@ -338,10 +335,13 @@ public class CourseManagementController {
         // Check if the input is valid
         List<String> changes = new ArrayList<>();
 
+        // create a copy of the selected course in case the user cancels the update
+        Course oldCourse = new Course(selectedCourse.getCourseName(), selectedCourse.getCourseID(), selectedCourse.getDepartment(), selectedCourse.getId());
+
         boolean valid = validateUpdateInput(selectedCourse, changes);
         if (valid && !changes.isEmpty()) {
             // successfully validated the changes, show a confirmation message
-            MsgSender.showUpdateConfirm("Update Course: " + selectedCourse.getCourseID(), changes, () -> updateCourseInDatabase(selectedCourse));
+            MsgSender.showUpdateConfirm("Update Course: " + selectedCourse.getCourseID(), changes, () -> updateCourseInDatabase(selectedCourse), () -> restoreCourseState(selectedCourse, oldCourse));
             return true;
         }
         // no changes detected
@@ -352,6 +352,18 @@ public class CourseManagementController {
 
         return false;
 
+    }
+
+    /**
+     * Restores the course's state to the original values if the user cancels the update.
+     *
+     * @param current The course object to restore.
+     * @param original The original course object to restore to.
+     */
+    private void restoreCourseState(Course current, Course original) {
+        current.setCourseName(original.getCourseName());
+        current.setCourseID(original.getCourseID());
+        current.setDepartment(original.getDepartment());
     }
 
     /**

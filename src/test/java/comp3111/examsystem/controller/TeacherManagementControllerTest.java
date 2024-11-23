@@ -878,7 +878,7 @@ class TeacherManagementControllerTest {
             // assert that the result is true
             assertTrue(result);
             // verify that the correct message was sent
-            mockedMsgSender.verify(() -> MsgSender.showUpdateConfirm(anyString(), anyList(), any(Runnable.class)));
+            mockedMsgSender.verify(() -> MsgSender.showUpdateConfirm(anyString(), anyList(), any(Runnable.class), any(Runnable.class)));
         }
 
     }

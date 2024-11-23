@@ -26,7 +26,7 @@ public class MsgSender {
         }
     }
 
-    static public void showUpdateConfirm(String title, List<String> changes, Runnable callback) {
+    static public void showUpdateConfirm(String title, List<String> changes, Runnable callback, Runnable cancel) {
         StringBuilder msgBuilder = new StringBuilder("Are you sure you want to make the following changes?\n");
         for (String change : changes) {
             msgBuilder.append(change).append("\n");
@@ -38,6 +38,9 @@ public class MsgSender {
 
         if (result == ButtonType.OK) {
             callback.run();
+        }
+        else {
+            cancel.run();
         }
     }
 
