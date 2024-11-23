@@ -43,17 +43,31 @@ public class StudentRegisterController implements Initializable {
     @FXML
     public TextField usernameTxt;
 
+    /**
+     * Initializes the controller class. This method is automatically called after the FXML file has been loaded.
+     *
+     * @param url The location used to resolve relative paths for the root object, or null if the location is not known.
+     * @param resourceBundle The resources used to localize the root object, or null if the root object was not localized.
+     */
     @FXML
     public void initialize(URL url, ResourceBundle resourceBundle) {
         this.studentDatabase = new Database<>(Student.class);
     }
 
+    /**
+     * Closes the current window.
+     */
     @FXML
     void closeWindow() {
         Stage stage = (Stage) usernameTxt.getScene().getWindow();
         stage.close();
     }
 
+    /**
+     * Event handler for registering a new student.
+     *
+     * @param event the ActionEvent triggering the registration
+     */
     @FXML
     void register(ActionEvent event) {
         // Retrieve input values from the form fields
@@ -68,7 +82,7 @@ public class StudentRegisterController implements Initializable {
         // Validate the input fields
         if(validateFields(age, department, gender, name, username, password, passConfirm)){
             // Create a new Student object with the input values
-            Student tmp = new Student(username, name, gender, age, department, password, "0", 0);
+            Student tmp = new Student(username, name, gender, age, department.toUpperCase(), password, "0", 0);
 
             // Add the new student to the database
             studentDatabase.add(tmp);
@@ -81,6 +95,18 @@ public class StudentRegisterController implements Initializable {
         }
     }
 
+    /**
+     * Validates the input fields for student registration.
+     *
+     * @param age the age of the student
+     * @param department the department of the student
+     * @param gender the gender of the student
+     * @param name the name of the student
+     * @param username the username of the student
+     * @param password the password of the student
+     * @param passConfirm the password confirmation
+     * @return true if all fields are valid, false otherwise
+     */
     private boolean validateFields(String age, String department, String gender, String name, String username, String password, String passConfirm){
         // Check if any field is empty
         if(age.isEmpty() || department.isEmpty() || gender.isEmpty() || name.isEmpty() || username.isEmpty() || password.isEmpty() || passConfirm.isEmpty()){
