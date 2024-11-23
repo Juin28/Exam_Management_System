@@ -522,7 +522,9 @@ public class TeacherManagementController {
 
         // validate the department
         department = department.toUpperCase();
-        if(!validateDepartment(department)){return false;}
+        if(!validateDepartment(department)){
+            MsgSender.showMsg("Please input a valid department");
+            return false;}
 
         // if all previous conditions are met, we have successfully validated the input, return true
         return true;
@@ -546,6 +548,7 @@ public class TeacherManagementController {
                 return true;
             }
         }
+
         return false;
     }
 
@@ -559,6 +562,7 @@ public class TeacherManagementController {
     public boolean validateUsername(String username)
     {
         // check to ensure that the username is unique
+        allTeachers = teacherDatabase.getAll();
         for (Teacher teacher : allTeachers)
         {
             if (teacher.getUsername().equals(username))

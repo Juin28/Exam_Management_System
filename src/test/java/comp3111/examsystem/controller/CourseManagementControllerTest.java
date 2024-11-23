@@ -250,9 +250,9 @@ class CourseManagementControllerTest {
     {
         String id = "COMP1001";
 
-        // make allCourses return no courses
+        // make allCourses return existing course
         Course courseExisting = new Course("Intro to CS", "COMP1001", "CSE", 0);
-        controller.allCourses = List.of(courseExisting);
+        when(courseDatabase.getAll()).thenReturn(List.of(courseExisting));
 
         try (MockedStatic<MsgSender> mockedMsgSender = mockStatic(MsgSender.class)) {
             boolean result = controller.validateID(id);

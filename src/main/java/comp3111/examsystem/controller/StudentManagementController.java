@@ -510,6 +510,7 @@ public class StudentManagementController {
         // validate the department
         department = department.toUpperCase();
         if (!validateDepartment(department)) {
+            MsgSender.showMsg("Please input a valid department");
             return false;
         }
 
@@ -548,6 +549,7 @@ public class StudentManagementController {
     public boolean validateUsername(String username)
     {
         // check to ensure that the username is unique
+        allStudents = studentDatabase.getAll();
         for (Student student : allStudents)
         {
             if (student.getUsername().equals(username))

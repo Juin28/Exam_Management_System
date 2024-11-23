@@ -233,7 +233,7 @@ class StudentManagementControllerTest {
         List<Student> students = List.of(
                 new Student("john123", "John", "Male", "21", "CSE", "password", 0)
         );
-        controller.allStudents = students;
+        when(mockDatabase.getAll()).thenReturn(students);
 
         try (MockedStatic<MsgSender> mockedMsgSender = mockStatic(MsgSender.class)) {
             boolean result = controller.validateUsername("john123");

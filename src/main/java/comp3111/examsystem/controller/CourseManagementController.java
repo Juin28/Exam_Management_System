@@ -563,6 +563,7 @@ public class CourseManagementController {
         }
 
         // check that the ID does not already exist
+        allCourses = courseDatabase.getAll();
         for (Course course : allCourses)
         {
             if (course.getCourseID().equals(id))

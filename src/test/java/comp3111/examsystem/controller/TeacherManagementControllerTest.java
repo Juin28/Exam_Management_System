@@ -355,6 +355,25 @@ class TeacherManagementControllerTest {
     }
 
     @Test
+    void testUsernameExists()
+    {
+        Teacher teacher = new Teacher();
+        when(mockDatabase.getAll()).thenReturn(List.of(teacher));
+
+        boolean expected = false;
+
+        try (MockedStatic<MsgSender> mockedMsgSender = mockStatic(MsgSender.class)) {
+            boolean actual = controller.validateUsername(teacher.getUsername());
+            assertEquals(expected, actual);
+            // verify that the message sender sends the correct message
+            mockedMsgSender.verify(() -> MsgSender.showMsg("Username already exists"));
+
+        }
+
+    }
+
+
+    @Test
     void testValidUsername()
     {
         // set up the mock database
