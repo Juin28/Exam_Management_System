@@ -24,6 +24,8 @@ class StudentMainControllerTest {
     private Database<Quiz> mockQuizDatabase;
     @Mock
     private Database<Grade> mockGradeDatabase;
+    @Mock
+    private Database<Course> mockCourseDatabase;
     private StudentMainController controller;
 
     @BeforeAll
@@ -40,9 +42,10 @@ class StudentMainControllerTest {
         controller.examCombox = new ComboBox<>();
         controller.quizDatabase = mockQuizDatabase;
         controller.gradeDatabase = mockGradeDatabase;
+        controller.courseDatabase = mockCourseDatabase;
         controller.quizzes = new ArrayList<>();
         controller.studentGrades = new ArrayList<>();
-        controller.student = new Student("StudentTest", "Student", "Male", "18", "cse", "password", "0", 1);
+        controller.student = new Student("StudentTest", "Student", "Male", "18", "CSE", "password", "0", 1);
     }
 
     @Test
@@ -77,6 +80,7 @@ class StudentMainControllerTest {
         Grade sampleGrade = new Grade("1", "1", "100", "1");
         controller.studentGrades.add(sampleGrade);
         when(mockQuizDatabase.getAll()).thenReturn(List.of(sampleQuiz));
+        when(mockCourseDatabase.queryByField("courseID", "COMP3111")).thenReturn(List.of(new Course("Software Engineering", "COMP3111", "CSE", 1)));
         controller.checkQuizValidity();
         assert !controller.quizzes.contains("COMP3111 | QuizTest");
     }
@@ -87,14 +91,25 @@ class StudentMainControllerTest {
         Grade sampleGrade = new Grade("1", "1", "100", "1");
         controller.studentGrades.add(sampleGrade);
         when(mockQuizDatabase.getAll()).thenReturn(List.of(sampleQuiz));
+        when(mockCourseDatabase.queryByField("courseID", "COMP3111")).thenReturn(List.of(new Course("Software Engineering", "COMP3111", "CSE", 1)));
         controller.checkQuizValidity();
         assert !controller.quizzes.contains("COMP3111 | QuizTest");
+    }
+
+    @Test
+    void testCheckQuizValidityNotDepartment(){
+        Quiz sampleQuiz = new Quiz("QuizTest", "1", "ISDN1234", "yes", 1, "1");
+        when(mockQuizDatabase.getAll()).thenReturn(List.of(sampleQuiz));
+        when(mockCourseDatabase.queryByField("courseID", "ISDN1234")).thenReturn(List.of(new Course("Design", "ISDN1234", "ISD", 1)));
+        controller.checkQuizValidity();
+        assert !controller.quizzes.contains("ISDN1234 | QuizTest");
     }
 
     @Test
     void testCheckQuizValidityNotTaken(){
         Quiz sampleQuiz = new Quiz("QuizTest", "1", "COMP3111", "yes", 1, "1");
         when(mockQuizDatabase.getAll()).thenReturn(List.of(sampleQuiz));
+        when(mockCourseDatabase.queryByField("courseID", "COMP3111")).thenReturn(List.of(new Course("Software Engineering", "COMP3111", "CSE", 1)));
         controller.checkQuizValidity();
         assert controller.quizzes.contains("COMP3111 | QuizTest");
     }

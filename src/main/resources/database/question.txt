@@ -1,3 +1,6 @@
 questionDescription:What is Java?,optionA:A programming language,optionB:A coffee ,optionC:A car,optionD:A food,answer:AB,questionScore:40,questionType:Multiple,id:1731747368046,
 questionDescription:Which of the following is a feature of Java?,optionA:Platform-dependent,optionB:Object-oriented,optionC:Low-level programming,optionD:None of the above,answer:B,questionScore:10,questionType:Single,id:1731747994423,
 questionDescription:What is C++?,optionA:A programming language,optionB:A coffee,optionC:A car,optionD:A food,answer:A,questionScore:10,questionType:Single,id:1731748385459,
+questionDescription:What is a dog?,optionA:A mammal,optionB:A reptile,optionC:A fish,optionD:An insect,answer:A,questionScore:30,questionType:Single,id:1732460877912,
+questionDescription:What is not an algorithm?,optionA:Linked List,optionB:Djikstra,optionC:Hashmap,optionD:Binary Search,answer:AC,questionScore:30,questionType:Multiple,id:1732461668283,
+questionDescription:What is a data structure?,optionA:Linked List ,optionB:Binary Search Tree,optionC:Dynamic Programming,optionD:Greedy ,answer:AB,questionScore:50,questionType:Multiple,id:1732461724003,

@@ -207,7 +207,7 @@ public class StudentGradeStatisticController implements Initializable {
                     for (Course c : courseDatabase.getAll()) {
                         // Check if the course is associated with the quiz
                         if (c.getCourseID().equals(q.getCourseID())) {
-                            coursesList.add(c.getCourseName());
+                            coursesList.add(c.getCourseID());
                         }
                     }
                 }
@@ -271,7 +271,7 @@ public class StudentGradeStatisticController implements Initializable {
                 // Add a row for each grade if the table is not full. Table should have the capacity of the number of courses
                 if (gradeRows.size() < coursesList.size()) {
                     gradeRows.add(new GradeTableRow(
-                            course.getCourseName(),
+                            course.getCourseID(),
                             quiz.getQuizName(),
                             grade.getStudentScore(),
                             String.valueOf(total),
