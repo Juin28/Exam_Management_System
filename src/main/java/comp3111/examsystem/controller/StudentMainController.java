@@ -199,7 +199,12 @@ public class StudentMainController implements Initializable {
         System.exit(0);
     }
 
-    // Helper function to remove whitespaces and split by "|"
+    /**
+     * Helper function to remove whitespaces and split a string by the "|" character.
+     *
+     * @param input The input string to be formatted.
+     * @return An array of strings split by the "|" character, or null if the input is null.
+     */
     public static String[] formatString(String input) {
         if (input == null) {
             return null; // Handle null case
@@ -207,7 +212,12 @@ public class StudentMainController implements Initializable {
         return splitByPipe(input.replace(" ", ""));
     }
 
-    // Helper function to split a String by "|"
+    /**
+     * Splits a string by the "|" character.
+     *
+     * @param input The input string to be split.
+     * @return An array of strings split by the "|" character.
+     */
     public static String[] splitByPipe(String input) {
         return input.split("\\|"); // Split by "|" character
     }

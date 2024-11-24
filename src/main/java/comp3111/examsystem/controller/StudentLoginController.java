@@ -27,9 +27,7 @@ public class StudentLoginController implements Initializable {
     public PasswordField passwordTxt;
     public Database<Student> studentDatabase;
     public List<Student> studentList;
-    /**
-     * Static variable to keep track of the currently logged-in student.
-     */
+    // Static variable to keep track of the currently logged-in student.
     public static Student loggedInStudent;
 
     /**
@@ -103,6 +101,11 @@ public class StudentLoginController implements Initializable {
         });
     }
 
+    /**
+     * Gets the currently logged-in student.
+     *
+     * @return The currently logged-in student.
+     */
     public static Student getLoggedInStudent() {
         return loggedInStudent;
     }

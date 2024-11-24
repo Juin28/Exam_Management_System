@@ -45,22 +45,47 @@ public class StudentGradeStatisticController implements Initializable {
             this.timeSpent = timeSpent;
         }
 
+        /**
+         * Gets the course name.
+         *
+         * @return the course name
+         */
         public String getCourseName() {
             return courseName;
         }
 
+        /**
+         * Gets the exam name.
+         *
+         * @return the exam name
+         */
         public String getExamName() {
             return examName;
         }
 
+        /**
+         * Gets the score.
+         *
+         * @return the score
+         */
         public String getScore() {
             return score;
         }
 
+        /**
+         * Gets the full score.
+         *
+         * @return the full score
+         */
         public String getFullScore() {
             return fullScore;
         }
 
+        /**
+         * Gets the time spent.
+         *
+         * @return the time spent
+         */
         public String getTimeSpent() {
             return timeSpent;
         }
