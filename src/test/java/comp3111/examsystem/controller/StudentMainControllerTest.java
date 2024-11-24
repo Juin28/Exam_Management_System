@@ -5,11 +5,10 @@ import static org.mockito.Mockito.*;
 
 import comp3111.examsystem.model.*;
 import comp3111.examsystem.service.Database;
+import comp3111.examsystem.service.JavaFXInitializer;
 import comp3111.examsystem.service.MsgSender;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.control.*;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -29,7 +28,8 @@ class StudentMainControllerTest {
 
     @BeforeAll
     static void initToolkit() {
-        Platform.startup(() -> {});
+        JavaFXInitializer.initToolkit();
+
     }
 
     @BeforeEach

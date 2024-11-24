@@ -1,5 +1,6 @@
 package comp3111.examsystem.controller;
 
+import comp3111.examsystem.service.JavaFXInitializer;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -34,7 +35,8 @@ class TeacherMainControllerTest {
 
     @BeforeAll
     static void initToolkit() {
-        Platform.startup(() -> {});
+        JavaFXInitializer.initToolkit();
+
     }
 
     @BeforeEach

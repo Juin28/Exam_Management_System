@@ -4,6 +4,7 @@ import static org.mockito.Mockito.*;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.junit.jupiter.api.Assertions.*;
 
+import comp3111.examsystem.service.JavaFXInitializer;
 import comp3111.examsystem.service.MsgSender;
 import comp3111.examsystem.model.Teacher;
 import comp3111.examsystem.service.Database;
@@ -53,7 +54,7 @@ class TeacherRegisterControllerTest {
 
     @BeforeAll
     static void initToolkit() {
-        Platform.startup(() -> {});
+        JavaFXInitializer.initToolkit();
     }
 
     @BeforeEach

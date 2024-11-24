@@ -8,7 +8,17 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+/**
+ * Controller for managing login selection in the HKUST Examination System.
+ * Provides functionality to navigate to the login interfaces for students, teachers, and managers.
+ */
 public class SelectLoginController {
+
+    /**
+     * Opens the Student Login UI in a new window.
+     * Loads the "StudentLoginUI.fxml" file and displays it in a new stage.
+     * Handles exceptions by printing stack traces.
+     */
     @FXML
     public void studentLogin() {
         try {
@@ -23,6 +33,11 @@ public class SelectLoginController {
         }
     }
 
+    /**
+     * Opens the Teacher Login UI in a new window.
+     * Loads the "TeacherLoginUI.fxml" file and displays it in a new stage.
+     * Handles exceptions by printing stack traces.
+     */
     @FXML
     public void teacherLogin() {
         try {
@@ -37,6 +52,11 @@ public class SelectLoginController {
         }
     }
 
+    /**
+     * Opens the Manager Login UI in a new window.
+     * Loads the "ManagerLoginUI.fxml" file and displays it in a new stage.
+     * Handles exceptions by printing stack traces.
+     */
     public void managerLogin() {
         try {
             Stage stage = new Stage();

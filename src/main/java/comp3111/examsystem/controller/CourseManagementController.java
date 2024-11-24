@@ -1,8 +1,6 @@
 package comp3111.examsystem.controller;
 
-import comp3111.examsystem.model.Grade;
-import comp3111.examsystem.model.Quiz;
-import comp3111.examsystem.model.Teacher;
+import comp3111.examsystem.model.*;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -12,20 +10,55 @@ import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 
-import comp3111.examsystem.model.Course;
 import comp3111.examsystem.service.Database;
 import comp3111.examsystem.service.MsgSender;
 
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Controller for managing courses in the HKUST Examination System.
+ * Provides functionality to add, delete, update, filter, and manage course-related data
+ * in the system. Interacts with the database to retrieve, modify, and save data.
+ *
+ * The class also supports managing associated quizzes and grades for a course, ensuring
+ * database consistency during operations like deletion.
+ */
 public class CourseManagementController {
+
+    /**
+     * Database instance for managing courses.
+     */
     public Database<Course> courseDatabase;
+
+    /**
+     * Database instance for managing quizzes.
+     */
     public Database<Quiz> quizDatabase;
+
+    /**
+     * Database instance for managing grades.
+     */
     public Database<Grade> gradeDatabase;
+
+    /**
+     * List of all courses retrieved from the database.
+     */
     public List<Course> allCourses;
+
+    /**
+     * List of all quizzes retrieved from the database.
+     */
     public List<Quiz> allQuizzes;
+
+    /**
+     * List of all grades retrieved from the database.
+     */
     public List<Grade> allGrades;
+
+    /**
+     * ObservableList for displaying courses in the TableView.
+     */
     public ObservableList<Course> courseList;
 
     @FXML
@@ -82,6 +115,11 @@ public class CourseManagementController {
     @FXML
     public AnchorPane rootPane;
 
+    /**
+     * Initializes the Course Management Controller.
+     * Sets up the database connections, loads the course data, configures the TableView,
+     * and establishes event listeners for managing user interactions.
+     */
     @FXML
     public void initialize()
     {
@@ -137,12 +175,21 @@ public class CourseManagementController {
 
     }
 
+    /**
+     * Clear the input fields in the course management page
+     */
     private void clearFields() {
         courseNameInput.clear();
         courseIDInput.clear();
         courseDeptInput.clear();
     }
 
+    /**
+     * Adds a course to the database.
+     * Prompts the user for confirmation before performing the operation.
+     *
+     * @param event The event triggered by clicking the "Add" button.
+     */
     @FXML
     public void addCourse(ActionEvent event)
     {
@@ -153,6 +200,12 @@ public class CourseManagementController {
         }
     }
 
+    /**
+     * Deletes a course from the database.
+     * If the course has associated quizzes, those are also deleted after user confirmation.
+     *
+     * @param event The event triggered by clicking the "Delete" button.
+     */
     @FXML
     public void deleteCourse(ActionEvent event)
     {
@@ -186,12 +239,24 @@ public class CourseManagementController {
         }
     }
 
+    /**
+     * Filters the courses displayed in the TableView based on user input.
+     *
+     * @param event The event triggered by clicking the "Filter" button.
+     */
     @FXML
     void filterCourse(ActionEvent event)
     {
         loadCourseTable();
     }
 
+
+    /**
+     * Validates the input fields for adding or updating a course.
+     * Ensures all fields are filled and contain valid data.
+     *
+     * @return true if the input is valid, false otherwise.
+     */
     private boolean validateAddInput()
     {
         // check to ensure that all the fields are filled
@@ -216,6 +281,11 @@ public class CourseManagementController {
         return true;
     }
 
+    /**
+     * Refreshes the course table by clearing filters and reloading all courses.
+     *
+     * @param event The event triggered by clicking the "Refresh" button.
+     */
     @FXML
     void refreshCourse(ActionEvent event)
     {
@@ -229,6 +299,11 @@ public class CourseManagementController {
         loadCourseTable();
     }
 
+    /**
+     * Resets all filters in the course table and reloads all courses.
+     *
+     * @param event The event triggered by clicking the "Reset" button.
+     */
     @FXML
     void resetFilter(ActionEvent event)
     {
@@ -239,6 +314,13 @@ public class CourseManagementController {
         loadCourseTable();
     }
 
+    /**
+     * Updates an existing course in the database.
+     * Prompts the user for confirmation if changes are detected.
+     *
+     * @param event The event triggered by clicking the "Update" button.
+     * @return true if the course is updated successfully, false otherwise.
+     */
     @FXML
     public boolean updateCourse(ActionEvent event)
     {
@@ -253,10 +335,13 @@ public class CourseManagementController {
         // Check if the input is valid
         List<String> changes = new ArrayList<>();
 
+        // create a copy of the selected course in case the user cancels the update
+        Course oldCourse = new Course(selectedCourse.getCourseName(), selectedCourse.getCourseID(), selectedCourse.getDepartment(), selectedCourse.getId());
+
         boolean valid = validateUpdateInput(selectedCourse, changes);
         if (valid && !changes.isEmpty()) {
             // successfully validated the changes, show a confirmation message
-            MsgSender.showUpdateConfirm("Update Course: " + selectedCourse.getCourseID(), changes, () -> updateCourseInDatabase(selectedCourse));
+            MsgSender.showUpdateConfirm("Update Course: " + selectedCourse.getCourseID(), changes, () -> updateCourseInDatabase(selectedCourse), () -> restoreCourseState(selectedCourse, oldCourse));
             return true;
         }
         // no changes detected
@@ -269,6 +354,24 @@ public class CourseManagementController {
 
     }
 
+    /**
+     * Restores the course's state to the original values if the user cancels the update.
+     *
+     * @param current The course object to restore.
+     * @param original The original course object to restore to.
+     */
+    private void restoreCourseState(Course current, Course original) {
+        current.setCourseName(original.getCourseName());
+        current.setCourseID(original.getCourseID());
+        current.setDepartment(original.getDepartment());
+    }
+
+    /**
+     * Update the course in the database
+     *
+     * @param course The course to update
+     * @return true if the course is updated successfully, false otherwise
+     */
     public boolean updateCourseInDatabase(Course course)
     {
         try
@@ -284,6 +387,13 @@ public class CourseManagementController {
         }
     }
 
+    /**
+     * Validate the input for updating a course
+     *
+     * @param course The course to update
+     * @param changes The list of changes to make
+     * @return true if the input is valid, false otherwise
+     */
     public boolean validateUpdateInput(Course course, List<String> changes)
     {
         // check to ensure that all the fields are filled
@@ -330,6 +440,12 @@ public class CourseManagementController {
         return true;
     }
 
+    /**
+     * Delete a course and its quizzes from the database
+     *
+     * @param course The course to delete
+     * @param quizzesToDelete The quizzes to delete
+     */
     public void deleteCourseAndQuizzes(Course course, List<Quiz> quizzesToDelete)
     {
         // delete the grades associated with the quizzes first
@@ -372,8 +488,13 @@ public class CourseManagementController {
 
     }
 
-    public void
-    deleteCourseFromDatabase(Course course)
+
+    /**
+     * Delete a course from the database
+     *
+     * @param course The course to delete
+     */
+    public void deleteCourseFromDatabase(Course course)
     {
         try
         {
@@ -387,6 +508,9 @@ public class CourseManagementController {
         }
     }
 
+    /**
+     * Add a course to the database
+     */
     public void addCourseToDatabase()
     {
         String name = courseNameInput.getText();
@@ -405,6 +529,15 @@ public class CourseManagementController {
         }
     }
 
+
+    /**
+     * Validate the course ID.
+     * Ensures the ID follows the format: 4 uppercase letters followed by 4 digits.
+     * Additionally, checks for uniqueness among existing courses.
+     *
+     * @param id The course ID to validate
+     * @return true if the course ID is valid, false otherwise
+     */
     public boolean validateID(String id)
     {
         // check that the name is 4 chars + 4 numbers, with the 4 chars as uppercase
@@ -430,6 +563,7 @@ public class CourseManagementController {
         }
 
         // check that the ID does not already exist
+        allCourses = courseDatabase.getAll();
         for (Course course : allCourses)
         {
             if (course.getCourseID().equals(id))
@@ -441,6 +575,14 @@ public class CourseManagementController {
         return true;
 
     }
+
+    /**
+     * Validate the department name.
+     * Ensures the department exists within a predefined list of valid departments.
+     *
+     * @param department The department to validate
+     * @return true if the department is valid, false otherwise
+     */
     public boolean validateDepartment(String department)
     {
         // check to ensure that the department is within HKUST's list of departments
@@ -456,6 +598,13 @@ public class CourseManagementController {
         return false;
     }
 
+    /**
+     * Load the course table with data from the database.
+     * If filters are applied, the table is populated with filtered results.
+     * Otherwise, all courses are loaded.
+     *
+     * @return a list of filtered courses if filters are applied. otherwise empty list
+     */
     public List<Course> loadCourseTable()
     {
         List<Course> filteredCourses = new ArrayList<>();
@@ -487,6 +636,12 @@ public class CourseManagementController {
         return filteredCourses;
     }
 
+    /**
+     * Check if no filters are currently applied to the course table.
+     * This is used to determine whether to load all courses or apply filtering logic.
+     *
+     * @return true if no filters are applied, false otherwise
+     */
     public boolean noFilter() {
         return (courseDeptFilter.getText().isEmpty() &&
                 courseNameFilter.getText().isEmpty() &&
