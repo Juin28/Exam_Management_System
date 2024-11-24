@@ -19,18 +19,50 @@ import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 
+/**
+ * Controller for the Manager Login interface.
+ * Handles the logic for manager authentication and transitions to the Manager UI.
+ */
 public class ManagerLoginController implements Initializable {
+    /**
+     * TextField for the manager's username input.
+     */
     @FXML
     public TextField usernameTxt;
+
+    /**
+     * PasswordField for the manager's password input.
+     */
     @FXML
     public PasswordField passwordTxt;
 
+    /**
+     * Database for managing the Manager entities.
+     */
     private Database<Manager> managerDatabase = null;
+
+    /**
+     * List containing all managers retrieved from the database.
+     */
     private List<Manager> allManagers;
 
+    /**
+     * FXMLLoader for loading the Manager Main UI.
+     */
     public FXMLLoader fxmlLoader;
+
+    /**
+     * Stage for displaying the Manager Main UI.
+     */
     public Stage stage;
 
+    /**
+     * Initializes the Manager Login Controller.
+     * Checks if an admin manager exists in the database, and creates one if not.
+     *
+     * @param location  The location of the FXML file (not used).
+     * @param resources The resources used to localize the FXML (not used).
+     */
     @FXML
     public void initialize(URL location, ResourceBundle resources) {
         // if the manager database is empty, create an admin manager
@@ -49,6 +81,14 @@ public class ManagerLoginController implements Initializable {
         }
     }
 
+    /**
+     * Handles the manager login action.
+     * Validates the username and password entered by the manager.
+     * Displays a success or failure message and transitions to the Manager UI on successful login.
+     *
+     * @param e The ActionEvent triggered by the login button.
+     * @return true if the login is successful, false otherwise.
+     */
     @FXML
     public boolean login(ActionEvent e) {
         // get the username and password
@@ -69,10 +109,13 @@ public class ManagerLoginController implements Initializable {
         return false;
     }
 
+    /**
+     * Displays the Manager Main UI after a successful login.
+     *
+     * @param eventSource The source of the event (usually the login button).
+     */
     public void showManagerUI(Object eventSource)
     {
-//        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("ManagerMainUI.fxml"));
-//        Stage stage = new Stage();
         if (fxmlLoader == null)
         {
             fxmlLoader = new FXMLLoader(Main.class.getResource("ManagerMainUI.fxml"));
@@ -91,6 +134,14 @@ public class ManagerLoginController implements Initializable {
         ((Stage) ((Button) eventSource).getScene().getWindow()).close();
     }
 
+    /**
+     * Validates the manager's login credentials.
+     * Checks the provided username and password against the database records.
+     *
+     * @param username The username entered by the manager.
+     * @param password The password entered by the manager.
+     * @return true if the credentials are valid, false otherwise.
+     */
     public boolean handleManagerLogin(String username, String password)
     {
         // since there is only one manager, hardcode the username and password

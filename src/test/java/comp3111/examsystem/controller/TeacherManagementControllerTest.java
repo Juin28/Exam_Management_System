@@ -1,19 +1,15 @@
 package comp3111.examsystem.controller;
-
-import comp3111.examsystem.model.Manager;
 import comp3111.examsystem.model.Teacher;
 import comp3111.examsystem.service.Database;
+import comp3111.examsystem.service.JavaFXInitializer;
 import comp3111.examsystem.service.MsgSender;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
-
 import java.io.IOException;
 import java.util.List;
 import javafx.scene.control.ComboBox;
@@ -22,19 +18,13 @@ import javafx.scene.control.TableView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Button;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.util.WaitForAsyncUtils;
-
 import java.util.ArrayList;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutionException;
-
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-@ExtendWith(MockitoExtension.class)
 class TeacherManagementControllerTest {
 
     @InjectMocks
@@ -62,11 +52,7 @@ class TeacherManagementControllerTest {
     private AnchorPane rootPane, AnchorWithInputs;
     @BeforeAll
     public static void initJavaFx() throws InterruptedException {
-        final CountDownLatch latch = new CountDownLatch(1);
-        Platform.startup(() -> { // Initializes JavaFX environment
-            latch.countDown();
-        });
-        latch.await(); // Ensures JavaFX is up before proceeding
+        JavaFXInitializer.initToolkit();
     }
 
 
@@ -103,11 +89,6 @@ class TeacherManagementControllerTest {
         controller.teacherList = FXCollections.observableArrayList();
     }
 
-    @AfterAll
-    public static void tearDownJavaFx() {
-
-        Platform.exit(); // Cleans up the JavaFX platform after all tests are run.
-    }
 
     @Test
     void testNoFilterTrue()
@@ -181,10 +162,6 @@ class TeacherManagementControllerTest {
 
     }
 
-//
-    @Test
-    void updateTeacher() {
-    }
 
     @Test
     void resetFilter() {
@@ -219,9 +196,6 @@ class TeacherManagementControllerTest {
 
     }
 
-    @Test
-    void deleteTeacher() {
-    }
 
     @Test
     void refreshTeacher() {
@@ -377,7 +351,27 @@ class TeacherManagementControllerTest {
             assertEquals(expected, actual);
         });
         WaitForAsyncUtils.waitForFxEvents();
+
     }
+
+    @Test
+    void testUsernameExists()
+    {
+        Teacher teacher = new Teacher();
+        when(mockDatabase.getAll()).thenReturn(List.of(teacher));
+
+        boolean expected = false;
+
+        try (MockedStatic<MsgSender> mockedMsgSender = mockStatic(MsgSender.class)) {
+            boolean actual = controller.validateUsername(teacher.getUsername());
+            assertEquals(expected, actual);
+            // verify that the message sender sends the correct message
+            mockedMsgSender.verify(() -> MsgSender.showMsg("Username already exists"));
+
+        }
+
+    }
+
 
     @Test
     void testValidUsername()
@@ -512,8 +506,10 @@ class TeacherManagementControllerTest {
         doThrow(new RuntimeException()).when(mockDatabase).add(Mockito.any(Teacher.class));
         Platform.runLater(() -> {
             assertThrows(RuntimeException.class, () -> controller.addTeacherToDatabase());
+
         });
         WaitForAsyncUtils.waitForFxEvents();
+
     }
 
     @Test
@@ -527,6 +523,7 @@ class TeacherManagementControllerTest {
             assertEquals(expected, actual);
         });
         WaitForAsyncUtils.waitForFxEvents();
+
     }
 
     @Test
@@ -540,6 +537,7 @@ class TeacherManagementControllerTest {
             assertEquals(expected, actual);
         });
         WaitForAsyncUtils.waitForFxEvents();
+
     }
 
     @Test
@@ -560,6 +558,7 @@ class TeacherManagementControllerTest {
             assertEquals(expected, actual);
         });
         WaitForAsyncUtils.waitForFxEvents();
+
     }
 
     @Test
@@ -578,6 +577,7 @@ class TeacherManagementControllerTest {
             assertEquals(expected, actual);
         });
         WaitForAsyncUtils.waitForFxEvents();
+
     }
 
     @Test
@@ -603,8 +603,8 @@ class TeacherManagementControllerTest {
             // check that changes has 2 values, name and department
             assertEquals(2, changes.size());
         });
-
         WaitForAsyncUtils.waitForFxEvents();
+
     }
 
     @Test
@@ -630,8 +630,8 @@ class TeacherManagementControllerTest {
             // check that changes has 2 values, name and department
             assertEquals(0, changes.size());
         });
-
         WaitForAsyncUtils.waitForFxEvents();
+
     }
 
     @Test
@@ -657,8 +657,8 @@ class TeacherManagementControllerTest {
             // check that changes has nothing inside
             assertEquals(0, changes.size());
         });
-
         WaitForAsyncUtils.waitForFxEvents();
+
     }
 
     @Test
@@ -684,8 +684,8 @@ class TeacherManagementControllerTest {
             // check that changes has nothing inside
             assertEquals(0, changes.size());
         });
-
         WaitForAsyncUtils.waitForFxEvents();
+
     }
 
     @Test
@@ -710,9 +710,10 @@ class TeacherManagementControllerTest {
             assertEquals(expected, actual);
             // check that changes has nothing inside
             assertEquals(0, changes.size());
-        });
 
+        });
         WaitForAsyncUtils.waitForFxEvents();
+
     }
 
     @Test
@@ -737,9 +738,10 @@ class TeacherManagementControllerTest {
             assertEquals(expected, actual);
             // check that changes has nothing inside
             assertEquals(0, changes.size());
-        });
 
+        });
         WaitForAsyncUtils.waitForFxEvents();
+
     }
 
     @Test
@@ -789,9 +791,10 @@ class TeacherManagementControllerTest {
             assertEquals(expected, actual);
             // check that changes have the expected size
             assertEquals(3, changes.size(), "Expected 3 changes, but got: " + changes.size());
-        });
 
+        });
         WaitForAsyncUtils.waitForFxEvents();
+
 
     }
 
@@ -894,7 +897,7 @@ class TeacherManagementControllerTest {
             // assert that the result is true
             assertTrue(result);
             // verify that the correct message was sent
-            mockedMsgSender.verify(() -> MsgSender.showUpdateConfirm(anyString(), anyList(), any(Runnable.class)));
+            mockedMsgSender.verify(() -> MsgSender.showUpdateConfirm(anyString(), anyList(), any(Runnable.class), any(Runnable.class)));
         }
 
     }
@@ -959,12 +962,4 @@ class TeacherManagementControllerTest {
             mockedMsgSender.verify(() -> MsgSender.showMsg("Age must be between 20 and 100"));
         }
     }
-
-
-
-
-
-
-
-    // input, expected, actual, assert
 }

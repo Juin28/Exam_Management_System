@@ -3,18 +3,15 @@ package comp3111.examsystem.controller;
 import comp3111.examsystem.model.Grade;
 import comp3111.examsystem.model.Student;
 import comp3111.examsystem.service.Database;
+import comp3111.examsystem.service.JavaFXInitializer;
 import comp3111.examsystem.service.MsgSender;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.testfx.util.WaitForAsyncUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +21,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-@ExtendWith(MockitoExtension.class)
 class StudentManagementControllerTest {
 
     @InjectMocks
@@ -56,9 +52,7 @@ class StudentManagementControllerTest {
 
     @BeforeAll
     public static void initJavaFx() throws InterruptedException {
-        final CountDownLatch latch = new CountDownLatch(1);
-        Platform.startup(latch::countDown);
-        latch.await();
+        JavaFXInitializer.initToolkit();
     }
 
     @BeforeEach
@@ -88,13 +82,6 @@ class StudentManagementControllerTest {
         controller.allStudents = new ArrayList<>();
         controller.studentList = FXCollections.observableArrayList();
     }
-
-    @AfterAll
-    public static void tearDownJavaFx() {
-        Platform.exit();
-    }
-
-    // --- Test cases (converted from TeacherManagementControllerTest) ---
 
     @Test
     void testNoFilterTrue() {
@@ -246,7 +233,7 @@ class StudentManagementControllerTest {
         List<Student> students = List.of(
                 new Student("john123", "John", "Male", "21", "CSE", "password", 0)
         );
-        controller.allStudents = students;
+        when(mockDatabase.getAll()).thenReturn(students);
 
         try (MockedStatic<MsgSender> mockedMsgSender = mockStatic(MsgSender.class)) {
             boolean result = controller.validateUsername("john123");
@@ -275,7 +262,7 @@ class StudentManagementControllerTest {
             assertTrue(result);
 
             mockedMsgSender.verify(() -> MsgSender.showUpdateConfirm(
-                    anyString(), anyList(), any(Runnable.class)
+                    anyString(), anyList(), any(Runnable.class), any(Runnable.class)
             ));
         }
     }

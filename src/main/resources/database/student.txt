@@ -4,3 +4,5 @@ id:1731736707949,username:hello,name:hello,gender:Male,age:12,department:cse,pas
 id:1731769447942,username:bob,name:bob,gender:Male,age:12,department:cse,password:1,
 id:1732009931993,username:hi,name:hi,gender:Male,age:12,department:cse,password:12,
 id:1732016733615,username:bqwyue,name:bryan,gender:Male,age:12,department:cse,password:1,
+id:1732348057603,username:zayn,name:zayn,gender:Male,age:20,department:SUST,password:12344,
+id:1732348090702,username:janice,name:janice,gender:Female,age:30,department:SUST,password:johny,

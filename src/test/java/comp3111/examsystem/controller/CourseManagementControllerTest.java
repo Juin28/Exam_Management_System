@@ -6,6 +6,7 @@ import comp3111.examsystem.model.Grade;
 import comp3111.examsystem.model.Question;
 import comp3111.examsystem.model.Quiz;
 import comp3111.examsystem.service.Database;
+import comp3111.examsystem.service.JavaFXInitializer;
 import comp3111.examsystem.service.MsgSender;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -16,7 +17,7 @@ import javafx.scene.layout.AnchorPane;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
-import org.mockito.junit.jupiter.MockitoExtension;
+//import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +25,7 @@ import java.util.concurrent.CountDownLatch;
 
 import static org.mockito.Mockito.*;
 
-@ExtendWith(MockitoExtension.class)
+//@ExtendWith(MockitoExtension.class)
 class CourseManagementControllerTest {
 
     @InjectMocks
@@ -56,9 +57,11 @@ class CourseManagementControllerTest {
 
     @BeforeAll
     static void initJavaFX() throws InterruptedException {
-        CountDownLatch latch = new CountDownLatch(1);
-        Platform.startup(latch::countDown); // Initialize JavaFX
-        latch.await();
+//        CountDownLatch latch = new CountDownLatch(1);
+//        Platform.startup(latch::countDown); // Initialize JavaFX
+//        latch.await();
+        JavaFXInitializer.initToolkit();
+
     }
 
     @BeforeEach
@@ -81,10 +84,10 @@ class CourseManagementControllerTest {
 
     }
 
-    @AfterAll
-    static void tearDownJavaFX() {
-        Platform.exit();
-    }
+//    @AfterAll
+//    static void tearDownJavaFX() {
+//        Platform.exit();
+//    }
 
     @Test
     void testNoFilter()
@@ -247,9 +250,9 @@ class CourseManagementControllerTest {
     {
         String id = "COMP1001";
 
-        // make allCourses return no courses
+        // make allCourses return existing course
         Course courseExisting = new Course("Intro to CS", "COMP1001", "CSE", 0);
-        controller.allCourses = List.of(courseExisting);
+        when(courseDatabase.getAll()).thenReturn(List.of(courseExisting));
 
         try (MockedStatic<MsgSender> mockedMsgSender = mockStatic(MsgSender.class)) {
             boolean result = controller.validateID(id);
@@ -518,7 +521,7 @@ class CourseManagementControllerTest {
         try (MockedStatic<MsgSender> mockedMsgSender = mockStatic(MsgSender.class)) {
             assertTrue(controller.updateCourse(actionEvent));
             // Verify message
-            mockedMsgSender.verify(() -> MsgSender.showUpdateConfirm(anyString(), any(List.class), any(Runnable.class)));
+            mockedMsgSender.verify(() -> MsgSender.showUpdateConfirm(anyString(), any(List.class), any(Runnable.class), any(Runnable.class)));
         }
 
     }

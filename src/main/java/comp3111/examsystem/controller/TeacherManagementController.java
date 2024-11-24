@@ -1,5 +1,6 @@
 package comp3111.examsystem.controller;
 
+import comp3111.examsystem.model.Student;
 import comp3111.examsystem.model.Teacher;
 import comp3111.examsystem.service.Database;
 import comp3111.examsystem.service.MsgSender;
@@ -16,8 +17,100 @@ import javafx.scene.input.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Controller for managing teachers in the HKUST Examination System.
+ * Provides functionality to add, update, delete, filter, and view teacher data.
+ * Integrates with the database to manage persistent storage and supports validation
+ * to ensure data integrity.
+ */
 public class TeacherManagementController {
+    public Database<Teacher> teacherDatabase;
+    public List<Teacher> allTeachers;
+    public ObservableList<Teacher> teacherList;
 
+    @FXML
+    public Button teachAdd;
+
+    @FXML
+    public TableColumn<Teacher, String> teachAgeCol;
+
+    @FXML
+    public TextField teachAgeInput;
+
+    @FXML
+    public Button teachDelete;
+
+    @FXML
+    public TableColumn<Teacher, String> teachDeptCol;
+
+    @FXML
+    public TableView<Teacher> teachTable;
+
+    @FXML
+    public TextField teachDeptFilter;
+
+    @FXML
+    public TextField teachDeptInput;
+
+    @FXML
+    public Button teachFilter;
+
+    @FXML
+    public TableColumn<Teacher, String> teachGenderCol;
+
+    @FXML
+    public ComboBox<String> teachGenderInput;
+
+    @FXML
+    public TableColumn<Teacher, String> teachNameCol;
+
+    @FXML
+    public TextField teachNameFilter;
+
+    @FXML
+    public TextField teachNameInput;
+
+    @FXML
+    public TableColumn<Teacher, String> teachPasswordCol;
+
+    @FXML
+    public TextField teachPasswordInput;
+
+    @FXML
+    public ComboBox<String> teachPosInput;
+
+    @FXML
+    public Button teachRefresh;
+
+    @FXML
+    public Button teachResetFilter;
+
+    @FXML
+    public Button teachUpdate;
+
+    @FXML
+    public TableColumn<Teacher, String> teachUsernameCol;
+
+    @FXML
+    public TextField teachUsernameFilter;
+
+    @FXML
+    public TextField teachUsernameInput;
+
+    @FXML
+    public TableColumn<Teacher, String> teachPositionCol;
+
+    @FXML
+    public AnchorPane rootPane;
+
+    @FXML
+    public AnchorPane AnchorWithInputs;
+
+    /**
+     * Initializes the Teacher Management Controller.
+     * Sets up the database connections, loads teacher data, configures the TableView,
+     * and establishes event listeners for user interactions.
+     */
     @FXML
     public void initialize()
     {
@@ -79,6 +172,12 @@ public class TeacherManagementController {
         teachTable.setItems(teacherList);
     }
 
+    /**
+     * Loads teacher data into the TableView.
+     * If filters are applied, only matching records are displayed.
+     *
+     * @return A list of filtered teachers or an empty list if no filters are applied
+     */
     @FXML
     public List<Teacher> loadTeacherTable()
     {
@@ -109,12 +208,24 @@ public class TeacherManagementController {
         return filteredTeachers;
     }
 
+    /**
+     * Checks whether any filters are currently applied to the teacher table.
+     *
+     * @return true if no filters are applied, false otherwise.
+     */
     public boolean noFilter() {
         return (teachDeptFilter.getText().isEmpty() &&
                 teachNameFilter.getText().isEmpty() &&
                 teachUsernameFilter.getText().isEmpty());
     }
 
+    /**
+     * Updates the selected teacher's data in the database.
+     * Validates the input and shows a confirmation dialog for changes.
+     *
+     * @param actionEvent The event triggered by clicking the "Update" button.
+     * @return true if the update is successful, false otherwise.
+     */
     @FXML
     public boolean updateTeacher(ActionEvent actionEvent) {
         Teacher teacher = teachTable.getSelectionModel().getSelectedItem();
@@ -125,10 +236,12 @@ public class TeacherManagementController {
         }
         List<String> changes = new ArrayList<>();
 
+        Teacher teacherCopy = new Teacher(teacher.getUsername(), teacher.getName(), teacher.getGender(), teacher.getAge(), teacher.getDepartment(), teacher.getPassword(), teacher.getPosition(), teacher.getId());
+
         boolean valid = validateUpdateInput(teacher, changes);
         if (valid && !changes.isEmpty()) {
             // successfully validated the changes, show a confirmation message
-            MsgSender.showUpdateConfirm("Update Teacher: " + teacher.getUsername(), changes, () -> updateTeacherInDatabase(teacher));
+            MsgSender.showUpdateConfirm("Update Teacher: " + teacher.getUsername(), changes, () -> updateTeacherInDatabase(teacher), () -> restoreTeacherState(teacher, teacherCopy));
             return true;
         }
         // no changes detected
@@ -140,6 +253,27 @@ public class TeacherManagementController {
         return false;
     }
 
+    /**
+     * Restores the teacher's state to the original values if the user cancels the update.
+     *
+     * @param current The teacher object to restore.
+     * @param original The original teacher object to restore to.
+     */
+    private void restoreTeacherState(Teacher current, Teacher original) {
+        current.setUsername(original.getUsername());
+        current.setName(original.getName());
+        current.setGender(original.getGender());
+        current.setAge(original.getAge());
+        current.setDepartment(original.getDepartment());
+        current.setPassword(original.getPassword());
+        current.setPosition(original.getPosition());
+    }
+
+    /**
+     * Clears all filters applied to the teacher table and reloads all data.
+     *
+     * @param actionEvent The event triggered by clicking the "Reset" button.
+     */
     @FXML
     public void resetFilter(ActionEvent actionEvent) {
         teachDeptFilter.clear();
@@ -148,12 +282,24 @@ public class TeacherManagementController {
         loadTeacherTable();
     }
 
+    /**
+     * Applies filters to the teacher table based on input criteria.
+     *
+     * @param actionEvent The event triggered by clicking the "Filter" button.
+     */
     @FXML
     public void filterTeacher(ActionEvent actionEvent) {
         // filtering functionality is implemented in the loadTeacherTable function
         loadTeacherTable();
     }
 
+    /**
+     * Deletes the selected teacher from the database.
+     * Shows a confirmation dialog before performing the deletion.
+     *
+     * @param actionEvent The event triggered by clicking the "Delete" button.
+     * @return true if the teacher is successfully deleted, false otherwise.
+     */
     @FXML
     public boolean deleteTeacher(ActionEvent actionEvent) {
         // delete teacher according to selection model
@@ -168,6 +314,12 @@ public class TeacherManagementController {
         return true;
     }
 
+    /**
+     * Deletes the given teacher from the database.
+     * Handles exceptions and displays error messages if the operation fails.
+     *
+     * @param teacher The teacher to delete.
+     */
     public void deleteTeacherFromDatabase(Teacher teacher)
     {
         try
@@ -182,6 +334,9 @@ public class TeacherManagementController {
         }
     }
 
+    /**
+     * Clears all input fields in the teacher management form.
+     */
     @FXML
     public void clearFields() {
         teachUsernameInput.clear();
@@ -193,6 +348,12 @@ public class TeacherManagementController {
         teachPosInput.setValue(null);
     }
 
+    /**
+     * Refreshes the teacher table by clearing all filters and reloading data.
+     * Also clears all input fields.
+     *
+     * @param actionEvent The event triggered by clicking the "Refresh" button.
+     */
     @FXML
     public void refreshTeacher(ActionEvent actionEvent) {
         // this function will reset all the filters, reload the table and clear the input fields
@@ -207,6 +368,12 @@ public class TeacherManagementController {
         loadTeacherTable();
     }
 
+    /**
+     * Adds a new teacher to the database after validating the input.
+     * Displays a confirmation dialog before performing the operation.
+     *
+     * @param actionEvent The event triggered by clicking the "Add" button.
+     */
     @FXML
     public void addTeacher(ActionEvent actionEvent) {
         boolean valid = validateAddInput();
@@ -217,9 +384,12 @@ public class TeacherManagementController {
     }
 
     /**
-     * This function validates the input fields for updating a teacher
+     * Validates the input fields for updating a teacher.
+     * Checks for required fields, correct formats, and detects changes in data.
      *
-     * @return Teacher     returns the updated Teacher object
+     * @param teacher The teacher object to validate against.
+     * @param changes A list to record detected changes in teacher information.
+     * @return true if the input is valid, false otherwise.
      */
     public boolean validateUpdateInput(Teacher teacher, List<String>changes)
     {
@@ -316,9 +486,10 @@ public class TeacherManagementController {
     }
 
     /**
-     * This function validates the input fields while adding a teacher
+     * Validates the input fields for adding a teacher.
+     * Ensures all required fields are filled and contain valid data.
      *
-     * @return boolean     True if the input is valid, false otherwise
+     * @return true if the input is valid, false otherwise.
      */
     public boolean validateAddInput()
     {
@@ -351,17 +522,19 @@ public class TeacherManagementController {
 
         // validate the department
         department = department.toUpperCase();
-        if(!validateDepartment(department)){return false;}
+        if(!validateDepartment(department)){
+            MsgSender.showMsg("Please input a valid department");
+            return false;}
 
         // if all previous conditions are met, we have successfully validated the input, return true
         return true;
     }
 
     /**
-     * This function validates the department input
+     * Validates the department input against a predefined list of valid departments.
      *
-     * @param   department  The department input as a String
-     * @return  boolean     True if the department is valid, false otherwise
+     * @param department The department input to validate.
+     * @return true if the department is valid, false otherwise.
      */
     public boolean validateDepartment(String department)
     {
@@ -375,18 +548,21 @@ public class TeacherManagementController {
                 return true;
             }
         }
+
         return false;
     }
 
     /**
-     * This function validates the username input
+     * Validates the username input for uniqueness and format.
+     * Ensures the username is alphanumeric and does not already exist.
      *
-     * @param   username    The username input as a String
-     * @return  boolean     True if the username is valid, false otherwise
+     * @param username The username input to validate.
+     * @return true if the username is valid, false otherwise.
      */
     public boolean validateUsername(String username)
     {
         // check to ensure that the username is unique
+        allTeachers = teacherDatabase.getAll();
         for (Teacher teacher : allTeachers)
         {
             if (teacher.getUsername().equals(username))
@@ -406,10 +582,10 @@ public class TeacherManagementController {
     }
 
     /**
-     * This function validates the age input
+     * Validates the age input for numeric format and range.
      *
-     * @param   age        The age input as a String
-     * @return  boolean    True if the age is valid, false otherwise
+     * @param age The age input to validate.
+     * @return true if the age is valid, false otherwise.
      */
     public boolean validateAge(String age)
     {
@@ -434,6 +610,12 @@ public class TeacherManagementController {
         return true;
     }
 
+    /**
+     * Updates the given teacher's data in the database.
+     * Displays a success or error message depending on the outcome.
+     *
+     * @param teacher The teacher object with updated data.
+     */
     public void updateTeacherInDatabase(Teacher teacher)
     {
         try
@@ -447,7 +629,8 @@ public class TeacherManagementController {
     }
 
     /**
-     * This function adds a teacher to the database
+     * Adds a new teacher to the database using the input fields.
+     * Displays a success or error message depending on the outcome.
      */
     public void addTeacherToDatabase()
     {
@@ -469,86 +652,5 @@ public class TeacherManagementController {
         }
     }
 
-    public Database<Teacher> teacherDatabase;
-    public List<Teacher> allTeachers;
-    public ObservableList<Teacher> teacherList;
-
-    @FXML
-    public Button teachAdd;
-
-    @FXML
-    public TableColumn<Teacher, String> teachAgeCol;
-
-    @FXML
-    public TextField teachAgeInput;
-
-    @FXML
-    public Button teachDelete;
-
-    @FXML
-    public TableColumn<Teacher, String> teachDeptCol;
-
-    @FXML
-    public TableView<Teacher> teachTable;
-
-    @FXML
-    public TextField teachDeptFilter;
-
-    @FXML
-    public TextField teachDeptInput;
-
-    @FXML
-    public Button teachFilter;
-
-    @FXML
-    public TableColumn<Teacher, String> teachGenderCol;
-
-    @FXML
-    public ComboBox<String> teachGenderInput;
-
-    @FXML
-    public TableColumn<Teacher, String> teachNameCol;
-
-    @FXML
-    public TextField teachNameFilter;
-
-    @FXML
-    public TextField teachNameInput;
-
-    @FXML
-    public TableColumn<Teacher, String> teachPasswordCol;
-
-    @FXML
-    public TextField teachPasswordInput;
-
-    @FXML
-    public ComboBox<String> teachPosInput;
-
-    @FXML
-    public Button teachRefresh;
-
-    @FXML
-    public Button teachResetFilter;
-
-    @FXML
-    public Button teachUpdate;
-
-    @FXML
-    public TableColumn<Teacher, String> teachUsernameCol;
-
-    @FXML
-    public TextField teachUsernameFilter;
-
-    @FXML
-    public TextField teachUsernameInput;
-
-    @FXML
-    public TableColumn<Teacher, String> teachPositionCol;
-
-    @FXML
-    public AnchorPane rootPane;
-
-    @FXML
-    public AnchorPane AnchorWithInputs;
 
 }

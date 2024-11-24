@@ -20,6 +20,10 @@ import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 
+/**
+ * Controller for the Student Login UI in the HKUST Examination System.
+ * Handles student login, validation, and navigation to the main student interface or registration form.
+ */
 public class StudentLoginController implements Initializable {
     @FXML
     public TextField usernameTxt;

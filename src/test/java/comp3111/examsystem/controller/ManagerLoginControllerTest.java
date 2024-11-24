@@ -4,6 +4,7 @@ import comp3111.examsystem.Main;
 import comp3111.examsystem.controller.ManagerLoginController;
 import comp3111.examsystem.model.Manager;
 import comp3111.examsystem.service.Database;
+import comp3111.examsystem.service.JavaFXInitializer;
 import comp3111.examsystem.service.MsgSender;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -20,7 +21,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.MockedStatic;
 
 import org.testfx.framework.junit5.ApplicationTest;
@@ -38,7 +38,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 import static org.testfx.assertions.api.Assertions.assertThat;
 
-@ExtendWith(MockitoExtension.class)
 public class ManagerLoginControllerTest extends ApplicationTest {
 
     @InjectMocks
@@ -61,11 +60,8 @@ public class ManagerLoginControllerTest extends ApplicationTest {
 
     @BeforeAll
     public static void initJavaFx() throws InterruptedException {
-        final CountDownLatch latch = new CountDownLatch(1);
-        Platform.startup(() -> { // Initializes JavaFX environment
-            latch.countDown();
-        });
-        latch.await(); // Ensures JavaFX is up before proceeding
+        JavaFXInitializer.initToolkit();
+
     }
 
     @BeforeEach
@@ -77,11 +73,11 @@ public class ManagerLoginControllerTest extends ApplicationTest {
         controller.stage = mockStage;
     }
 
-    @AfterAll
-    public static void tearDownJavaFx() {
-
-        Platform.exit(); // Cleans up the JavaFX platform after all tests are run.
-    }
+//    @AfterAll
+//    public static void tearDownJavaFx() {
+//
+//        Platform.exit(); // Cleans up the JavaFX platform after all tests are run.
+//    }
 
 
     @Test

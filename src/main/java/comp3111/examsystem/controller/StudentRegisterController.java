@@ -15,6 +15,11 @@ import javafx.stage.Stage;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+/**
+ * Controller for the Student Registration UI in the HKUST Examination System.
+ * Handles the logic for registering a new student, including input validation,
+ * database integration, and user notifications.
+ */
 public class StudentRegisterController implements Initializable {
     public Database<Student> studentDatabase;
     public Integer studentNum;
