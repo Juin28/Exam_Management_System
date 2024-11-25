@@ -85,7 +85,7 @@ class StudentGradeStatisticControllerTest {
         when(mockQuizDatabase.queryByField("id", sampleGrade.getQuestionId())).thenReturn(List.of(sampleQuiz));
         when(mockCourseDatabase.getAll()).thenReturn(List.of(sampleCourse));
         controller.showCourses();
-        assert controller.coursesList.contains("Course1");
+        assert controller.coursesList.contains("COMP3111");
     }
 
     @Test

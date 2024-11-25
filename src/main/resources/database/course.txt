@@ -1,5 +1,3 @@
-id:111,courseName:Course1,courseID:COMP1111,department:CSE,
-id:222,courseName:Course2,courseID:COMP2222,department:CSE,
-id:333,courseName:Object Oriented Programming,courseID:COMP3333,department:CSE,
-id:555,courseName:Course5,courseID:COMP5555,department:CSE,
 id:1732352547254,courseName:Introduction to Design,courseID:ISDN1234,department:ISD,
+id:1732461380707,courseName:Software Engineering,courseID:COMP3111,department:CSE,
+id:1732461494846,courseName:Algorithms,courseID:COMP3711,department:CSE,
