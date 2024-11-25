@@ -32,6 +32,7 @@ public class StudentMainController implements Initializable {
     ComboBox<String> examCombox;
     public Database<Quiz> quizDatabase;
     public Database<Grade> gradeDatabase;
+    public Database<Course> courseDatabase;
     // Variable used to keep track of the loggedInStudent
     public Student student;
     public List<String> quizzes;
@@ -48,6 +49,7 @@ public class StudentMainController implements Initializable {
         // initializing the quizDatabase
         quizDatabase = new Database<>(Quiz.class);
         gradeDatabase = new Database<>(Grade.class);
+        courseDatabase = new Database<>(Course.class);
         quizzes = new ArrayList<>();
         studentGrades = new ArrayList<>();
         student = StudentLoginController.getLoggedInStudent();
@@ -87,6 +89,14 @@ public class StudentMainController implements Initializable {
             // Formatting the quiz information
             for (Quiz quiz : quizDatabase.getAll()) {
                 String quizId = Long.toString(quiz.getId());
+                // Filtering out quizzes that do not belong to the student's department
+                if(!courseDatabase
+                        .queryByField("courseID", quiz.getCourseID())
+                        .getFirst()
+                        .getDepartment()
+                        .equals(student.getDepartment())){
+                    continue;
+                }
                 String quizPublished = quiz.getPublishStatus();
                 if (quizPublished.equalsIgnoreCase("yes")) {
                     quizPublished = "true";
@@ -122,6 +132,7 @@ public class StudentMainController implements Initializable {
         if(taken || !published){
             return;
         }
+
         String tmp = quiz.getCourseID();
         tmp = tmp.concat(" | ");
         tmp = tmp.concat(quiz.getQuizName());
@@ -199,7 +210,12 @@ public class StudentMainController implements Initializable {
         System.exit(0);
     }
 
-    // Helper function to remove whitespaces and split by "|"
+    /**
+     * Helper function to remove whitespaces and split a string by the "|" character.
+     *
+     * @param input The input string to be formatted.
+     * @return An array of strings split by the "|" character, or null if the input is null.
+     */
     public static String[] formatString(String input) {
         if (input == null) {
             return null; // Handle null case
@@ -207,7 +223,12 @@ public class StudentMainController implements Initializable {
         return splitByPipe(input.replace(" ", ""));
     }
 
-    // Helper function to split a String by "|"
+    /**
+     * Splits a string by the "|" character.
+     *
+     * @param input The input string to be split.
+     * @return An array of strings split by the "|" character.
+     */
     public static String[] splitByPipe(String input) {
         return input.split("\\|"); // Split by "|" character
     }

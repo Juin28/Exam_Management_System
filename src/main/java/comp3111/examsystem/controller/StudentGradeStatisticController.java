@@ -45,22 +45,47 @@ public class StudentGradeStatisticController implements Initializable {
             this.timeSpent = timeSpent;
         }
 
+        /**
+         * Gets the course name.
+         *
+         * @return the course name
+         */
         public String getCourseName() {
             return courseName;
         }
 
+        /**
+         * Gets the exam name.
+         *
+         * @return the exam name
+         */
         public String getExamName() {
             return examName;
         }
 
+        /**
+         * Gets the score.
+         *
+         * @return the score
+         */
         public String getScore() {
             return score;
         }
 
+        /**
+         * Gets the full score.
+         *
+         * @return the full score
+         */
         public String getFullScore() {
             return fullScore;
         }
 
+        /**
+         * Gets the time spent.
+         *
+         * @return the time spent
+         */
         public String getTimeSpent() {
             return timeSpent;
         }
@@ -182,7 +207,7 @@ public class StudentGradeStatisticController implements Initializable {
                     for (Course c : courseDatabase.getAll()) {
                         // Check if the course is associated with the quiz
                         if (c.getCourseID().equals(q.getCourseID())) {
-                            coursesList.add(c.getCourseName());
+                            coursesList.add(c.getCourseID());
                         }
                     }
                 }
@@ -246,7 +271,7 @@ public class StudentGradeStatisticController implements Initializable {
                 // Add a row for each grade if the table is not full. Table should have the capacity of the number of courses
                 if (gradeRows.size() < coursesList.size()) {
                     gradeRows.add(new GradeTableRow(
-                            course.getCourseName(),
+                            course.getCourseID(),
                             quiz.getQuizName(),
                             grade.getStudentScore(),
                             String.valueOf(total),
