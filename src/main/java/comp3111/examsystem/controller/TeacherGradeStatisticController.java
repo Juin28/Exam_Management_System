@@ -243,10 +243,19 @@ public class TeacherGradeStatisticController implements Initializable {
         for (Grade grade : gradeList)
         {
             // find the courseID of the quiz
-            Quiz quizInGrade = quizDatabase.queryByKey(grade.getQuestionId());
-            String courseID = quizInGrade.getCourseID();
-            String quizName = quizInGrade.getQuizName();
-            String studentName = studentDatabase.queryByKey(grade.getStudentId()).getName();
+            Quiz quizInGrade;
+            String courseID;
+            String quizName;
+            String studentName;
+            try {
+                quizInGrade = quizDatabase.queryByKey(grade.getQuestionId());
+                courseID = quizInGrade.getCourseID();
+                quizName = quizInGrade.getQuizName();
+                studentName = studentDatabase.queryByKey(grade.getStudentId()).getName();
+            } catch (Exception e) {
+                continue;
+            }
+
             GradeStatisticClass gradeStatistic = new GradeStatisticClass (
                     studentName,
                     courseID,
