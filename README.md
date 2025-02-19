@@ -1,18 +1,45 @@
-# COMP3111 Project
+# Exam Management System
 
-## Team ID - Group 18
+A web application that allows students to take quizzes and enables teachers to create exams and manage questions.
 
-### 1. Task 1 (Student Portal) - YUEN, Bryan Qi Wen
-- Email: bqwyuen@connect.ust.hk
-- GitHub id: shockwave359
-- Dev Branch ID: Bryan
+## Features
 
-### 2. Task 2 (Teacher Portal) - TAN, Juin
-- Email: jtanat@connect.ust.hk
-- GitHub id: juin28
-- Dev Branch ID: Juin
+- **Student Interface**: 
+  - Register and log in to take quizzes.
+  - View available exams and submit answers.
 
-### 3. Task 3 (Teacher and Manager Portal) - LOH, Angus Han Jern
-- Email: ahjloh@connect.ust.hk
-- GitHub id: angusk701
-- Dev Branch ID: Angus
+- **Teacher Interface**: 
+  - Create and manage exams by adding questions.
+  - Set time limits and scoring criteria.
+  - Review student performance.
+
+## Technology Stack
+
+- **Frontend**: Java (JavaFX)
+- **Backend**: Java for business logic and user authentication
+- **Database**: Use txt file for storing the data
+- **Testing**: JUnit for automated testing
+
+## Installation
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/Juin28/Exam_Management_System.git
+   ```
+2. Navigate to the project directory:
+   ```bash
+   cd Exam_Management_System
+   ```
+3. Run the application:
+   - Use your preferred Java IDE to run the project.
+
+## Usage
+
+- Students can register, log in, and take quizzes.
+- Teachers can log in to create and manage exams.
+
+## Authors
+
+1. Task 1 (Student Portal) - YUEN, Bryan Qi Wen
+2. Task 2 (Teacher Portal) - TAN, Juin
+3. Task 3 (Teacher and Manager Portal) - LOH, Angus Han Jern
